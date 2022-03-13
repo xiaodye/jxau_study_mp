@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "jxau_study_mp",
   "appid": "",
   "description": "",
   "versionName": "1.0.0",
@@ -58,7 +58,7 @@
   },
   "mp-weixin": {
     /* 微信小程序特有相关 */
-    "appid": "",
+    "appid": "wxd0339accb826f9dc",
     "setting": {
       "urlCheck": false,
       "checkSiteMap": false
