@@ -1,7 +1,7 @@
 <template>
-  <view class="home" :style="{ paddingTop: statusBarHeight + 'px', minHeight: windowHeight + 'px' }">
-    <!-- 导航栏(标题栏) -->
-    <view class="nav" :style="{ height: navigationBarHeight + 'px' }">
+  <view class="home" :style="{ minHeight: windowHeight + 'px' }">
+    <!-- 导航栏 -->
+    <view class="nav" :style="{ height: navHeight + 'px', paddingTop: statusBarHeight + 'px' }">
       <u-search placeholder="前端" :showAction="false" :disabled="true"></u-search>
     </view>
 
@@ -9,7 +9,7 @@
     <view class="tab" :style="{ top: navHeight + 'px' }">
       <u-tabs
         :scrollable="false"
-        :list="navList"
+        :list="tabList"
         lineWidth="30"
         lineHeight="5"
         lineColor="#f56c6c"
@@ -27,19 +27,26 @@
         itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;"
       ></u-tabs>
 
-      <!-- 子tab -->
+      <!-- subTab -->
       <view class="sub-tab">
-        <u-tag text="推荐" type="warning" shape="circle" size="mini" bgColor="#71d5a1" color="#333" borderColor="#fff"></u-tag>
-        <u-tag text="最热" type="success" shape="circle" size="mini" bgColor="#f4f4f5" color="#333" borderColor="#fff"></u-tag>
-        <u-tag text="最新" type="success" shape="circle" size="mini" bgColor="#f4f4f5" color="#333" borderColor="#fff"></u-tag>
+        <u-tag
+          v-for="(item, index) in subTabList"
+          :key="index"
+          :text="item"
+          type="warning"
+          shape="circle"
+          size="mini"
+          :bgColor="subActiveIndex === index ? '#71d5a1' : '#f4f4f5'"
+          color="#333"
+          borderColor="#fff"
+          @click="switchSubTab(index)"
+        ></u-tag>
       </view>
     </view>
 
-    <!-- 文章列表 -->
-    <view class="ariticle" :style="{ paddingTop: 80 + 'px' }">
-      <u-search placeholder="前端" :showAction="false"></u-search>
-      <u-search placeholder="前端" :showAction="false"></u-search>
-      <u-search placeholder="前端" :showAction="false"></u-search>
+    <!-- 首页列表 -->
+    <view class="home-list" :style="{ marginTop: 80 + navHeight + 'px' }">
+      <article-list :articleList="articleList"></article-list>
     </view>
   </view>
 </template>
@@ -53,7 +60,7 @@ export default {
     navHeight: 0,
     windowHeight: 0,
 
-    navList: [
+    tabList: [
       {
         name: "文章",
         badge: {
@@ -70,19 +77,150 @@ export default {
         name: "资料",
       },
     ],
+    subTabList: ["推荐", "最热", "最新"],
+    subActiveIndex: 0,
+
+    articleList: [
+      {
+        articleId: "01",
+        avatar: "https://cdn.uviewui.com/uview/album/1.jpg",
+        userName: "小染",
+        title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
+        cover: "https://cdn.uviewui.com/uview/album/1.jpg",
+        date: "2022-03-14",
+        content:
+          "前几天拿到字节offer了，很开心，也有很多小伙伴私信我问了很多问题，所以在这里简单分享一下我是如何学习八股文的，文章篇幅略长，希望能帮助到有需要的同学或者也是双非大三正在迷茫的你。",
+        tags: ["前端", "面试"],
+        iconList: [
+          {
+            name: "eye",
+            num: 203,
+          },
+          {
+            name: "thumb-up",
+            num: 47,
+          },
+          {
+            name: "chat",
+            num: 9,
+          },
+        ],
+      },
+      {
+        articleId: "02",
+        avatar: "https://cdn.uviewui.com/uview/album/2.jpg",
+        userName: "ken",
+        title: "学习路径 | 学习路径问题，求助",
+        cover: "https://cdn.uviewui.com/uview/album/1.jpg",
+        date: "2022-03-15",
+        content:
+          "目前大一，这个假期学java到了多线程，看视频加核心技术卷1，书看了一半多，数据结构学到快速排序，目前在看那本黑皮书，因为学校把数据结构放到大二，感觉太晚了",
+        tags: ["Java", "学习"],
+        iconList: [
+          {
+            name: "eye",
+            num: 166,
+          },
+          {
+            name: "thumb-up",
+            num: 19,
+          },
+          {
+            name: "chat",
+            num: 54,
+          },
+        ],
+      },
+      {
+        articleId: "04",
+        avatar: "https://cdn.uviewui.com/uview/album/1.jpg",
+        userName: "小染",
+        title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
+        // cover: "https://cdn.uviewui.com/uview/album/1.jpg",
+        date: "2022-03-14",
+        content:
+          "前几天拿到字节offer了，很开心，也有很多小伙伴私信我问了很多问题，所以在这里简单分享一下我是如何学习八股文的，文章篇幅略长，希望能帮助到有需要的同学或者也是双非大三正在迷茫的你。",
+        tags: ["前端", "面试"],
+        iconList: [
+          {
+            name: "eye",
+            num: 203,
+          },
+          {
+            name: "thumb-up",
+            num: 47,
+          },
+          {
+            name: "chat",
+            num: 9,
+          },
+        ],
+      },
+      {
+        articleId: "05",
+        avatar: "https://cdn.uviewui.com/uview/album/2.jpg",
+        userName: "ken",
+        title: "学习路径 | 学习路径问题，求助",
+        // cover: "https://cdn.uviewui.com/uview/album/1.jpg",
+        date: "2022-03-15",
+        content:
+          "目前大一，这个假期学java到了多线程，看视频加核心技术卷1，书看了一半多，数据结构学到快速排序，目前在看那本黑皮书，因为学校把数据结构放到大二，感觉太晚了",
+        tags: ["Java", "学习"],
+        iconList: [
+          {
+            name: "eye",
+            num: 166,
+          },
+          {
+            name: "thumb-up",
+            num: 19,
+          },
+          {
+            name: "chat",
+            num: 54,
+          },
+        ],
+      },
+      {
+        articleId: "03",
+        avatar: "https://cdn.uviewui.com/uview/album/1.jpg",
+        userName: "小染",
+        title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
+        cover: "https://cdn.uviewui.com/uview/album/1.jpg",
+        date: "2022-03-14",
+        content:
+          "前几天拿到字节offer了，很开心，也有很多小伙伴私信我问了很多问题，所以在这里简单分享一下我是如何学习八股文的，文章篇幅略长，希望能帮助到有需要的同学或者也是双非大三正在迷茫的你。",
+        tags: ["前端", "面试"],
+        iconList: [
+          {
+            name: "eye",
+            num: 203,
+          },
+          {
+            name: "thumb-up",
+            num: 47,
+          },
+          {
+            name: "chat",
+            num: 9,
+          },
+        ],
+      },
+    ],
   }),
 
   methods: {
-    // 得到状态导航栏高度
+    // get设备信息
     getSystemInfo() {
       this.statusBarHeight = getApp().globalData.statusBarHeight;
       this.navigationBarHeight = getApp().globalData.navigationBarHeight;
       this.windowHeight = getApp().globalData.windowHeight;
       this.navHeight = getApp().globalData.navHeight;
+    },
 
-      // console.log(this.statusBarHeight)
-      // console.log(this.windowHeight)
-      // console.log(this.navigationBarHeight)
+    // 切换子tab
+    switchSubTab(index) {
+      this.subActiveIndex = index;
     },
   },
 
@@ -96,15 +234,20 @@ export default {
 $tab: 160rpx;
 
 .home {
+  display: flex;
+  flex-direction: column;
   background-color: $uni-bg-color-grey;
-  overflow-y: auto;
   box-sizing: border-box;
 }
 
 .nav {
-  // height: 102rpx;
-  padding: 0 240rpx 0 40rpx;
-  // padding: 10rpx 240rpx 10rpx 40rpx;
+  width: 100%;
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 99;
+  background-color: #fff;
+  padding-left: 40rpx;
+  padding-right: 240rpx;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,7 +257,9 @@ $tab: 160rpx;
   background-color: #ffffff;
   height: $tab;
   // padding-bottom: 20rpx;
-  position: absolute;
+  position: fixed;
+  z-index: 99;
+
   width: 100%;
   .u-tabs {
     height: 100rpx;
@@ -133,7 +278,8 @@ $tab: 160rpx;
   }
 }
 
-.ariticle {
-  margin-top: 40rpx;
+.home-list {
+  padding: 20rpx;
+  margin-bottom: 100rpx;
 }
 </style>

@@ -22,6 +22,24 @@
       "style": {
         "navigationBarTitleText": "rigister"
       }
+    },
+    {
+      "path": "pages/exercise/exercise",
+      "style": {
+        "navigationBarTitleText": "题库"
+      }
+    },
+    {
+      "path": "pages/community/community",
+      "style": {
+        "navigationBarTitleText": "社区"
+      }
+    },
+    {
+      "path": "pages/person/person",
+      "style": {
+        "navigationBarTitleText": "个人"
+      }
     }
   ],
   "globalStyle": {
@@ -29,5 +47,36 @@
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#000000",
+    "selectedColor": "#17ead9",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/index_.png",
+        "selectedIconPath": "static/tabbar/indexSelected.png"
+      },
+      {
+        "pagePath": "pages/exercise/exercise",
+        "text": "题库",
+        "iconPath": "static/tabbar/exercise.png",
+        "selectedIconPath": "static/tabbar/exerciseSelected.png"
+      },
+      {
+        "pagePath": "pages/community/community",
+        "text": "社区",
+        "iconPath": "static/tabbar/community.png",
+        "selectedIconPath": "static/tabbar/communitySelected.png"
+      },
+      {
+        "pagePath": "pages/person/person",
+        "text": "个人中心",
+        "iconPath": "static/tabbar/person.png",
+        "selectedIconPath": "static/tabbar/personCenterSelected.png"
+      }
+    ]
   }
 }

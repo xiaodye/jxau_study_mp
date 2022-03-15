@@ -93,5 +93,6 @@
       "bold": false,
       "italic": false
     }
-  ]
+  ],
+  "prettier.semi": false
 }
