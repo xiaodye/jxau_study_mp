@@ -21,7 +21,7 @@
               {{ item.content }}
             </view>
             <view class="content-tags">
-              <view class="tag" v-for="(tag, index) in item.tags" :key="index">{{ tag }}</view>
+              <my-tag class="tag" size="mini" type="warning" v-for="(tag, index) in item.tags" :key="index">{{ tag }}</my-tag>
             </view>
           </view>
           <u-image v-if="item.cover" :showLoading="true" :src="item.cover" width="160rpx" height="120rpx" radius="6px"></u-image>
@@ -53,20 +53,8 @@ export default {
   data: () => ({}),
   computed: {},
   methods: {},
-  watch: {},
 
-  // 组件周期函数--监听组件挂载完毕
   mounted() {},
-  // 组件周期函数--监听组件数据更新之前
-  beforeUpdate() {},
-  // 组件周期函数--监听组件数据更新之后
-  updated() {},
-  // 组件周期函数--监听组件激活(显示)
-  activated() {},
-  // 组件周期函数--监听组件停用(隐藏)
-  deactivated() {},
-  // 组件周期函数--监听组件销毁之前
-  beforeDestroy() {},
 };
 </script>
 
@@ -127,14 +115,14 @@ export default {
         &-tags {
           display: flex;
           .tag {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fdf6ec;
+            // display: flex;
+            // justify-content: center;
+            // align-items: center;
+            // background-color: #fdf6ec;
             margin-right: 14rpx;
-            padding: 6rpx 24rpx;
-            border-radius: 40rpx;
-            color: #f29100;
+            // padding: 6rpx 24rpx;
+            // border-radius: 40rpx;
+            // color: #f29100;
           }
         }
       }
