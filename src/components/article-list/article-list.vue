@@ -115,14 +115,7 @@ export default {
         &-tags {
           display: flex;
           .tag {
-            // display: flex;
-            // justify-content: center;
-            // align-items: center;
-            // background-color: #fdf6ec;
             margin-right: 14rpx;
-            // padding: 6rpx 24rpx;
-            // border-radius: 40rpx;
-            // color: #f29100;
           }
         }
       }

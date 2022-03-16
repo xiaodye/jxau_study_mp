@@ -218,7 +218,7 @@ export default {
 
     // 切换子tab
     switchSubTab(item) {
-      console.log(item);
+      // console.log(item);
       this.subActiveIndex = item.index;
     },
   },
