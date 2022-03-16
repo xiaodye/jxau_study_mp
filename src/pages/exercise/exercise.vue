@@ -1,9 +1,8 @@
 <template>
-  <div class="exercise">exercise</div>
+  <view class="exercise">exercise</view>
 </template>
 
 <script>
-
 export default {
   components: {},
   data: () => ({}),
@@ -23,7 +22,7 @@ export default {
   onUnload() {},
   // 页面处理函数--监听用户下拉动作
   onPullDownRefresh() {
-    uni.stopPullDownRefresh();
+    uni.stopPullDownRefresh()
   },
   // 页面处理函数--监听用户上拉触底
   onReachBottom() {},
@@ -31,7 +30,7 @@ export default {
   /* onPageScroll(event) {}, */
   // 页面处理函数--用户点击右上角分享
   /* onShareAppMessage(options) {}, */
-};
+}
 </script>
 
 <style lang="scss"></style>

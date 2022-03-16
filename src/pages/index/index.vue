@@ -50,14 +50,12 @@
 </template>
 
 <script>
+import { systemInfo } from "@/mixin.js"
 export default {
   components: {},
-  data: () => ({
-    statusBarHeight: 0,
-    navigationBarHeight: 0,
-    navHeight: 0,
-    windowHeight: 0,
+  mixins: [systemInfo],
 
+  data: () => ({
     tabList: [
       {
         name: "文章",
@@ -208,25 +206,17 @@ export default {
   }),
 
   methods: {
-    // get设备信息
-    getSystemInfo() {
-      this.statusBarHeight = getApp().globalData.statusBarHeight;
-      this.navigationBarHeight = getApp().globalData.navigationBarHeight;
-      this.windowHeight = getApp().globalData.windowHeight;
-      this.navHeight = getApp().globalData.navHeight;
-    },
-
     // 切换子tab
     switchSubTab(item) {
       // console.log(item);
-      this.subActiveIndex = item.index;
+      this.subActiveIndex = item.index
     },
   },
 
   onLoad() {
-    this.getSystemInfo();
+    this.getSystemInfo()
   },
-};
+}
 </script>
 
 <style lang="scss" scoped >
