@@ -29,18 +29,16 @@
 
       <!-- subTab -->
       <view class="sub-tab">
-        <u-tag
+        <my-tag
+          class="tag"
           v-for="(item, index) in subTabList"
           :key="index"
-          :text="item"
-          type="warning"
-          shape="circle"
-          size="mini"
-          :bgColor="subActiveIndex === index ? '#71d5a1' : '#f4f4f5'"
-          color="#333"
-          borderColor="#fff"
-          @click="switchSubTab(index)"
-        ></u-tag>
+          :type="subActiveIndex === index ? 'success' : 'info'"
+          size="small"
+          @click="switchSubTab({ index, text: item })"
+        >
+          {{ item }}
+        </my-tag>
       </view>
     </view>
 
@@ -219,8 +217,9 @@ export default {
     },
 
     // 切换子tab
-    switchSubTab(index) {
-      this.subActiveIndex = index;
+    switchSubTab(item) {
+      console.log(item);
+      this.subActiveIndex = item.index;
     },
   },
 
@@ -230,7 +229,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped >
 $tab: 160rpx;
 
 .home {
@@ -261,19 +260,12 @@ $tab: 160rpx;
   z-index: 99;
 
   width: 100%;
-  .u-tabs {
-    height: 100rpx;
-    display: flex;
-    justify-content: center;
-    // align-items: center;
-  }
   .sub-tab {
     padding-left: 30rpx;
+    margin-top: 20rpx;
     display: flex;
-    .u-tag {
-      margin-right: 20rpx !important;
-      padding: 0 20rpx;
-      // font-size: 24rpx;
+    .tag {
+      margin-right: 20rpx;
     }
   }
 }
