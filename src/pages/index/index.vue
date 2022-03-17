@@ -33,7 +33,7 @@
           class="tag"
           v-for="(item, index) in subTabList"
           :key="index"
-          :type="subActiveIndex === index ? 'success' : 'info'"
+          :type="subActiveIndex === index ? 'error' : 'info'"
           size="small"
           @click="switchSubTab({ index, text: item })"
         >
@@ -211,10 +211,22 @@ export default {
       // console.log(item);
       this.subActiveIndex = item.index
     },
+
+    // 检验请求
+    async getUserInfo() {
+      try {
+        const { data: res } = await uni.request({ url: "/user/get" })
+        if (res.status !== 0) return console.log("获取用户信息失败")
+        console.log(res.data)
+      } catch (err) {
+        console.log(err)
+      }
+    },
   },
 
   onLoad() {
     this.getSystemInfo()
+    this.getUserInfo()
   },
 }
 </script>

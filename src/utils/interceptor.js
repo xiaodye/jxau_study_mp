@@ -12,3 +12,25 @@ uni.addInterceptor("request", {
     }
   },
 })
+
+// 在 Vue 2 项目中， 使用 Vue 3 项目 API Promise 化 返回格式
+function isPromise(obj) {
+  return !!obj && (typeof obj === "object" || typeof obj === "function") && typeof obj.then === "function"
+}
+
+uni.addInterceptor({
+  returnValue(res) {
+    if (!isPromise(res)) {
+      return res
+    }
+    return new Promise((resolve, reject) => {
+      res.then(res => {
+        if (res[0]) {
+          reject(res[0])
+        } else {
+          resolve(res[1])
+        }
+      })
+    })
+  },
+})

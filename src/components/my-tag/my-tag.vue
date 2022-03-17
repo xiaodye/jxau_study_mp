@@ -7,7 +7,7 @@
  */
 
 <template>
-  <view class="tag-base" :class="[`tag-color-${type}`, `tag-size-${size}`, circle ? 'circle' : '']" @click="handleClick">
+  <view class="tag-base" :class="[`tag-color-${type}`, `tag-size-${size}`, circle ? 'circle' : '']" @click.stop="handleClick">
     <slot></slot>
   </view>
 </template>
@@ -32,16 +32,15 @@ export default {
   data: () => ({}),
   computed: {},
   methods: {
-    handleClick(e) {
-      e.stopPropagation();
-      this.$emit("click");
+    handleClick() {
+      this.$emit("click")
     },
   },
 
   mounted() {
     // console.log(this.type);
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

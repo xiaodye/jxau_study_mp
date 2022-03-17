@@ -21,7 +21,7 @@
               {{ item.content }}
             </view>
             <view class="content-tags">
-              <my-tag class="tag" size="mini" type="warning" v-for="(tag, index) in item.tags" :key="index">{{ tag }}</my-tag>
+              <my-tag class="tag" size="mini" type="success" v-for="(tag, index) in item.tags" :key="index">{{ tag }}</my-tag>
             </view>
           </view>
           <u-image v-if="item.cover" :showLoading="true" :src="item.cover" width="160rpx" height="120rpx" radius="6px"></u-image>
@@ -55,7 +55,7 @@ export default {
   methods: {},
 
   mounted() {},
-};
+}
 </script>
 
 <style lang="scss" scoped>
