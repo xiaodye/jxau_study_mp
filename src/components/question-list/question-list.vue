@@ -7,10 +7,11 @@
     :refresher-enabled="true"
     refresher-background="#f8f8f8"
     :refresher-triggered="triggered"
-    @scrolltolower="lower"
+    @scrolltolower="onLower"
     @refresherpulling="onPulling"
     @refresherrefresh="onRefresh"
   >
+    <u-toast ref="uToast"></u-toast>
     <view class="question-list" v-if="questionList.length">
       <view class="question-list-item" v-for="item in questionList" :key="item.id">
         <view class="question-list-item-desc">
@@ -20,6 +21,7 @@
               <my-tag class="tag" :type="levelColor(item.level)" size="mini">{{ item.level }}</my-tag>
               <my-tag class="tag" type="info" size="mini" v-for="tag in item.tagList" :key="tag.tagId">{{ tag.tag }}</my-tag>
             </view>
+
             <view class="pass">
               <text class="pass-text">通过率：</text>
               <text class="pass-rate">{{ item.passRate + "%" }}</text>
@@ -29,6 +31,9 @@
 
         <u-icon name="arrow-right" size="24" color="#999"></u-icon>
       </view>
+
+      <!-- 加载更多 -->
+      <u-loadmore :status="status" loadingText="一大波题目正在赶来" nomoreText="~我是有底线的~" />
     </view>
 
     <!-- 空白页 -->
@@ -39,7 +44,6 @@
 </template>
 
 <script>
-import { systemInfo } from "@/mixin.js"
 export default {
   props: {
     questionList: {
@@ -47,17 +51,16 @@ export default {
       default: [],
     },
   },
-  mixins: [systemInfo],
   data: () => ({
+    windowHeight: 0,
     triggered: false,
+    status: "loadmore",
   }),
   computed: {},
   methods: {
     // 自动刷新
     refreshInit() {
-      setTimeout(() => {
-        this.triggered = true
-      }, 1000)
+      this.triggered = true
     },
 
     // 自定义下拉控件下拉处理函数
@@ -69,32 +72,49 @@ export default {
     // 自定义刷新触发处理函数
     onRefresh() {
       // console.log("自定义下拉刷新被触发")
-      console.log(this.triggered)
+      // console.log(this.triggered)
       setTimeout(() => {
         this.triggered = false
+        this.status = "loadmore"
+        this.$refs.uToast.show({
+          type: "success",
+          message: "刷新成功",
+          iconUrl: "https://cdn.uviewui.com/uview/demo/toast/success.png",
+        })
       }, 2000)
     },
 
     // 下拉触底
-    lower() {
-      console.log("下拉触底")
+    onLower() {
+      // 防抖
+      if (this.status === "loading" || this.status === "nomore") return
+      this.status = "loading"
+      setTimeout(() => {
+        this.status = "nomore"
+      }, 3000)
     },
 
+    // 根据难度选择tag种类
     levelColor(level) {
-      if (level === "简单") {
-        return "success"
-      } else if (level === "中等") {
-        return "warning"
-      } else {
-        return "error"
+      switch (level) {
+        case "简单":
+          return "success"
+          break
+        case "中等":
+          return "warning"
+          break
+        case "困难":
+          return "error"
+        default:
+          break
       }
     },
   },
 
   // 组件周期函数--监听组件挂载完毕
   mounted() {
-    this.getSystemInfo()
-    // this.refreshInit()
+    this.windowHeight = uni.getSystemInfoSync().windowHeight
+    this.refreshInit()
   },
 }
 </script>
@@ -103,6 +123,8 @@ export default {
 .question-container {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 .question-list {
   width: 100%;
@@ -123,6 +145,9 @@ export default {
 
     &:first-child {
       margin-top: 20rpx;
+    }
+    &:last-of-type {
+      margin-bottom: 20rpx;
     }
 
     &-desc {

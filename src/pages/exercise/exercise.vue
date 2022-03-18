@@ -1,5 +1,5 @@
 <template>
-  <view class="exercise" :style="{ minHeight: `${windowHeight}px` }">
+  <view class="exercise" :style="{ height: `${windowHeight}px` }">
     <view class="exercise-module">
       <view class="exercise-module-lf">
         <view class="title">算法基础</view>
@@ -19,10 +19,13 @@
 
     <!-- tab -->
     <view class="exercise-tab">
+      <view class="search">
+        <u-search placeholder="搜索题目" :showAction="false"></u-search>
+      </view>
       <view class="tag-group">
         <my-tag
           class="tag"
-          size="medium"
+          size="small"
           :type="activeTabIndex === index ? 'primary' : 'info'"
           v-for="(item, index) in tagList"
           :key="index"
@@ -39,12 +42,11 @@
 </template>
 
 <script>
-import { systemInfo } from "@/mixin.js"
 import { questionList } from "@/mock/questionList.js"
 export default {
   components: {},
-  mixins: [systemInfo],
   data: () => ({
+    windowHeight: 0,
     tagList: ["推荐", "最热", "最新"],
     activeTabIndex: 0,
     questionList: questionList,
@@ -59,18 +61,8 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad() {
-    this.getSystemInfo()
+    this.windowHeight = uni.getSystemInfoSync().windowHeight
   },
-
-  onPullDownRefresh() {
-    uni.stopPullDownRefresh()
-  },
-  // 页面处理函数--监听用户上拉触底
-  onReachBottom() {},
-  // 页面处理函数--监听页面滚动(not-nvue)
-  /* onPageScroll(event) {}, */
-  // 页面处理函数--用户点击右上角分享
-  /* onShareAppMessage(options) {}, */
 }
 </script>
 
@@ -160,19 +152,31 @@ $tab: 100rpx;
 
   &-tab {
     height: $tab;
+
     display: flex;
+    justify-content: space-between;
     align-items: center;
+
     box-sizing: border-box;
     background-color: #fff;
+    border-bottom: 2rpx solid #f3f4f6;
     padding: 0 20rpx;
     margin-top: 20rpx;
-    border-radius: 16rpx;
+    // border-radius: 16rpx;
     box-sizing: border-box;
+    .search {
+      width: 45%;
+    }
+
     .tag-group {
-      width: 100%;
-      padding: 20rpx 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
       .tag {
         margin-right: 20rpx;
+        &:last-of-type {
+          margin: 0;
+        }
       }
     }
   }

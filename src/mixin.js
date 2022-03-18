@@ -11,7 +11,7 @@ export const systemInfo = {
     getSystemInfo() {
       this.statusBarHeight = getApp().globalData.statusBarHeight
       this.navigationBarHeight = getApp().globalData.navigationBarHeight
-      this.windowHeight = getApp().globalData.windowHeight
+      this.windowHeight = uni.getSystemInfoSync().windowHeight
       this.navHeight = getApp().globalData.navHeight
     },
   },

@@ -2,7 +2,7 @@ export const articleList = [
   {
     articleId: "01",
     avatar: "https://s2.loli.net/2022/03/17/qR7twcYdV43hmCg.png",
-    userName: "小染",
+    userName: "银渐层",
     title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
     cover: "https://cdn.uviewui.com/uview/album/1.jpg",
     date: "2022-03-14",
@@ -27,7 +27,7 @@ export const articleList = [
   {
     articleId: "02",
     avatar: "https://s2.loli.net/2022/03/17/3YKvgwmo1yWzBHG.png",
-    userName: "ken",
+    userName: "狸花猫",
     title: "学习路径 | 学习路径问题，求助",
     cover: "https://cdn.uviewui.com/uview/album/1.jpg",
     date: "2022-03-15",
@@ -52,7 +52,7 @@ export const articleList = [
   {
     articleId: "04",
     avatar: "https://s2.loli.net/2022/03/17/x7VqdXteLupnlUK.png",
-    userName: "小染",
+    userName: "蓝猫",
     title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
     // cover: "https://cdn.uviewui.com/uview/album/1.jpg",
     date: "2022-03-14",
@@ -77,7 +77,7 @@ export const articleList = [
   {
     articleId: "05",
     avatar: "https://s2.loli.net/2022/03/17/W5yOKFNX7qhzxIY.png",
-    userName: "ken",
+    userName: "加菲猫",
     title: "学习路径 | 学习路径问题，求助",
     // cover: "https://cdn.uviewui.com/uview/album/1.jpg",
     date: "2022-03-15",
@@ -102,7 +102,7 @@ export const articleList = [
   {
     articleId: "03",
     avatar: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
-    userName: "小染",
+    userName: "大橘猫",
     title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
     cover: "https://cdn.uviewui.com/uview/album/1.jpg",
     date: "2022-03-14",

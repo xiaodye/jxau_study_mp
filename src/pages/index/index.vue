@@ -100,6 +100,7 @@ export default {
 
   onLoad() {
     this.getSystemInfo()
+    console.log(uni.getSystemInfoSync().windowHeight)
     // this.getUserInfo()
   },
 }
@@ -148,6 +149,6 @@ $tab: 160rpx;
 
 .home-list {
   padding: 20rpx;
-  margin-bottom: 100rpx;
+  // margin-bottom: 100rpx;
 }
 </style>

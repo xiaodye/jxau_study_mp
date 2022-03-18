@@ -35,6 +35,9 @@
           </view>
         </view>
       </view>
+
+      <!-- 加载更多 -->
+      <u-loadmore :status="status" nomore-text="~我是有底线的~" />
     </view>
 
     <!-- 空白页 -->
@@ -50,7 +53,9 @@ export default {
       required: true,
     },
   },
-  data: () => ({}),
+  data: () => ({
+    status: "nomore",
+  }),
   computed: {},
   methods: {},
 
