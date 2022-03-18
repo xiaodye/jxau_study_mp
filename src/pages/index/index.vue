@@ -16,15 +16,15 @@
         :activeStyle="{
           color: '#303133',
           fontWeight: 'bold',
-          fontSize: 20 + 'px',
+          fontSize: 40 + 'rpx',
           transform: 'scale(1.05)',
         }"
         :inactiveStyle="{
           color: '#606266',
-          fontSize: 17 + 'px',
+          fontSize: 34 + 'rpx',
           transform: 'scale(1)',
         }"
-        itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;"
+        itemStyle="padding-left: 30rpx; padding-right: 30rpx; height: 68rpx;"
       ></u-tabs>
 
       <!-- subTab -->
@@ -51,6 +51,7 @@
 
 <script>
 import { systemInfo } from "@/mixin.js"
+import { articleList } from "@/mock/articleList.js"
 export default {
   components: {},
   mixins: [systemInfo],
@@ -75,134 +76,7 @@ export default {
     ],
     subTabList: ["推荐", "最热", "最新"],
     subActiveIndex: 0,
-
-    articleList: [
-      {
-        articleId: "01",
-        avatar: "https://cdn.uviewui.com/uview/album/1.jpg",
-        userName: "小染",
-        title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
-        cover: "https://cdn.uviewui.com/uview/album/1.jpg",
-        date: "2022-03-14",
-        content:
-          "前几天拿到字节offer了，很开心，也有很多小伙伴私信我问了很多问题，所以在这里简单分享一下我是如何学习八股文的，文章篇幅略长，希望能帮助到有需要的同学或者也是双非大三正在迷茫的你。",
-        tags: ["前端", "面试"],
-        iconList: [
-          {
-            name: "eye",
-            num: 203,
-          },
-          {
-            name: "thumb-up",
-            num: 47,
-          },
-          {
-            name: "chat",
-            num: 9,
-          },
-        ],
-      },
-      {
-        articleId: "02",
-        avatar: "https://cdn.uviewui.com/uview/album/2.jpg",
-        userName: "ken",
-        title: "学习路径 | 学习路径问题，求助",
-        cover: "https://cdn.uviewui.com/uview/album/1.jpg",
-        date: "2022-03-15",
-        content:
-          "目前大一，这个假期学java到了多线程，看视频加核心技术卷1，书看了一半多，数据结构学到快速排序，目前在看那本黑皮书，因为学校把数据结构放到大二，感觉太晚了",
-        tags: ["Java", "学习"],
-        iconList: [
-          {
-            name: "eye",
-            num: 166,
-          },
-          {
-            name: "thumb-up",
-            num: 19,
-          },
-          {
-            name: "chat",
-            num: 54,
-          },
-        ],
-      },
-      {
-        articleId: "04",
-        avatar: "https://cdn.uviewui.com/uview/album/1.jpg",
-        userName: "小染",
-        title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
-        // cover: "https://cdn.uviewui.com/uview/album/1.jpg",
-        date: "2022-03-14",
-        content:
-          "前几天拿到字节offer了，很开心，也有很多小伙伴私信我问了很多问题，所以在这里简单分享一下我是如何学习八股文的，文章篇幅略长，希望能帮助到有需要的同学或者也是双非大三正在迷茫的你。",
-        tags: ["前端", "面试"],
-        iconList: [
-          {
-            name: "eye",
-            num: 203,
-          },
-          {
-            name: "thumb-up",
-            num: 47,
-          },
-          {
-            name: "chat",
-            num: 9,
-          },
-        ],
-      },
-      {
-        articleId: "05",
-        avatar: "https://cdn.uviewui.com/uview/album/2.jpg",
-        userName: "ken",
-        title: "学习路径 | 学习路径问题，求助",
-        // cover: "https://cdn.uviewui.com/uview/album/1.jpg",
-        date: "2022-03-15",
-        content:
-          "目前大一，这个假期学java到了多线程，看视频加核心技术卷1，书看了一半多，数据结构学到快速排序，目前在看那本黑皮书，因为学校把数据结构放到大二，感觉太晚了",
-        tags: ["Java", "学习"],
-        iconList: [
-          {
-            name: "eye",
-            num: 166,
-          },
-          {
-            name: "thumb-up",
-            num: 19,
-          },
-          {
-            name: "chat",
-            num: 54,
-          },
-        ],
-      },
-      {
-        articleId: "03",
-        avatar: "https://cdn.uviewui.com/uview/album/1.jpg",
-        userName: "小染",
-        title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
-        cover: "https://cdn.uviewui.com/uview/album/1.jpg",
-        date: "2022-03-14",
-        content:
-          "前几天拿到字节offer了，很开心，也有很多小伙伴私信我问了很多问题，所以在这里简单分享一下我是如何学习八股文的，文章篇幅略长，希望能帮助到有需要的同学或者也是双非大三正在迷茫的你。",
-        tags: ["前端", "面试"],
-        iconList: [
-          {
-            name: "eye",
-            num: 203,
-          },
-          {
-            name: "thumb-up",
-            num: 47,
-          },
-          {
-            name: "chat",
-            num: 9,
-          },
-        ],
-      },
-    ],
+    articleList: articleList,
   }),
 
   methods: {
@@ -226,7 +100,7 @@ export default {
 
   onLoad() {
     this.getSystemInfo()
-    this.getUserInfo()
+    // this.getUserInfo()
   },
 }
 </script>

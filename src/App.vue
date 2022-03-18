@@ -28,7 +28,7 @@ export default {
     // console.log("导航栏高度："+this.globalData.navigationBarHeight)
     // #endif
 
-    // console.log(this.globalData)
+    console.log(this.globalData)
   },
   onShow: function () {
     console.log("App Show")
@@ -42,4 +42,6 @@ export default {
 <style lang="scss">
 /*每个页面公共css */
 @import "uview-ui/index.scss";
+
+@import url("@/static/fonts/iconfont-weapp-icon.css");
 </style>
