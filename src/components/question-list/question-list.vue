@@ -1,7 +1,7 @@
 <template>
   <scroll-view
     class="question-container"
-    :style="{ height: `${windowHeight - 260}px` }"
+    :style="{ height: `${windowHeight - rpxToPx(520)}px` }"
     scroll-y
     enable-flex
     :refresher-enabled="true"
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { systemInfo } from "@/mixin.js"
 export default {
   props: {
     questionList: {
@@ -51,6 +52,7 @@ export default {
       default: [],
     },
   },
+  mixins: [systemInfo],
   data: () => ({
     windowHeight: 0,
     triggered: false,
@@ -113,7 +115,7 @@ export default {
 
   // 组件周期函数--监听组件挂载完毕
   mounted() {
-    this.windowHeight = uni.getSystemInfoSync().windowHeight
+    this.getSystemInfo()
     this.refreshInit()
   },
 }

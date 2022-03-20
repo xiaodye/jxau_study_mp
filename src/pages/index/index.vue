@@ -43,7 +43,8 @@
     </view>
 
     <!-- 首页列表 -->
-    <view class="home-list" :style="{ marginTop: 80 + navHeight + 'px' }">
+    <!-- rpx转px单位 -->
+    <view class="home-list" :style="{ marginTop: `${rpxToPx(160) + navHeight}px` }">
       <article-list :articleList="articleList"></article-list>
     </view>
   </view>
