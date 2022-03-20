@@ -18,7 +18,7 @@
           <view class="title u-line-1">{{ item.title }}</view>
           <view class="info">
             <view class="level">
-              <my-tag class="tag" :type="levelColor(item.level)" size="mini">{{ item.level }}</my-tag>
+              <my-tag class="tag" :type="levelColor(item.level)" :circle="false" size="mini">{{ item.level }}</my-tag>
               <my-tag class="tag" type="info" size="mini" v-for="tag in item.tagList" :key="tag.tagId">{{ tag.tag }}</my-tag>
             </view>
 

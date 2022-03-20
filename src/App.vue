@@ -16,13 +16,13 @@ export default {
     const custom = wx.getMenuButtonBoundingClientRect()
     // console.log(custom)
 
-    // 总体高度 = 状态栏高度 + 胶囊高度 + （胶囊距离顶部的距离 - 状态栏高度）* 2
-    const navHeight = this.globalData.statusBarHeight + custom.height + (custom.top - this.globalData.statusBarHeight) * 2
-    this.globalData.navHeight = navHeight
-
-    // 导航栏高度(标题栏高度) = 总体高度 - 状态栏高度
-    this.globalData.navigationBarHeight = navHeight - this.globalData.statusBarHeight
+    // 导航栏高度(标题栏高度) = 胶囊高度 + (顶部距离 - 状态栏高度) * 2
+    this.globalData.navigationBarHeight = custom.height + (custom.top - this.globalData.statusBarHeight) * 2
     // console.log("导航栏高度："+this.globalData.navigationBarHeight)
+
+    // 总体高度 = 状态栏高度 + 导航栏高度
+    this.globalData.navHeight = this.globalData.navigationBarHeight + this.globalData.statusBarHeight
+
     // #endif
 
     console.log(this.globalData)
