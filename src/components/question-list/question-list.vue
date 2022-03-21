@@ -12,6 +12,8 @@
     @refresherrefresh="onRefresh"
   >
     <u-toast ref="uToast"></u-toast>
+
+    <!-- 题目列表 -->
     <view class="question-list" v-if="questionList.length">
       <view class="question-list-item" v-for="item in questionList" :key="item.id">
         <view class="question-list-item-desc">
@@ -125,8 +127,6 @@ export default {
 .question-container {
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  overflow-y: auto;
 }
 .question-list {
   width: 100%;

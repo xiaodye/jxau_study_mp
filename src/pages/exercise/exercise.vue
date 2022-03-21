@@ -5,6 +5,7 @@
         <view class="title">算法基础</view>
         <view class="t-icon t-icon-algo"></view>
       </view>
+
       <view class="exercise-module-rg">
         <view class="rg-top">
           <view class="title">竞赛精选</view>
