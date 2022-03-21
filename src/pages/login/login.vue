@@ -1,37 +1,26 @@
 <template>
-  <div class="login">login</div>
+  <view class="login" :style="{ paddingTop: navHeight + 'px', height: windowHeight + 'px' }">login</view>
 </template>
 
 <script>
-
+import { systemInfo } from "@/mixin.js"
 export default {
   components: {},
   data: () => ({}),
+  mixins: [systemInfo],
   computed: {},
   methods: {},
-  watch: {},
 
   // 页面周期函数--监听页面加载
-  onLoad() {},
-  // 页面周期函数--监听页面初次渲染完成
-  onReady() {},
-  // 页面周期函数--监听页面显示(not-nvue)
-  onShow() {},
-  // 页面周期函数--监听页面隐藏
-  onHide() {},
-  // 页面周期函数--监听页面卸载
-  onUnload() {},
-  // 页面处理函数--监听用户下拉动作
-  onPullDownRefresh() {
-    uni.stopPullDownRefresh();
+  onLoad() {
+    this.getSystemInfo()
   },
-  // 页面处理函数--监听用户上拉触底
-  onReachBottom() {},
-  // 页面处理函数--监听页面滚动(not-nvue)
-  /* onPageScroll(event) {}, */
-  // 页面处理函数--用户点击右上角分享
-  /* onShareAppMessage(options) {}, */
-};
+}
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.login {
+  box-sizing: border-box;
+  background-image: linear-gradient(to top, #96fbc4 0%, #f9f586 100%);
+}
+</style>
