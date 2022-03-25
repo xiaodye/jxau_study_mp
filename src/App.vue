@@ -4,9 +4,6 @@ export default {
     statusBarHeight: 0, // 状态导航栏高度
     navHeight: 0, // 总体高度
     navigationBarHeight: 0, // 导航栏高度(标题栏高度)
-
-    screenWidth: 0,
-    screenHeight: 0,
   },
   onLaunch: function () {
     console.log("App Launch")
@@ -27,9 +24,6 @@ export default {
     this.globalData.navHeight = this.globalData.navigationBarHeight + this.globalData.statusBarHeight
 
     // #endif
-
-    this.globalData.screenWidth = uni.getSystemInfoSync().screenWidth
-    this.globalData.screenHeight = uni.getSystemInfoSync().screenHeight
 
     console.log(this.globalData)
   },

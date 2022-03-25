@@ -1,10 +1,11 @@
 import Vue from "vue"
 import App from "./App"
-
 import uView from "uview-ui"
-Vue.use(uView)
-
+import { globalMixin } from "@/mixin.js"
 import "@/utils/interceptor.js"
+
+Vue.use(uView)
+Vue.mixin(globalMixin)
 
 Vue.config.productionTip = false
 

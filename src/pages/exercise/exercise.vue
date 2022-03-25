@@ -47,7 +47,6 @@ import { questionList } from "@/mock/questionList.js"
 export default {
   components: {},
   data: () => ({
-    windowHeight: 0,
     tagList: ["推荐", "最热", "最新"],
     activeTabIndex: 0,
     questionList: questionList,
@@ -61,9 +60,7 @@ export default {
   },
 
   // 页面周期函数--监听页面加载
-  onLoad() {
-    this.windowHeight = uni.getSystemInfoSync().windowHeight
-  },
+  onLoad() {},
 }
 </script>
 

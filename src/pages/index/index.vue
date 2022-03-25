@@ -47,6 +47,11 @@
     <view class="home-list" :style="{ marginTop: `${rpxToPx(160) + navHeight}px` }">
       <article-list :articleList="articleList"></article-list>
     </view>
+
+    <!-- 开发 -->
+    <navigator open-type="navigate" url="/pages/login/login">
+      <u-button type="error" text="登录页开发"></u-button>
+    </navigator>
   </view>
 </template>
 
@@ -66,13 +71,13 @@ export default {
         },
       },
       {
-        name: "讨论",
-      },
-      {
         name: "视频",
       },
       {
-        name: "资料",
+        name: "课程",
+      },
+      {
+        name: "电子书",
       },
     ],
     subTabList: ["推荐", "最热", "最新"],
@@ -99,11 +104,7 @@ export default {
     },
   },
 
-  onLoad() {
-    this.getSystemInfo()
-    console.log(uni.getSystemInfoSync().windowHeight)
-    // this.getUserInfo()
-  },
+  onLoad() {},
 }
 </script>
 

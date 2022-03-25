@@ -3,10 +3,6 @@ export const systemInfo = {
     statusBarHeight: 0,
     navigationBarHeight: 0,
     navHeight: 0,
-    screenWidth: 0,
-    screenHeight: 0,
-
-    windowHeight: 0, // 可使用窗口高度
   }),
 
   methods: {
@@ -15,14 +11,30 @@ export const systemInfo = {
       this.statusBarHeight = getApp().globalData.statusBarHeight
       this.navigationBarHeight = getApp().globalData.navigationBarHeight
       this.navHeight = getApp().globalData.navHeight
-      this.screenWidth = getApp().globalData.screenWidth
-      this.screenHeight = getApp().globalData.screenHeight
-
-      this.windowHeight = uni.getSystemInfoSync().windowHeight
     },
+  },
 
+  onLoad() {
+    this.getSystemInfo()
+  },
+
+  mounted() {
+    this.getSystemInfo()
+  },
+}
+
+export const globalMixin = {
+  // rpx转px
+  methods: {
     rpxToPx(rpx) {
-      return (rpx * Number.parseInt(this.screenWidth)) / 750
+      const screenWidth = uni.getSystemInfoSync().screenWidth
+      return (rpx * Number.parseInt(screenWidth)) / 750
+    },
+  },
+  computed: {
+    // 获取可使用窗口高度
+    windowHeight() {
+      return uni.getSystemInfoSync().windowHeight
     },
   },
 }
