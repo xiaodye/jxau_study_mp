@@ -15,7 +15,7 @@
     <!-- 第三方登录 -->
     <view class="login-other">
       <u-divider text="第三方登录" lineColor="#909399"></u-divider>
-      <view class="login-other-weixin">
+      <view class="login-other-weixin" @click="weixinLogin">
         <button type="primary">
           <u-icon name="weixin-circle-fill" color="#18b566" :size="rpxToPx(80)"></u-icon>
           <text>一键登录</text>
@@ -28,13 +28,42 @@
 <script>
 import formBox from "./form-box/form-box.vue"
 import { systemInfo } from "@/mixin.js"
+import { mapMutations, mapState } from "vuex"
 export default {
   components: { formBox },
   data: () => ({}),
   mixins: [systemInfo],
-  computed: {},
+  computed: {
+    ...mapState("userModule", ["userInfo"]),
+  },
 
-  methods: {},
+  methods: {
+    ...mapMutations("userModule", ["getUserInfo"]),
+    async weixinLogin() {
+      try {
+        // 获取微信用户信息
+        const { userInfo } = await uni.getUserProfile({ desc: "获取微信用户信息", lang: "zh_CN" })
+
+        uni.$u.toast("授权成功")
+        console.log(userInfo)
+        this.getUserInfo(userInfo)
+        console.log(this.userInfo)
+
+        // 获取code
+        const { code } = await uni.login({ provider: "weixin" })
+        console.log("code：" + code)
+
+        // 发起登录请求，获取openid和session_key
+        // const { data: res } = await uni.request({ url: "/login/weixin", method: "POST", data: { code: code } })
+        // console.log(res.data)
+        // uni.setStorageSync("openid", res.data.openid)
+        // uni.setStorageSync("session_key", res.data.session_key)
+      } catch (err) {
+        // console.log(err)
+        uni.$u.toast("微信登录异常")
+      }
+    },
+  },
 
   onLoad() {},
 }

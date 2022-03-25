@@ -43,6 +43,21 @@
       }
     }
   ],
+
+  "subPackages": [
+    {
+      "root": "subPackages/index",
+      "pages": [
+        {
+          "path": "write/write",
+          "style": {
+            "navigationBarTitleText": "write"
+          }
+        }
+      ]
+    }
+  ],
+
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",
