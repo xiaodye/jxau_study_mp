@@ -9,7 +9,7 @@
             <view class="text u-line-1">{{ item.title }}</view>
             <view class="user-info">
               <view class="name">{{ item.userName }}</view>
-              <view class="date">{{ item.date }}</view>
+              <view class="date">{{ item.create_time }}</view>
             </view>
           </view>
         </view>
