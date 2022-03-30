@@ -19,6 +19,11 @@
 
       <!-- 上传图片 -->
       <u-form-item prop="imgList" ref="item3">
+        <view class="upload-tip">
+          <text style="color: #333; font-weight: blod; font-size: 32rpx">提示：</text>
+          默认第一张图片作为文章封面
+        </view>
+
         <u-upload
           :fileList="formModel.imgList"
           @afterRead="afterRead"
@@ -32,22 +37,25 @@
 
       <!-- 添加标签 -->
       <u-form-item :labelWidth="rpxToPx(160)" prop="tagList" ref="item4">
-        <u-input type="text" :maxlength="4" v-model="tagValue" border="bottom" placeholder="最多四个字，至多三个">
-          <u-text slot="prefix" text="标签："></u-text>
-          <button slot="suffix" type="primary" size="mini" @click="addTag" :disabled="addBtnDisabled">添加</button>
-        </u-input>
+        <view class="write-tag">
+          <!-- 添加标签btn -->
+          <button type="warn" size="mini" @click="openPopup" :disabled="addBtnDisabled">
+            <!-- <u-icon name="plus-circle" :size="rpxToPx(30)" color="#fff"></u-icon> -->
+            <text>添加标签</text>
+          </button>
 
-        <!-- 标签组 -->
-        <view class="tag-group" ref="item5">
-          <u-tag
-            :text="item.text"
-            :show="item.close"
-            type="success"
-            closable
-            @close="delTag(index)"
-            v-for="(item, index) in formModel.tagList"
-            :key="index"
-          ></u-tag>
+          <!-- 标签组 -->
+          <view class="write-tag-group" ref="item5">
+            <u-tag
+              :text="item.text"
+              :show="item.close"
+              type="success"
+              closable
+              @close="delTag(index)"
+              v-for="(item, index) in formModel.tagList"
+              :key="index"
+            ></u-tag>
+          </view>
         </view>
       </u-form-item>
 
@@ -67,14 +75,20 @@
       </u-form-item>
     </u-form>
 
+    <!-- popup组件 -->
+    <tag-bar @addTag="addTag" ref="tagBar"></tag-bar>
+
     <!-- toast组件 -->
-    <u-toast ref="uToast"></u-toast>
+    <u-toast ref="uToast" mode="right">
+      <view class="">哈哈哈哈哈哈</view>
+    </u-toast>
   </view>
 </template>
 
 <script>
+import tagBar from "./components/tagBar.vue"
 export default {
-  components: {},
+  components: { tagBar },
   data: () => ({
     formModel: {
       title: "",
@@ -199,16 +213,25 @@ export default {
       this.formModel.tagList.splice(index, 1)
     },
 
+    // 打开popup
+    openPopup() {
+      this.$refs.tagBar.popupShow = true
+    },
+
     // 添加标签
-    addTag() {
-      if (this.tagValue.trim().length) {
-        this.formModel.tagList.unshift({ close: true, text: this.tagValue })
-        this.tagValue = ""
-      }
+    addTag(tagList) {
+      // 添加标签
+      tagList.forEach((tag) => {
+        if (this.formModel.tagList.length < 3) {
+          this.formModel.tagList.push(tag)
+        }
+      })
     },
   },
 
-  onLoad() {},
+  onLoad() {
+    console.log(this.$refs.tagBar.popupShow)
+  },
   onReady() {
     // 在onReady生命周期调用组件的setRules方法绑定验证规则
     // 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
@@ -222,18 +245,36 @@ export default {
   // background-color: $uni-bg-color-grey;
   box-sizing: border-box;
   padding: 20rpx;
-}
 
-.tag-group {
-  margin-top: 30rpx;
-  display: flex;
-  align-items: center;
-  &-item {
-    margin-right: 20rpx;
+  &-tag {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100rpx;
+    button {
+      margin: 0;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      background-color: #ff9900;
+    }
+
+    &-group {
+      display: flex;
+      align-items: center;
+      &-item {
+        margin-right: 20rpx;
+      }
+    }
   }
-}
 
-.submit {
-  margin-top: 100rpx;
+  .upload-tip {
+    color: $uni-text-color-placeholder;
+    margin-bottom: 30rpx;
+  }
+
+  .submit {
+    margin-top: 100rpx;
+  }
 }
 </style>
