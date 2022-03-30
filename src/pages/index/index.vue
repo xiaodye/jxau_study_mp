@@ -52,6 +52,10 @@
     <navigator open-type="navigate" url="/pages/login/login">
       <u-button type="error" text="登录页开发"></u-button>
     </navigator>
+
+    <view class="go-write" @click="gotoWrite">
+      <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon>
+    </view>
   </view>
 </template>
 
@@ -101,6 +105,11 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+
+    // 跳转写文章page
+    gotoWrite() {
+      uni.navigateTo({ url: "/subPackages/index/write/write" })
     },
   },
 
@@ -152,5 +161,18 @@ $tab: 160rpx;
 .home-list {
   padding: 20rpx;
   // margin-bottom: 100rpx;
+}
+
+.go-write {
+  position: fixed;
+  width: 100rpx;
+  height: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #dbf1e1;
+  border-radius: 50%;
+  right: 10%;
+  bottom: 10%;
 }
 </style>

@@ -244,7 +244,7 @@ export default {
       color: #18b566;
       // color: #333;
       &.disabled {
-        color: #999;
+        color: $uni-text-color-disable;
       }
     }
   }

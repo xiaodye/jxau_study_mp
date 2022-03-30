@@ -25,7 +25,7 @@ export default {
 
     // #endif
 
-    console.log(this.globalData)
+    // console.log(this.globalData)
   },
   onShow: function () {
     console.log("App Show")

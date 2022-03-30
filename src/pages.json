@@ -51,7 +51,7 @@
         {
           "path": "write/write",
           "style": {
-            "navigationBarTitleText": "write"
+            "navigationBarTitleText": "写文章"
           }
         }
       ]

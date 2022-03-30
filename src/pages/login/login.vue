@@ -39,15 +39,16 @@ export default {
 
   methods: {
     ...mapMutations("userModule", ["getUserInfo"]),
+
+    // 微信登录
     async weixinLogin() {
       try {
         // 获取微信用户信息
         const { userInfo } = await uni.getUserProfile({ desc: "获取微信用户信息", lang: "zh_CN" })
-
         uni.$u.toast("授权成功")
         console.log(userInfo)
         this.getUserInfo(userInfo)
-        console.log(this.userInfo)
+        // console.log(this.userInfo)
 
         // 获取code
         const { code } = await uni.login({ provider: "weixin" })
@@ -59,7 +60,7 @@ export default {
         // uni.setStorageSync("openid", res.data.openid)
         // uni.setStorageSync("session_key", res.data.session_key)
       } catch (err) {
-        // console.log(err)
+        console.log(err)
         uni.$u.toast("微信登录异常")
       }
     },
