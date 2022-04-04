@@ -43,7 +43,6 @@
       }
     }
   ],
-
   "subPackages": [
     {
       "root": "subPackages/index",
@@ -53,11 +52,46 @@
           "style": {
             "navigationBarTitleText": "写文章"
           }
+        },
+        {
+          "path": "historySearch/historySearch",
+          "style": {
+            "navigationBarTitleText": "搜索",
+            "navigationBarBackgroundColor": "#fff"
+          }
+        },
+        {
+          "path": "articleDetail/articleDetail",
+          "style": {
+            "navigationBarTitleText": "文章详情"
+          }
+        },
+        {
+          "path": "reply/reply",
+          "style": {
+            "navigationBarTitleText": "回复"
+          }
+        }
+      ]
+    },
+    {
+      "root": "subPackages/seedPages",
+      "pages": [
+        {
+          "path": "uploadPic/uploadPic",
+          "style": {
+            "navigationBarTitleText": "上传图片"
+          }
+        },
+        {
+          "path": "display/display",
+          "style": {
+            "navigationBarTitleText": "展示"
+          }
         }
       ]
     }
   ],
-
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",

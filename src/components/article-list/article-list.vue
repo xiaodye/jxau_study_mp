@@ -1,5 +1,5 @@
 <template>
-  <view class="article-container">
+  <view class="article-container" @click.stop="gotoDetail">
     <view class="article-list" v-if="articleList.length">
       <view class="article-list-item" v-for="item in articleList" :key="item.articleId">
         <!-- 头部 -->
@@ -57,7 +57,11 @@ export default {
     status: "nomore",
   }),
   computed: {},
-  methods: {},
+  methods: {
+    gotoDetail() {
+      uni.navigateTo({ url: "/subPackages/index/articleDetail/articleDetail" })
+    },
+  },
 
   mounted() {},
 }
