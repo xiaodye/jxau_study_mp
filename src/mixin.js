@@ -9,8 +9,11 @@ export const systemInfo = {
     // 获取设备信息
     getSystemInfo() {
       this.statusBarHeight = getApp().globalData.statusBarHeight
+
+      // #ifdef MP-WEIXIN
       this.navigationBarHeight = getApp().globalData.navigationBarHeight
       this.navHeight = getApp().globalData.navHeight
+      // #endif
     },
   },
 

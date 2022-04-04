@@ -1,8 +1,8 @@
 <template>
   <view class="home" :style="{ minHeight: windowHeight + 'px' }">
     <!-- 导航栏 -->
-    <view class="nav" :style="{ height: navHeight + 'px', paddingTop: statusBarHeight + 'px' }">
-      <u-search placeholder="前端" :showAction="false" :disabled="true"></u-search>
+    <view class="nav" :style="{ height: navHeight + 'px', paddingTop: statusBarHeight + 'px' }" @>
+      <u-search placeholder="前端" :showAction="false" :disabled="true" @click="gotoSearch"></u-search>
     </view>
 
     <!-- tab栏 -->
@@ -52,6 +52,11 @@
     <navigator open-type="navigate" url="/pages/login/login">
       <u-button type="error" text="登录页开发"></u-button>
     </navigator>
+
+    <!-- seed -->
+    <!-- <navigator style="margin-top: 20rpx" open-type="navigate" url="/subPackages/seedPages/uploadPic/uploadPic">
+      <u-button type="error" text="seed"></u-button>
+    </navigator> -->
 
     <view class="go-write" @click="gotoWrite">
       <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon>
@@ -110,6 +115,11 @@ export default {
     // 跳转写文章page
     gotoWrite() {
       uni.navigateTo({ url: "/subPackages/index/write/write" })
+    },
+
+    // 跳转搜索
+    gotoSearch() {
+      uni.navigateTo({ url: "/subPackages/index/historySearch/historySearch" })
     },
   },
 
