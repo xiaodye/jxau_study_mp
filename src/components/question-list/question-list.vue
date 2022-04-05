@@ -50,7 +50,7 @@ export default {
   props: {
     questionList: {
       type: Array,
-      default: [],
+      required: true,
     },
   },
   data: () => ({

@@ -58,6 +58,7 @@
     </view>
 
     <!-- 评论 -->
+    <view class="article-comment-header">全部评论</view>
     <article-comment :commentList="articleData.commentList"></article-comment>
 
     <!-- 底部栏 -->
@@ -86,7 +87,7 @@
 </template>
 
 <script>
-import ArticleComment from "./components/article-comment.vue"
+import ArticleComment from "../components/article-comment.vue"
 import { commentList } from "@/mock/commentList.js"
 export default {
   components: { ArticleComment },
@@ -141,6 +142,11 @@ export default {
       console.log(value)
       // const { data: res } = await uni.request({ url: "/publish", method: "POST", data: { text: value } })
       // console.log(res)
+      setTimeout(() => {
+        this.$refs.publishPanel.text = ""
+        this.$refs.publishPanel.btn = { text: "发布", loading: false, disabled: false }
+        this.$refs.publishPanel.popupShow = false
+      }, 1000)
     },
   },
   watch: {},
@@ -233,6 +239,16 @@ $article_bar: 100rpx;
         margin-right: 20rpx;
       }
     }
+  }
+
+  &-comment-header {
+    margin-top: 30rpx;
+    background-color: #fff;
+    height: 100rpx;
+    line-height: 100rpx;
+    font-weight: bold;
+    padding: 0 40rpx;
+    font-size: 40rpx;
   }
 
   &-bar {

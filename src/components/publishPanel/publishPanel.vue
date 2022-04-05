@@ -6,12 +6,22 @@
       </view>
 
       <view class="handler">
-        <view class="handler-lf">
+        <!-- <view class="handler-lf">
           <text>回复：</text>
           <text>{{ "@" + "稀土君" }}</text>
-        </view>
+        </view> -->
         <view class="handler-btn" @click.stop="publish">
-          <u-button type="primary" icon="play-right" hairline size="small" shape="circle">发布</u-button>
+          <u-button
+            type="primary"
+            icon="play-right"
+            hairline
+            size="small"
+            :loading="btn.loading"
+            :disabled="btn.disabled"
+            shape="circle"
+          >
+            {{ btn.text }}
+          </u-button>
         </view>
       </view>
     </view>
@@ -24,6 +34,7 @@ export default {
   data: () => ({
     popupShow: false,
     text: "",
+    btn: { text: "发布", loading: false, disabled: false },
   }),
   computed: {},
   methods: {
@@ -35,9 +46,11 @@ export default {
     // 发布，传递
     publish() {
       if (!this.text.trim().length) return uni.$u.toast("内容不能为空")
+      this.btn = { text: "", loading: true, disabled: true }
       this.$emit("receiveText", this.text.trim())
-      this.text = ""
-      this.popupShow = false
+
+      // this.text = ""
+      // this.popupShow = false
     },
   },
   watch: {},
@@ -60,7 +73,8 @@ export default {
   .handler {
     flex: 1;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding: 20rpx;
 

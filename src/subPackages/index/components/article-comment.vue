@@ -1,7 +1,5 @@
 <template>
   <div class="comment">
-    <view class="header">全部评论</view>
-
     <!-- 评论列表 -->
     <view class="comment-list" v-if="commentList.length">
       <view class="comment-list-item" v-for="item in commentList" :key="item.uuid">
@@ -24,7 +22,7 @@
           <!-- 评论底部栏：日期、评论、点赞 -->
           <view class="cli-rg-footer">
             <view class="cli-rg-footer-date">{{ item.create_time }}</view>
-            <view class="cli-rg-footer-rg">
+            <view class="cli-rg-footer-rg" v-if="showIcons">
               <view class="cli-rfr-call" @click="gotoReply">
                 <u-icon name="chat-fill" :size="rpxToPx(45)" color="#19be6b"></u-icon>
                 <text>{{ item.callNum }}</text>
@@ -53,6 +51,10 @@ export default {
       type: Array,
       required: true,
     },
+    showIcons: {
+      type: Boolean,
+      default: true,
+    },
   },
   data: () => ({}),
   computed: {},
@@ -64,7 +66,6 @@ export default {
   },
   watch: {},
 
-  // 组件周期函数--监听组件挂载完毕
   mounted() {},
 }
 </script>
@@ -77,16 +78,7 @@ export default {
 }
 .comment {
   // background-color: #fff;
-  margin: 30rpx 0 50rpx;
-
-  .header {
-    background-color: #fff;
-    height: 100rpx;
-    line-height: 100rpx;
-    font-weight: bold;
-    padding: 0 40rpx;
-    font-size: 40rpx;
-  }
+  margin: 0 0 50rpx;
 
   &-list {
     &-item {
