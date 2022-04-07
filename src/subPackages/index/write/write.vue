@@ -1,5 +1,5 @@
 <template>
-  <view class="write" :style="{ minHeight: windowHeight + 'px' }">
+  <view class="write">
     <u-form labelPosition="left" :model="formModel" :rules="rules" ref="form">
       <!-- 文章标题 -->
       <u-form-item label="标题：" :labelWidth="rpxToPx(100)" prop="title" borderBottom ref="item1">
@@ -242,6 +242,7 @@ export default {
 
 <style lang="scss" scoped>
 .write {
+  min-height: 100vh;
   // background-color: $uni-bg-color-grey;
   box-sizing: border-box;
   padding: 20rpx;

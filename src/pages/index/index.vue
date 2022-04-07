@@ -1,5 +1,5 @@
 <template>
-  <view class="home" :style="{ minHeight: windowHeight + 'px' }">
+  <view class="home">
     <!-- 导航栏 -->
     <view class="nav" :style="{ height: navHeight + 'px', paddingTop: statusBarHeight + 'px' }" @>
       <u-search placeholder="前端" :showAction="false" :disabled="true" @click="gotoSearch"></u-search>
@@ -75,9 +75,6 @@ export default {
     tabList: [
       {
         name: "文章",
-        badge: {
-          isDot: true,
-        },
       },
       {
         name: "视频",
@@ -131,6 +128,7 @@ export default {
 $tab: 160rpx;
 
 .home {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: $uni-bg-color-grey;

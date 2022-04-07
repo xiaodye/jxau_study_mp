@@ -9,6 +9,9 @@ import "@/utils/interceptor.js"
 Vue.use(uView)
 Vue.mixin(globalMixin)
 
+// 配置uView默认单位为rpx
+// uni.$u.config.unit = "rpx"
+
 Vue.config.productionTip = false
 
 App.mpType = "app"

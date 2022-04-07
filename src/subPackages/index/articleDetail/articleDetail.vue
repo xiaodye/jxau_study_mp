@@ -1,5 +1,5 @@
 <template>
-  <view class="article" :style="{ minHeight: windowHeight + 'px' }">
+  <view class="article">
     <!-- 文章标题 -->
     <view class="article-caption">
       <text>{{ articleData.title }}</text>
@@ -170,6 +170,7 @@ $article_bar: 100rpx;
 
 .article {
   // @include vertical_center(center);
+  min-height: 100vh;
   background-color: $uni-bg-color-grey;
   padding-bottom: $article_bar;
   &-caption {

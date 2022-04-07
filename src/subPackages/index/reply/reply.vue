@@ -1,5 +1,5 @@
 <template>
-  <view class="reply" :style="{ minHeight: windowHeight + 'px' }">
+  <view class="reply">
     <!-- 父级评论 -->
     <article-comment :commentList="comment" :showIcons="false"></article-comment>
 
@@ -44,7 +44,6 @@ export default {
   methods: {
     // 打开面板
     openPanel() {
-      console.log(1)
       this.$refs.replyPanel.popupShow = true
     },
 
@@ -61,14 +60,26 @@ export default {
   },
   watch: {},
 
-  onLoad() {},
+  onLoad() {
+    const screenWidth = uni.getSystemInfoSync().screenWidth
+    // console.log(typeof screenWidth)
+    // console.log(screenWidth)
+    // console.log(uni.getSystemInfoSync().windowHeight)
+  },
 }
 </script>
 
+<style lang="scss">
+// 设置页面背景
+page {
+  background-color: $uni-bg-color-grey;
+}
+</style>
+
 <style lang="scss" scoped>
 .reply {
+  min-height: 100vh;
   background-color: $uni-bg-color-grey;
-
   &-title {
     display: flex;
     justify-content: space-between;

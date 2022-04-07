@@ -31,7 +31,7 @@ export const globalMixin = {
   methods: {
     rpxToPx(rpx) {
       const screenWidth = uni.getSystemInfoSync().screenWidth
-      return (rpx * Number.parseInt(screenWidth)) / 750
+      return (Number.parseInt(rpx) * screenWidth) / 750
     },
   },
   computed: {

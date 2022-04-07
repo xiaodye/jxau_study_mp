@@ -93,6 +93,7 @@ export default {
 
 <style lang="scss" scoped>
 .search {
+  min-height: 100vh;
   box-sizing: border-box;
   // background-color: $uni-bg-color-grey;
 

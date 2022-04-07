@@ -1,5 +1,5 @@
 <template>
-  <view class="login" :style="{ paddingTop: navHeight + 'px', minHeight: windowHeight + 'px' }">
+  <view class="login" :style="{ paddingTop: navHeight + 'px' }">
     <!-- 登录提示 -->
     <view class="login-tip">Hi~，欢迎回来！</view>
 
@@ -72,6 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 .login {
+  min-height: 100vh;
   box-sizing: border-box;
   background-image: linear-gradient(to top, #96fbc4 0%, #f9f586 100%);
   padding: 0 60rpx 60rpx;
