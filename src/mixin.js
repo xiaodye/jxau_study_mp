@@ -17,6 +17,13 @@ export const systemInfo = {
     },
   },
 
+  computed: {
+    // 获取可使用窗口高度
+    windowHeight() {
+      return uni.getSystemInfoSync().windowHeight
+    },
+  },
+
   onLoad() {
     this.getSystemInfo()
   },
@@ -32,12 +39,6 @@ export const globalMixin = {
     rpxToPx(rpx) {
       const screenWidth = uni.getSystemInfoSync().screenWidth
       return (Number.parseInt(rpx) * screenWidth) / 750
-    },
-  },
-  computed: {
-    // 获取可使用窗口高度
-    windowHeight() {
-      return uni.getSystemInfoSync().windowHeight
     },
   },
 }

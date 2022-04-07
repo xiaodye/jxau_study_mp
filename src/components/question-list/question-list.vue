@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { systemInfo } from "@/mixin.js"
 export default {
   props: {
     questionList: {
@@ -57,6 +58,7 @@ export default {
     triggered: false,
     status: "loadmore",
   }),
+  mixins: [systemInfo],
   computed: {},
   methods: {
     // 自动刷新

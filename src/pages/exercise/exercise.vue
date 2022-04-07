@@ -1,5 +1,5 @@
 <template>
-  <view class="exercise" :style="{ height: `${windowHeight}px` }">
+  <view class="exercise">
     <view class="exercise-module">
       <view class="exercise-module-lf">
         <view class="title">算法基础</view>
@@ -69,6 +69,7 @@ $module: 400rpx;
 $tab: 100rpx;
 
 .exercise {
+  height: 100vh;
   background-color: $uni-bg-color-grey;
   box-sizing: border-box;
 
