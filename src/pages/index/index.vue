@@ -49,7 +49,7 @@
     <swiper
       class="home-list"
       :style="{ height: swiperHeight + 'px', marginTop: `${rpxToPx(160) + navHeight}px` }"
-      :current="swiperActiveIndex"
+      :current="tabActiveIndex"
       @change="swiperChangeHandler"
     >
       <!-- 文章 -->
@@ -123,7 +123,6 @@ export default {
     subTabList: ["推荐", "最热", "最新"],
     tabActiveIndex: 0,
     subActiveIndex: 0,
-    swiperActiveIndex: 0,
     swiperHeight: 0,
     articleList: articleList,
     contentList: [articleList, [], [], []],
@@ -132,7 +131,7 @@ export default {
   methods: {
     // 切换tab
     switchTab({ name, index }) {
-      this.swiperActiveIndex = index
+      this.tabActiveIndex = index
       this.setSwiperHeight()
     },
 
