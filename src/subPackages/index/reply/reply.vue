@@ -60,12 +60,7 @@ export default {
   },
   watch: {},
 
-  onLoad() {
-    const screenWidth = uni.getSystemInfoSync().screenWidth
-    // console.log(typeof screenWidth)
-    // console.log(screenWidth)
-    // console.log(uni.getSystemInfoSync().windowHeight)
-  },
+  onLoad() {},
 }
 </script>
 
@@ -78,7 +73,6 @@ page {
 
 <style lang="scss" scoped>
 .reply {
-  min-height: 100vh;
   background-color: $uni-bg-color-grey;
   &-title {
     display: flex;

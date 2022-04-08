@@ -12,6 +12,7 @@
         :list="tabList"
         lineWidth="30"
         lineHeight="5"
+        :current="tabActiveIndex"
         lineColor="#f56c6c"
         :activeStyle="{
           color: '#303133',
@@ -24,7 +25,8 @@
           fontSize: 34 + 'rpx',
           transform: 'scale(1)',
         }"
-        itemStyle="padding-left: 30rpx; padding-right: 30rpx; height: 68rpx;"
+        :itemStyle="{ paddingLeft: 30 + 'rpx', paddingRight: 30 + 'rpx', height: 68 + 'rpx' }"
+        @click="switchTab"
       ></u-tabs>
 
       <!-- subTab -->
@@ -44,9 +46,40 @@
 
     <!-- 首页列表 -->
     <!-- rpx转px单位 -->
-    <view class="home-list" :style="{ marginTop: `${rpxToPx(160) + navHeight}px` }">
-      <article-list :articleList="articleList"></article-list>
-    </view>
+    <swiper
+      class="home-list"
+      :style="{ height: swiperHeight + 'px', marginTop: `${rpxToPx(160) + navHeight}px` }"
+      :current="swiperActiveIndex"
+      @change="swiperChangeHandler"
+    >
+      <!-- 文章 -->
+      <swiper-item class="home-list-item">
+        <view id="content-container-1">
+          <article-list :articleList="articleList"></article-list>
+        </view>
+      </swiper-item>
+
+      <!-- 视频 -->
+      <swiper-item class="home-list-item">
+        <view id="content-container-2">
+          <u-empty text="还没有视频哦" icon="http://cdn.uviewui.com/uview/empty/data.png"></u-empty>
+        </view>
+      </swiper-item>
+
+      <!-- 课程 -->
+      <swiper-item class="home-list-item">
+        <view id="content-container-3">
+          <u-empty text="还没有课程哦" icon="http://cdn.uviewui.com/uview/empty/data.png"></u-empty>
+        </view>
+      </swiper-item>
+
+      <!-- 电子书 -->
+      <swiper-item class="home-list-item">
+        <view id="content-container-4">
+          <u-empty text="还没有电子书哦" icon="http://cdn.uviewui.com/uview/empty/car.png"></u-empty>
+        </view>
+      </swiper-item>
+    </swiper>
 
     <!-- 开发 -->
     <navigator open-type="navigate" url="/pages/login/login">
@@ -86,16 +119,43 @@ export default {
         name: "电子书",
       },
     ],
+
     subTabList: ["推荐", "最热", "最新"],
+    tabActiveIndex: 0,
     subActiveIndex: 0,
+    swiperActiveIndex: 0,
+    swiperHeight: 0,
     articleList: articleList,
+    contentList: [articleList, [], [], []],
   }),
 
   methods: {
+    // 切换tab
+    switchTab({ name, index }) {
+      this.swiperActiveIndex = index
+      this.setSwiperHeight()
+    },
+
     // 切换子tab
     switchSubTab(item) {
       // console.log(item);
       this.subActiveIndex = item.index
+    },
+
+    // 滑块滚动
+    swiperChangeHandler({ detail }) {
+      this.tabActiveIndex = detail.current
+      this.setSwiperHeight()
+    },
+
+    // 动态舌设置swiper高度，因为swiper只能设置固定高度，swiper-item宽高100%是相对于其父组件
+    setSwiperHeight() {
+      const contentNodesRef = uni
+        .createSelectorQuery()
+        .in(this)
+        .select(`#content-container-${this.tabActiveIndex + 1}`)
+      contentNodesRef.boundingClientRect((res) => (this.swiperHeight = res.height)).exec()
+      // console.log(this.swiperHeight)
     },
 
     // 检验请求
@@ -114,13 +174,16 @@ export default {
       uni.navigateTo({ url: "/subPackages/index/write/write" })
     },
 
-    // 跳转搜索
+    // 跳转搜索page
     gotoSearch() {
       uni.navigateTo({ url: "/subPackages/index/historySearch/historySearch" })
     },
   },
 
-  onLoad() {},
+  onLoad() {
+    // swiperHeight
+    this.$nextTick(() => this.setSwiperHeight())
+  },
 }
 </script>
 
@@ -167,8 +230,9 @@ $tab: 160rpx;
 }
 
 .home-list {
+  min-height: 80vh;
   padding: 20rpx;
-  // margin-bottom: 100rpx;
+  overflow: auto;
 }
 
 .go-write {
