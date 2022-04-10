@@ -15,7 +15,7 @@
 
     <!-- 题目列表 -->
     <view class="question-list" v-if="questionList.length">
-      <view class="question-list-item" v-for="item in questionList" :key="item.id">
+      <view class="question-list-item" v-for="item in questionList" :key="item.id" @click.stop="gotoDetail">
         <view class="question-list-item-desc">
           <view class="title u-line-1">{{ item.title }}</view>
           <view class="info">
@@ -111,6 +111,11 @@ export default {
         default:
           break
       }
+    },
+
+    // goto detail
+    gotoDetail() {
+      uni.navigateTo({ url: "/subPackages/exercise/questionDetail/questionDetail" })
     },
   },
 

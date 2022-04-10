@@ -70,6 +70,7 @@ export default {
 <style lang="scss" scoped>
 .article-container {
   box-sizing: border-box;
+  padding: 20rpx;
 }
 
 .article-list {

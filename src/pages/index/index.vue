@@ -62,7 +62,8 @@
       <!-- 视频 -->
       <swiper-item class="home-list-item">
         <view id="content-container-2">
-          <u-empty text="还没有视频哦" icon="http://cdn.uviewui.com/uview/empty/data.png"></u-empty>
+          <!-- <u-empty text="还没有视频哦" icon="http://cdn.uviewui.com/uview/empty/data.png"></u-empty> -->
+          <video-list :videoList="videoList"></video-list>
         </view>
       </swiper-item>
 
@@ -91,7 +92,7 @@
       <u-button type="error" text="seed"></u-button>
     </navigator> -->
 
-    <view class="go-write" @click="gotoWrite">
+    <view class="go-write" v-if="showWrite" @click="gotoWrite">
       <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon>
     </view>
   </view>
@@ -100,6 +101,7 @@
 <script>
 import { systemInfo } from "@/mixin.js"
 import { articleList } from "@/mock/articleList.js"
+import { videoList } from "@/mock/videoList.js"
 export default {
   components: {},
   mixins: [systemInfo],
@@ -124,7 +126,10 @@ export default {
     tabActiveIndex: 0,
     subActiveIndex: 0,
     swiperHeight: 0,
+
+    showWrite: true,
     articleList: articleList,
+    videoList: videoList,
     contentList: [articleList, [], [], []],
   }),
 
@@ -178,9 +183,16 @@ export default {
       uni.navigateTo({ url: "/subPackages/index/historySearch/historySearch" })
     },
   },
+  watch: {
+    // 是否展示gotoWrite
+    tabActiveIndex(val) {
+      this.showWrite = val === 0 ? true : false
+    },
+  },
 
   onLoad() {
     // swiperHeight
+    // console.log(this.videoList)
     this.$nextTick(() => this.setSwiperHeight())
   },
 }
@@ -230,7 +242,7 @@ $tab: 160rpx;
 
 .home-list {
   min-height: 80vh;
-  padding: 20rpx;
+  // padding: 20rpx;
   overflow: auto;
 }
 
