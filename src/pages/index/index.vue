@@ -1,3 +1,7 @@
+/**
+ * @author lan
+ * 首页
+ */
 <template>
   <view class="home">
     <!-- 导航栏 -->
@@ -158,7 +162,7 @@ export default {
         .createSelectorQuery()
         .in(this)
         .select(`#content-container-${this.tabActiveIndex + 1}`)
-      contentNodesRef.boundingClientRect((res) => (this.swiperHeight = res.height)).exec()
+      contentNodesRef.boundingClientRect(res => (this.swiperHeight = res.height)).exec()
       // console.log(this.swiperHeight)
     },
 

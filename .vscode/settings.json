@@ -13,7 +13,8 @@
 
   // 路径提示
   "path-intellisense.mappings": {
-    "@": "${workspaceRoot}/src/"
+    "@": "${workspaceRoot}/src/",
+    "static": "${workspaceRoot}/src/static"
   },
 
   // 文件映射，json文件写注释

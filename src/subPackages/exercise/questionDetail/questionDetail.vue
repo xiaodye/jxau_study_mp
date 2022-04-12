@@ -1,3 +1,7 @@
+/**
+ * @author lan
+ * 刷题页
+ */
 <template>
   <view class="question-container">
     <!-- 导航条 -->
@@ -189,10 +193,10 @@ export default {
 
     // 用于判断选中option如何添加样式
     getMapValue(key, value, type) {
-      /*
-      key: 题号，第几题 如1 2 3 4...
-      value: 题目的选项，如A B C D
-      type: 题目的类型 如单选题 多选题
+      /**
+       * key: 题号，第几题 如1 2 3 4...
+       * value: 题目的选项，如A B C D
+       * type: 题目的类型 如单选题 多选题
        */
 
       if (type === "单选题") return this.answerMap.get(key) === value
@@ -200,12 +204,10 @@ export default {
       return this.answerMap.get(key).includes(value)
     },
 
-    // 确认提交
-    confirmCommit() {},
-
     closeModal() {
       this.showModal = false
     },
+
     // 提交答题卡
     commitCard() {
       // 提交
@@ -235,7 +237,6 @@ export default {
     },
   },
 
-  // 页面周期函数--监听页面加载
   onLoad() {
     this.createAnswerMap()
   },
