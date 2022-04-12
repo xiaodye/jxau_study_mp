@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import { questionList } from "@/mock/questionList.js"
 export default {
   components: {},
   data: () => ({
@@ -125,6 +124,7 @@ view {
 $chart_panel: 600rpx;
 $case_panel: 220rpx;
 $answer_panel: 340rpx;
+
 .result {
   min-height: 100vh;
   background-color: $uni-bg-color-grey;
