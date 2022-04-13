@@ -240,6 +240,11 @@ export default {
   onLoad() {
     this.createAnswerMap()
   },
+
+  // onBackPress(e) {
+  //   console.log(e)
+  //   uni.$u.toast("你返回了")
+  // },
 }
 </script>
 

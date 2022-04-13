@@ -107,6 +107,13 @@
             "navigationBarTitleText": "答题结果",
             "navigationBarBackgroundColor": "#fff"
           }
+        },
+        {
+          "path": "questionCateDetail/questionCateDetail",
+          "style": {
+            "navigationBarTitleText": "questionCateDetail",
+            "navigationStyle": "custom"
+          }
         }
       ]
     }

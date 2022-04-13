@@ -1,23 +1,11 @@
 <template>
-  <scroll-view
-    class="question-container"
-    :style="{ height: `${windowHeight - rpxToPx(520)}px` }"
-    scroll-y
-    enable-flex
-    :refresher-enabled="true"
-    refresher-background="#f8f8f8"
-    :refresher-triggered="triggered"
-    @scrolltolower="onLower"
-    @refresherpulling="onPulling"
-    @refresherrefresh="onRefresh"
-  >
-    <u-toast ref="uToast"></u-toast>
-
+  <view class="question-container">
     <!-- 题目列表 -->
     <view class="question-list" v-if="questionList.length">
       <view class="question-list-item" v-for="item in questionList" :key="item.id" @click.stop="gotoDetail">
         <view class="question-list-item-desc">
           <view class="title u-line-1">{{ item.title }}</view>
+
           <view class="info">
             <view class="level">
               <my-tag class="tag" :type="levelColor(item.level)" :circle="false" size="mini">{{ item.level }}</my-tag>
@@ -31,22 +19,19 @@
           </view>
         </view>
 
+        <!-- 箭头 -->
         <u-icon name="arrow-right" size="24" color="#999"></u-icon>
       </view>
-
-      <!-- 加载更多 -->
-      <u-loadmore :status="status" loadingText="一大波题目正在赶来" nomoreText="~我是有底线的~" />
     </view>
 
     <!-- 空白页 -->
     <view v-else class="empty">
       <u-empty mode="data" text="这里什么也没有"></u-empty>
     </view>
-  </scroll-view>
+  </view>
 </template>
 
 <script>
-import { systemInfo } from "@/mixin.js"
 export default {
   props: {
     questionList: {
@@ -54,49 +39,9 @@ export default {
       required: true,
     },
   },
-  data: () => ({
-    triggered: false,
-    status: "loadmore",
-  }),
-  mixins: [systemInfo],
+  data: () => ({}),
   computed: {},
   methods: {
-    // 自动刷新
-    refreshInit() {
-      this.triggered = true
-    },
-
-    // 自定义下拉控件下拉处理函数
-    onPulling() {
-      // console.log("自定义下拉刷新控件被下拉")
-      if (!this.triggered) this.triggered = true
-    },
-
-    // 自定义刷新触发处理函数
-    onRefresh() {
-      // console.log("自定义下拉刷新被触发")
-      // console.log(this.triggered)
-      setTimeout(() => {
-        this.triggered = false
-        this.status = "loadmore"
-        this.$refs.uToast.show({
-          type: "success",
-          message: "刷新成功",
-          iconUrl: "https://cdn.uviewui.com/uview/demo/toast/success.png",
-        })
-      }, 2000)
-    },
-
-    // 下拉触底
-    onLower() {
-      // 防抖
-      if (this.status === "loading" || this.status === "nomore") return
-      this.status = "loading"
-      setTimeout(() => {
-        this.status = "nomore"
-      }, 3000)
-    },
-
     // 根据难度选择tag种类
     levelColor(level) {
       switch (level) {
@@ -121,7 +66,7 @@ export default {
 
   // 组件周期函数--监听组件挂载完毕
   mounted() {
-    this.refreshInit()
+    // this.refreshInit()
   },
 }
 </script>
@@ -156,6 +101,8 @@ export default {
     }
 
     &-desc {
+      flex: 1;
+
       display: flex;
       flex-direction: column;
       margin-right: 40rpx;
@@ -170,13 +117,20 @@ export default {
         font-size: 24rpx;
         align-items: center;
         color: $uni-text-color-placeholder;
+
+        box-sizing: border-box;
+        width: 100%;
+
         .level {
-          margin-right: 40rpx;
           .tag {
             margin-right: 20rpx;
+            &:last-child {
+              margin-right: 0;
+            }
           }
         }
         .pass {
+          margin-left: auto;
           &-rate {
             color: $uni-color-success;
           }

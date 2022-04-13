@@ -1,6 +1,6 @@
 /**
- * @author lan
  * 首页
+ * @author lan
  */
 <template>
   <view class="home">
@@ -59,7 +59,7 @@
       <!-- 文章 -->
       <swiper-item class="home-list-item">
         <view id="content-container-1">
-          <article-list :articleList="articleList"></article-list>
+          <article-list :articleList="articleList" ref="articleList"></article-list>
         </view>
       </swiper-item>
 
@@ -87,9 +87,9 @@
     </swiper>
 
     <!-- 开发 -->
-    <navigator open-type="navigate" url="/pages/login/login">
+    <!-- <navigator open-type="navigate" url="/pages/login/login">
       <u-button type="error" text="登录页开发"></u-button>
-    </navigator>
+    </navigator> -->
 
     <!-- seed -->
     <!-- <navigator style="margin-top: 20rpx" open-type="navigate" url="/subPackages/seedPages/uploadPic/uploadPic">
@@ -135,6 +135,9 @@ export default {
     articleList: articleList,
     videoList: videoList,
     contentList: [articleList, [], [], []],
+
+    // 当前ref
+    activeRef: "articleList",
   }),
 
   methods: {
@@ -198,6 +201,15 @@ export default {
     // swiperHeight
     // console.log(this.videoList)
     this.$nextTick(() => this.setSwiperHeight())
+  },
+  onReachBottom() {
+    // 防抖
+    if (this.$refs.articleList.status === "loading" || this.$refs.articleList.status === "nomore") return
+
+    this.$refs.articleList.status = "loading"
+    setTimeout(() => {
+      this.$refs.articleList.status = "nomore"
+    }, 3000)
   },
 }
 </script>

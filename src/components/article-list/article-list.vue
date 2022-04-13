@@ -1,8 +1,8 @@
 <template>
   <view class="article-container" @click.stop="gotoDetail">
     <view class="article-list" v-if="articleList.length">
-      <view class="article-list-item" v-for="item in articleList" :key="item.articleId">
-        <!-- 头部 -->
+      <view class="article-list-item" v-for="item in articleList" :key="item.id">
+        <!-- 头部 ,头像，标题，时间-->
         <view class="article-list-item-header">
           <u-avatar :src="item.avatar" fontSize="16" size="40"></u-avatar>
           <view class="title">
@@ -14,7 +14,7 @@
           </view>
         </view>
 
-        <!-- 主体 -->
+        <!-- 主体 ，内容，封面，标签-->
         <view class="article-list-item-main">
           <view class="content">
             <view class="content-text u-line-2">
@@ -27,7 +27,7 @@
           <u-image v-if="item.cover" :showLoading="true" :src="item.cover" width="160rpx" height="120rpx" radius="6px"></u-image>
         </view>
 
-        <!-- 尾部 -->
+        <!-- 尾部，点赞，评论，浏览 -->
         <view class="article-list-item-footer">
           <view class="icon" v-for="icon in item.iconList" :key="icon.name">
             <u-icon :name="icon.name" size="24" color="#808080"></u-icon>
@@ -37,7 +37,7 @@
       </view>
 
       <!-- 加载更多 -->
-      <u-loadmore :status="status" nomore-text="~我是有底线的~" />
+      <u-loadmore :status="status" loading-text="正在加载..." nomore-text="~我是有底线的~" />
     </view>
 
     <!-- 空白页 -->
@@ -54,7 +54,7 @@ export default {
     },
   },
   data: () => ({
-    status: "nomore",
+    status: "loadmore",
   }),
   computed: {},
   methods: {

@@ -135,7 +135,7 @@ $answer_panel: 340rpx;
 
   &-panel {
     background-color: #fff;
-    height: $chart_panel;
+    min-height: $chart_panel;
     border-radius: 20rpx;
     overflow: hidden;
 
@@ -185,7 +185,7 @@ $answer_panel: 340rpx;
   }
 
   &-case {
-    height: $case_panel;
+    min-height: $case_panel;
     border-radius: 20rpx;
     overflow: hidden;
     background-color: #fff;

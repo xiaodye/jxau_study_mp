@@ -6,12 +6,12 @@
   <view class="exercise">
     <view class="exercise-module">
       <view class="exercise-module-lf">
-        <view class="title">算法基础</view>
+        <view class="title">编程基础</view>
         <view class="t-icon t-icon-algo"></view>
       </view>
 
       <view class="exercise-module-rg">
-        <view class="rg-top">
+        <view class="rg-top" @click="gotoCateDetail">
           <view class="title">竞赛精选</view>
           <view class="t-icon t-icon-race"></view>
         </view>
@@ -41,25 +41,91 @@
       </view>
     </view>
 
-    <!-- 题目列表 -->
-    <question-list :questionList="questionList"></question-list>
+    <!-- 滚动容器 -->
+    <scroll-view
+      :style="{ height: `${windowHeight - rpxToPx(520)}px` }"
+      scroll-y
+      enable-flex
+      :refresher-enabled="true"
+      refresher-background="#f8f8f8"
+      :refresher-triggered="triggered"
+      @scrolltolower="onLower"
+      @refresherpulling="onPulling"
+      @refresherrefresh="onRefresh"
+    >
+      <!-- 题目列表 -->
+      <question-list :questionList="questionList" ref="questionList"></question-list>
+
+      <!-- 加载更多 -->
+      <u-loadmore :status="status" loadingText="一大波题目正在赶来" nomoreText="~我是有底线的~" />
+
+      <!-- 消息框 -->
+      <u-toast ref="uToast"></u-toast>
+    </scroll-view>
   </view>
 </template>
 
 <script>
+import { systemInfo } from "@/mixin.js"
 import { questionList } from "@/mock/questionList.js"
 export default {
   components: {},
+  mixins: [systemInfo],
   data: () => ({
     tagList: ["推荐", "最热", "最新"],
     activeTabIndex: 0,
     questionList: questionList,
+
+    triggered: false,
+    status: "loadmore",
   }),
   computed: {},
   methods: {
     switchTab(item) {
       // console.log(item)
       this.activeTabIndex = item.index
+    },
+
+    // goto 分类大块
+    gotoCateDetail() {
+      uni.navigateTo({ url: "/subPackages/exercise/questionCateDetail/questionCateDetail" })
+    },
+
+    // 自动刷新
+    refreshInit() {
+      this.triggered = true
+    },
+
+    // 自定义下拉控件下拉处理函数
+    onPulling() {
+      // console.log("自定义下拉刷新控件被下拉")
+      if (!this.triggered) this.triggered = true
+    },
+
+    // 自定义刷新触发处理函数
+    onRefresh() {
+      // console.log("自定义下拉刷新被触发")
+      // console.log(this.triggered)
+
+      setTimeout(() => {
+        this.triggered = false
+        this.status = "loadmore"
+        this.$refs.uToast.show({
+          type: "success",
+          message: "刷新成功",
+          iconUrl: "https://cdn.uviewui.com/uview/demo/toast/success.png",
+        })
+      }, 2000)
+    },
+
+    // 下拉触底
+    onLower() {
+      // 防抖
+      if (this.status === "loading" || this.status === "nomore") return
+      this.status = "loading"
+      setTimeout(() => {
+        this.status = "nomore"
+      }, 3000)
     },
   },
 
