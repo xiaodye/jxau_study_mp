@@ -1,6 +1,6 @@
 /**
- * 首页
  * @author lan
+ * 首页
  */
 <template>
   <view class="home">
@@ -138,6 +138,12 @@ export default {
 
     // 当前ref
     activeRef: "articleList",
+
+    totalPages: 4, // 总页数
+    paramsData: {
+      pageNum: 1, // 当前页数
+      pageSize: 5, // 每页最大数据量
+    },
   }),
 
   methods: {
@@ -165,8 +171,16 @@ export default {
         .createSelectorQuery()
         .in(this)
         .select(`#content-container-${this.tabActiveIndex + 1}`)
-      contentNodesRef.boundingClientRect(res => (this.swiperHeight = res.height)).exec()
-      // console.log(this.swiperHeight)
+
+      contentNodesRef
+        .boundingClientRect(res => {
+          // 保证最小高度，防止选项卡高度太低，导致无法滚动
+          if (res.height < this.minSwiperHeight) return (this.swiperHeight = this.minSwiperHeight)
+          this.swiperHeight = res.height
+
+          console.log(this.swiperHeight)
+        })
+        .exec()
     },
 
     // 检验请求
@@ -180,6 +194,27 @@ export default {
       }
     },
 
+    // 加载更多
+    loadMore() {
+      // 节流
+      if (this.$refs.articleList.status === "loading" || this.$refs.articleList.status === "nomore") return
+
+      this.$refs.articleList.status = "loading"
+      setTimeout(() => {
+        this.articleList = [...this.articleList, ...articleList]
+        this.paramsData.pageNum++
+        console.log(this.articleList)
+
+        // 重新获取内容高度
+        this.$nextTick(() => this.setSwiperHeight())
+
+        // 到底了
+        if (this.paramsData.pageNum >= this.totalPages) return (this.$refs.articleList.status = "nomore")
+
+        this.$refs.articleList.status = "loadmore"
+      }, 3000)
+    },
+
     // 跳转写文章page
     gotoWrite() {
       uni.navigateTo({ url: "/subPackages/index/write/write" })
@@ -190,6 +225,11 @@ export default {
       uni.navigateTo({ url: "/subPackages/index/historySearch/historySearch" })
     },
   },
+  computed: {
+    minSwiperHeight() {
+      return this.windowHeight - (this.rpxToPx(160) + this.navHeight)
+    },
+  },
   watch: {
     // 是否展示gotoWrite
     tabActiveIndex(val) {
@@ -198,18 +238,13 @@ export default {
   },
 
   onLoad() {
-    // swiperHeight
-    // console.log(this.videoList)
+    // 加载获取内容高度
     this.$nextTick(() => this.setSwiperHeight())
   },
-  onReachBottom() {
-    // 防抖
-    if (this.$refs.articleList.status === "loading" || this.$refs.articleList.status === "nomore") return
 
-    this.$refs.articleList.status = "loading"
-    setTimeout(() => {
-      this.$refs.articleList.status = "nomore"
-    }, 3000)
+  // 监听触底
+  onReachBottom() {
+    this.loadMore()
   },
 }
 </script>
@@ -257,8 +292,6 @@ $tab: 160rpx;
 }
 
 .home-list {
-  min-height: 80vh;
-  // padding: 20rpx;
   overflow: auto;
 }
 
