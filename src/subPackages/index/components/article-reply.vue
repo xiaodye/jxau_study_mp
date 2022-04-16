@@ -2,9 +2,9 @@
   <view class="reply">
     <!-- 回复列表 -->
     <view class="reply-list" v-if="replyList.length">
-      <view class="reply-list-item" v-for="item in replyList" :key="item.id">
+      <view class="reply-list-item" v-for="item in replyList" :key="item.id" hover-class="item_hover">
         <view class="rli-lf">
-          <u-avatar :src="item.avatarUrl" :size="rpxToPx(60)"></u-avatar>
+          <u-avatar :src="item.avatarUrl" :size="rpxToPx(70)"></u-avatar>
         </view>
 
         <!-- 回复主体 -->
@@ -51,6 +51,9 @@ export default {
 <style lang="scss" scoped>
 .reply {
   &-list {
+    .item_hover {
+      background-color: #f3f4f6;
+    }
     &-item {
       background-color: #fff;
       padding: 20rpx;

@@ -1,14 +1,17 @@
 // 请求拦截器
 uni.addInterceptor("request", {
   invoke(args) {
+    if (args.method === undefined) args.method = "POST"
     // 拼接根路由
-    const BASE_URL = "http://127.0.0.1:3007"
+    const BASE_URL = "http://192.168.196.215:8081" // chen
+    // const BASE_URL = "http://192.168.196.213:8084" // dai
+    // const BASE_URL = "http://192.168.43.163:8084" // 局域网
     args.url = BASE_URL + args.url
 
-    // 如果有token并且请求有权限,则在请求头添加token
-    if (uni.getStorageSync("token") && args.url.indexOf("/api/") === -1) {
-      if (args.header) return (args.header.Authorization = uni.getStorageSync("token"))
-      args.header = { Authorization: uni.getStorageSync("token") }
+    // 如果有token,则在请求头添加token
+    if (uni.getStorageSync("token")) {
+      if (args.header) return (args.header.authorization = uni.getStorageSync("token"))
+      args.header = { authorization: uni.getStorageSync("token") }
     }
   },
 })
@@ -20,9 +23,8 @@ function isPromise(obj) {
 
 uni.addInterceptor({
   returnValue(res) {
-    if (!isPromise(res)) {
-      return res
-    }
+    if (!isPromise(res)) return res
+
     return new Promise((resolve, reject) => {
       res.then(res => {
         if (res[0]) {

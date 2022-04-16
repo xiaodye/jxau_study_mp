@@ -29,26 +29,23 @@
 
     <!-- 文章主体 -->
     <view class="article-main">
+      <!-- 文章图片 -->
+      <u-swiper
+        :list="articleData.picList"
+        indicator
+        indicatorMode="dot"
+        circular
+        bgColor="#fff"
+        :autoplay="false"
+        @click="previewImage"
+        :height="rpxToPx(320)"
+      ></u-swiper>
+
       <!-- 文章内容 -->
       <view class="article-main-content">
-        <text>
+        <text user-select>
           {{ articleData.content }}
         </text>
-      </view>
-
-      <!-- 文章图片 -->
-      <view class="article-main-pics">
-        <u-swiper
-          :list="articleData.picList"
-          indicator
-          indicatorMode="dot"
-          :previousMargin="rpxToPx(80)"
-          :nextMargin="rpxToPx(80)"
-          circular
-          bgColor="#fff"
-          :autoplay="false"
-          @click="previewImage"
-        ></u-swiper>
       </view>
 
       <!-- 文章标签 -->
@@ -59,24 +56,24 @@
 
     <!-- 评论 -->
     <view class="article-comment-header">全部评论</view>
-    <article-comment :commentList="articleData.commentList"></article-comment>
+    <article-comment :commentList="commentList"></article-comment>
 
     <!-- 底部栏 -->
     <view class="article-bar">
       <!-- 输入框 -->
       <view class="article-bar-input" @click.stop="openPanel">
-        <u-input :disabled="true" shape="circle" placeholder="发表评论" prefixIcon="edit-pen"></u-input>
+        <u-input :disabled="true" shape="circle" :fontSize="rpxToPx(25)" placeholder="发表评论" prefixIcon="edit-pen"></u-input>
       </view>
 
       <!-- 点赞与评论 -->
       <view class="article-bar-rg">
-        <view class="article-bar-rg-icon">
-          <u-icon name="thumb-up" :size="rpxToPx(60)"></u-icon>
-          <u-badge type="error" max="99" :value="18" :offset="[-4, -10]" absolute></u-badge>
+        <view class="article-bar-rg-icon" @click.stop="giveLikeHandler">
+          <u-icon name="thumb-up" :size="rpxToPx(60)" :color="articleThumbStatus"></u-icon>
+          <u-badge type="error" max="99" :value="articleData.likeNumber" :offset="[-6, -12]" absolute></u-badge>
         </view>
         <view class="article-bar-rg-icon">
-          <u-icon name="chat" :size="rpxToPx(60)"></u-icon>
-          <u-badge type="error" max="99" :value="6" :offset="[-4, -10]" absolute></u-badge>
+          <u-icon name="chat" :size="rpxToPx(60)" color="#808080"></u-icon>
+          <u-badge type="error" max="99" :value="articleData.commentNumber" :offset="[-6, -12]" absolute></u-badge>
         </view>
       </view>
     </view>
@@ -94,6 +91,7 @@ export default {
   props: {},
   data: () => ({
     articleData: {
+      id: uni.$u.guid(20),
       userName: "稀土君",
       avatarUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
       title: "尤雨溪携手字节前端专家，畅聊 Vue 3.0 & 前端技术新趋势",
@@ -108,13 +106,23 @@ export default {
       tagList: ["前端", "Vue"],
       create_time: "2022/03/17",
       view: 273,
-      like: 23,
-      comment_num: 7,
-      commentList: commentList,
+      likeNumber: 23,
+      commentNumber: 7,
+      thumbStatus: false,
+      // commentList: commentList,
+    },
+    commentList: commentList,
+    styles: {
+      thumbColor: "#3f536e",
     },
     commentText: "",
   }),
-  computed: {},
+  computed: {
+    // 获取作者对文章的点赞状态
+    articleThumbStatus() {
+      return this.articleData.thumbStatus ? "#fa3534" : "#808080"
+    },
+  },
   methods: {
     // 预览头像
     previewAvatar(url) {
@@ -147,6 +155,18 @@ export default {
         this.$refs.publishPanel.btn = { text: "发布", loading: false, disabled: false }
         this.$refs.publishPanel.popupShow = false
       }, 1000)
+    },
+
+    // 点赞
+    giveLikeHandler() {
+      if (this.articleData.thumbStatus) {
+        this.articleData.thumbStatus = false
+        this.articleData.likeNumber--
+        uni.$u.toast("取消点赞")
+      } else {
+        this.articleData.thumbStatus = true
+        this.articleData.likeNumber++
+      }
     },
   },
   watch: {},
@@ -223,13 +243,10 @@ $article_bar: 100rpx;
   &-main {
     background-color: #fff;
     padding: 20rpx 40rpx;
-    // padding-bottom: 40rpx;
     &-content {
       color: $uni-color-paragraph;
-      margin-bottom: 40rpx;
+      margin-top: 40rpx;
     }
-    // &-pics {
-    // }
 
     &-tags {
       @include vertical_center();
@@ -266,6 +283,10 @@ $article_bar: 100rpx;
 
     &-input {
       width: 70%;
+
+      ::v-deep .u-input {
+        height: 36rpx;
+      }
     }
 
     &-rg {

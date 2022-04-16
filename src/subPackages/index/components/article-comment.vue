@@ -2,7 +2,7 @@
   <div class="comment">
     <!-- 评论列表 -->
     <view class="comment-list" v-if="commentList.length">
-      <view class="comment-list-item" v-for="item in commentList" :key="item.uuid">
+      <view class="comment-list-item" v-for="item in commentList" :key="item.uuid" @click="gotoReply">
         <view class="cli-lf">
           <u-avatar :src="item.avatarUrl" :size="rpxToPx(70)" @click="previewAvatar(item.avatarUrl)"></u-avatar>
         </view>
@@ -23,12 +23,14 @@
           <view class="cli-rg-footer">
             <view class="cli-rg-footer-date">{{ item.create_time }}</view>
             <view class="cli-rg-footer-rg" v-if="showIcons">
-              <view class="cli-rfr-call" @click="gotoReply">
-                <u-icon name="chat-fill" :size="rpxToPx(45)" color="#19be6b"></u-icon>
+              <view class="cli-rfr-call">
+                <!-- color="#19be6b" -->
+                <u-icon name="chat" :size="rpxToPx(45)" color="#808080"></u-icon>
                 <text>{{ item.callNum }}</text>
               </view>
-              <view class="cli-rfr-like">
-                <u-icon name="thumb-up-fill" :size="rpxToPx(45)" color="#fa3534"></u-icon>
+              <view class="cli-rfr-like" @click.stop="giveLikeHandler">
+                <!-- color="#fa3534" -->
+                <u-icon name="thumb-up" :size="rpxToPx(45)" :color="styles.thumbColor"></u-icon>
                 <text>{{ item.like }}</text>
               </view>
             </view>
@@ -56,9 +58,18 @@ export default {
       default: true,
     },
   },
-  data: () => ({}),
+  data: () => ({
+    styles: {
+      thumbColor: "#808080",
+    },
+  }),
   computed: {},
   methods: {
+    // 点赞
+    giveLikeHandler() {
+      if (this.styles.thumbColor === "#3f536e") return (this.styles.thumbColor = "#fa3534")
+      this.styles.thumbColor = "#3f536e"
+    },
     // 跳转回复页
     gotoReply() {
       uni.navigateTo({ url: "/subPackages/index/reply/reply" })
@@ -81,6 +92,10 @@ export default {
   margin: 0 0 50rpx;
 
   &-list {
+    .item_hover {
+      background-color: #f3f4f6;
+    }
+
     &-item {
       padding: 20rpx;
       display: flex;
@@ -132,8 +147,7 @@ export default {
 
               & > text {
                 color: $uni-text-color-placeholder;
-                font-size: 24rpx;
-                padding-left: 4rpx;
+                font-size: 28rpx;
               }
             }
           }

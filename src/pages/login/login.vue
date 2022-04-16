@@ -47,21 +47,26 @@ export default {
         const { userInfo } = await uni.getUserProfile({ desc: "获取微信用户信息", lang: "zh_CN" })
         uni.$u.toast("授权成功")
         console.log(userInfo)
-        this.getUserInfo(userInfo)
+        // this.getUserInfo(userInfo)
         // console.log(this.userInfo)
 
         // 获取code
         const { code } = await uni.login({ provider: "weixin" })
         console.log("code：" + code)
 
-        // 发起登录请求，获取openid和session_key
-        // const { data: res } = await uni.request({ url: "/login/weixin", method: "POST", data: { code: code } })
-        // console.log(res.data)
-        // uni.setStorageSync("openid", res.data.openid)
-        // uni.setStorageSync("session_key", res.data.session_key)
+        // 发起登录请求，获取token
+        const { data: res } = await uni.request({
+          url: "/wechat/login",
+          method: "GET",
+          data: { code: code, nickName: userInfo.nickName, avatarUrl: userInfo.avatarUrl },
+        })
+        console.log(res)
+
+        uni.setStorageSync("token", res.data.token)
+        this.getUserInfo(res.data.user)
       } catch (err) {
-        console.log(err)
         uni.$u.toast("微信登录异常")
+        throw new Error(err)
       }
     },
   },

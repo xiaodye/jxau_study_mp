@@ -1,14 +1,14 @@
 <template>
   <view class="article-container" @click.stop="gotoDetail">
     <view class="article-list" v-if="articleList.length">
-      <view class="article-list-item" v-for="item in articleList" :key="item.id">
+      <view class="article-list-item" v-for="item in articleList" :key="item.id" hover-class="item_hover">
         <!-- 头部 ,头像，标题，时间-->
         <view class="article-list-item-header">
-          <u-avatar :src="item.avatar" fontSize="16" size="40"></u-avatar>
+          <u-avatar :src="item.user.imageUrl" fontSize="16" size="40"></u-avatar>
           <view class="title">
             <view class="text u-line-1">{{ item.title }}</view>
             <view class="user-info">
-              <view class="name">{{ item.userName }}</view>
+              <view class="name">{{ item.user.nickName }}</view>
               <view class="date">{{ item.create_time }}</view>
             </view>
           </view>
@@ -21,17 +21,34 @@
               {{ item.content }}
             </view>
             <view class="content-tags">
-              <my-tag class="tag" size="mini" type="success" v-for="(tag, index) in item.tags" :key="index">{{ tag }}</my-tag>
+              <my-tag class="tag" size="mini" type="success" v-for="(tag, index) in item.tag" :key="index">{{ tag }}</my-tag>
             </view>
           </view>
-          <u-image v-if="item.cover" :showLoading="true" :src="item.cover" width="160rpx" height="120rpx" radius="6px"></u-image>
+
+          <!-- 图片 -->
+          <u-image
+            v-if="item.coverImgUrl"
+            :showLoading="true"
+            :src="item.coverImgUrl"
+            width="160rpx"
+            height="120rpx"
+            radius="6px"
+          ></u-image>
         </view>
 
         <!-- 尾部，点赞，评论，浏览 -->
         <view class="article-list-item-footer">
-          <view class="icon" v-for="icon in item.iconList" :key="icon.name">
-            <u-icon :name="icon.name" size="24" color="#808080"></u-icon>
-            <view>{{ icon.num }}</view>
+          <view class="icon">
+            <u-icon name="eye" size="24" color="#808080"></u-icon>
+            <view>{{ item.visitNumber }}</view>
+          </view>
+          <view class="icon">
+            <u-icon name="thumb-up" size="24" color="#808080"></u-icon>
+            <view>{{ item.likeNumber }}</view>
+          </view>
+          <view class="icon">
+            <u-icon name="chat" size="24" color="#808080"></u-icon>
+            <view>{{ item.commentNumber }}</view>
           </view>
         </view>
       </view>
@@ -75,6 +92,10 @@ export default {
 
 .article-list {
   // padding: 15rpx;
+  .item_hover {
+    background-color: #f3f4f6;
+  }
+
   &-item {
     background-color: #fff;
     margin-bottom: 20rpx;
@@ -113,8 +134,10 @@ export default {
 
     &-main {
       display: flex;
+      height: 150rpx;
 
       .content {
+        flex: 1;
         font-size: $uni-font-size-paragraph;
         color: $uni-color-paragraph;
         margin-right: 20rpx;
@@ -128,6 +151,10 @@ export default {
             margin-right: 14rpx;
           }
         }
+      }
+
+      ::v-deep .u-image {
+        margin-left: auto;
       }
     }
 

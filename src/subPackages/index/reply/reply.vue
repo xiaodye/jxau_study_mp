@@ -7,7 +7,7 @@
     <view class="reply-title">
       <view class="reply-title-text">全部回复</view>
       <view class="reply-title-add" @click.stop="openPanel">
-        <u-button type="primary" plain hairline text="添加回复" icon="plus" shape="circle" size="small"></u-button>
+        <u-button type="primary" plain hairline text="添加回复" shape="circle" size="small"></u-button>
       </view>
     </view>
 

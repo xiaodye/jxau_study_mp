@@ -141,7 +141,7 @@ export default {
 
     totalPages: 4, // 总页数
     paramsData: {
-      pageNum: 1, // 当前页数
+      currentPage: 1, // 当前页数
       pageSize: 5, // 每页最大数据量
     },
   }),
@@ -183,36 +183,51 @@ export default {
         .exec()
     },
 
-    // 检验请求
-    async getUserInfo() {
+    // 获取文章列表
+    async getArticleList() {
       try {
-        const { data: res } = await uni.request({ url: "/user/get" })
-        if (res.status !== 0) return console.log("获取用户信息失败")
-        console.log(res.data)
+        const { data: res } = await uni.request({
+          url: "/index/get/all/essays",
+          data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+        })
+        // console.log(res.data)
+        this.articleList = res.data.list
+        this.totalPages = res.data.pages
+
+        // 重新设置内容高度
+        this.$nextTick(() => this.setSwiperHeight())
       } catch (err) {
-        console.log(err)
+        uni.$u.toast("获取文章列表失败")
+        throw new Error(err)
       }
     },
 
-    // 加载更多
-    loadMore() {
+    //  加载更多
+    async loadMore() {
       // 节流
       if (this.$refs.articleList.status === "loading" || this.$refs.articleList.status === "nomore") return
 
+      // 请求数据
       this.$refs.articleList.status = "loading"
-      setTimeout(() => {
-        this.articleList = [...this.articleList, ...articleList]
-        this.paramsData.pageNum++
-        console.log(this.articleList)
+      this.paramsData.currentPage++
+      try {
+        const { data: res } = await uni.request({
+          url: "/index/get/all/essays",
+          data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+        })
+        // console.log(res.data)
+        this.articleList = [...this.articleList, ...res.data.list]
 
-        // 重新获取内容高度
+        // 重新设置内容高度
         this.$nextTick(() => this.setSwiperHeight())
+      } catch (err) {
+        uni.$u.toast("上拉加载失败")
+        throw new Error(err)
+      }
 
-        // 到底了
-        if (this.paramsData.pageNum >= this.totalPages) return (this.$refs.articleList.status = "nomore")
-
-        this.$refs.articleList.status = "loadmore"
-      }, 3000)
+      // 到底了
+      if (this.paramsData.currentPage >= this.totalPages) return (this.$refs.articleList.status = "nomore")
+      this.$refs.articleList.status = "loadmore"
     },
 
     // 跳转写文章page
@@ -225,11 +240,13 @@ export default {
       uni.navigateTo({ url: "/subPackages/index/historySearch/historySearch" })
     },
   },
+
   computed: {
     minSwiperHeight() {
       return this.windowHeight - (this.rpxToPx(160) + this.navHeight)
     },
   },
+
   watch: {
     // 是否展示gotoWrite
     tabActiveIndex(val) {
@@ -240,11 +257,12 @@ export default {
   onLoad() {
     // 加载获取内容高度
     this.$nextTick(() => this.setSwiperHeight())
+    // this.getArticleList()
   },
 
   // 监听触底
   onReachBottom() {
-    this.loadMore()
+    // this.loadMore()
   },
 }
 </script>
