@@ -75,23 +75,6 @@
       ]
     },
     {
-      "root": "subPackages/seedPages",
-      "pages": [
-        {
-          "path": "uploadPic/uploadPic",
-          "style": {
-            "navigationBarTitleText": "上传图片"
-          }
-        },
-        {
-          "path": "display/display",
-          "style": {
-            "navigationBarTitleText": "展示"
-          }
-        }
-      ]
-    },
-    {
       "root": "subPackages/exercise",
       "pages": [
         {
