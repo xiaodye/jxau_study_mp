@@ -132,14 +132,14 @@ export default {
     swiperHeight: 0,
 
     showWrite: true,
-    articleList: articleList,
+    articleList: [],
     videoList: videoList,
     contentList: [articleList, [], [], []],
 
     // 当前ref
     activeRef: "articleList",
 
-    totalPages: 4, // 总页数
+    totalPages: 0, // 总页数
     paramsData: {
       currentPage: 1, // 当前页数
       pageSize: 5, // 每页最大数据量
@@ -197,8 +197,8 @@ export default {
         // 重新设置内容高度
         this.$nextTick(() => this.setSwiperHeight())
       } catch (err) {
+        console.error(err)
         uni.$u.toast("获取文章列表失败")
-        throw new Error(err)
       }
     },
 
@@ -221,8 +221,8 @@ export default {
         // 重新设置内容高度
         this.$nextTick(() => this.setSwiperHeight())
       } catch (err) {
+        console.error(err)
         uni.$u.toast("上拉加载失败")
-        throw new Error(err)
       }
 
       // 到底了
@@ -257,12 +257,12 @@ export default {
   onLoad() {
     // 加载获取内容高度
     this.$nextTick(() => this.setSwiperHeight())
-    // this.getArticleList()
+    this.getArticleList()
   },
 
   // 监听触底
   onReachBottom() {
-    // this.loadMore()
+    this.loadMore()
   },
 }
 </script>

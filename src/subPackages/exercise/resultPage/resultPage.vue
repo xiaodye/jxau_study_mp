@@ -111,7 +111,7 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad(options) {
-    console.log(options.answerSheet)
+    console.log(JSON.parse(options.answerSheet))
     this.answerSheet = options.answerSheet
   },
 }

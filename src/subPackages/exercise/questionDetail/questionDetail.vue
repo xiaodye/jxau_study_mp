@@ -126,6 +126,18 @@ export default {
       console.log(this.answerMap)
     },
 
+    // 获取题组
+    async getQuestionList() {
+      const { data: res } = await uni.request({
+        url: "/question/get/set/questions",
+        method: "GET",
+        data: { QuestionSetId: "4656ed9ccb2b4256b1ee22cceb8ca394" },
+      })
+      console.log(res)
+      if (res.status !== "200") return uni.$u.toast("获取题组失败")
+      this.questionInfoList = res.data.multipleChoiceList
+    },
+
     // 选中选项
     selectOption(item, index, type) {
       // this.optionActiveIndex = index
@@ -161,7 +173,6 @@ export default {
           }
           // 提示题目未完成
           if (unFinishedArr.length) return uni.$u.toast(`你还有题目未完成：${JSON.stringify(unFinishedArr)}`)
-
           return (this.showModal = true)
         }
 
@@ -239,6 +250,7 @@ export default {
 
   onLoad() {
     this.createAnswerMap()
+    // this.getQuestionList()
   },
 
   // onBackPress(e) {

@@ -1,7 +1,13 @@
 <template>
-  <view class="article-container" @click.stop="gotoDetail">
+  <view class="article-container">
     <view class="article-list" v-if="articleList.length">
-      <view class="article-list-item" v-for="item in articleList" :key="item.id" hover-class="item_hover">
+      <view
+        class="article-list-item"
+        v-for="item in articleList"
+        :key="item.id"
+        @click.stop="gotoDetail(item.id)"
+        hover-class="item_hover"
+      >
         <!-- 头部 ,头像，标题，时间-->
         <view class="article-list-item-header">
           <u-avatar :src="item.user.imageUrl" fontSize="16" size="40"></u-avatar>
@@ -75,8 +81,8 @@ export default {
   }),
   computed: {},
   methods: {
-    gotoDetail() {
-      uni.navigateTo({ url: "/subPackages/index/articleDetail/articleDetail" })
+    gotoDetail(articleId) {
+      uni.navigateTo({ url: "/subPackages/index/articleDetail/articleDetail?articleId=" + articleId })
     },
   },
 

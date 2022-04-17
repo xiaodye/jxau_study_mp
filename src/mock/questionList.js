@@ -1,6 +1,6 @@
 export const questionList = [
   {
-    id: "01",
+    id: uni.$u.guid(20),
     title: "两数之和",
     level: "简单",
     tagList: [
@@ -12,7 +12,7 @@ export const questionList = [
     passRate: 85,
   },
   {
-    id: "02",
+    id: uni.$u.guid(20),
     title: "寻找两个正序数组的中位数寻找两个正序数组的中位数",
     level: "困难",
     tagList: [
@@ -28,7 +28,7 @@ export const questionList = [
     passRate: 11,
   },
   {
-    id: "03",
+    id: uni.$u.guid(20),
     title: "三数之和",
     level: "中等",
     tagList: [
@@ -40,7 +40,7 @@ export const questionList = [
     passRate: 67,
   },
   {
-    id: "04",
+    id: uni.$u.guid(20),
     title: "罗马数字转整数",
     level: "简单",
     tagList: [
@@ -52,7 +52,7 @@ export const questionList = [
     passRate: 45,
   },
   {
-    id: "05",
+    id: uni.$u.guid(20),
     title: "三数之和",
     level: "中等",
     tagList: [
@@ -64,7 +64,7 @@ export const questionList = [
     passRate: 67,
   },
   {
-    id: "06",
+    id: uni.$u.guid(20),
     title: "罗马数字转整数",
     level: "简单",
     tagList: [
@@ -76,7 +76,7 @@ export const questionList = [
     passRate: 45,
   },
   {
-    id: "07",
+    id: uni.$u.guid(20),
     title: "三数之和",
     level: "中等",
     tagList: [
@@ -88,7 +88,7 @@ export const questionList = [
     passRate: 67,
   },
   {
-    id: "08",
+    id: uni.$u.guid(20),
     title: "罗马数字转整数",
     level: "困难",
     tagList: [

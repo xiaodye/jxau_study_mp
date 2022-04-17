@@ -58,10 +58,10 @@
 
       <!-- 加载更多 -->
       <u-loadmore :status="status" loadingText="一大波题目正在赶来" nomoreText="~我是有底线的~" />
-
-      <!-- 消息框 -->
-      <u-toast ref="uToast"></u-toast>
     </scroll-view>
+
+    <!-- 消息框 -->
+    <u-toast ref="uToast"></u-toast>
   </view>
 </template>
 
@@ -78,6 +78,12 @@ export default {
 
     triggered: false,
     status: "loadmore",
+
+    totalPages: 0, // 总页数
+    paramsData: {
+      currentPage: 1, // 当前页数
+      pageSize: 5, // 每页最大数据量
+    },
   }),
   computed: {},
   methods: {
@@ -103,7 +109,7 @@ export default {
     },
 
     // 自定义刷新触发处理函数
-    onRefresh() {
+    async onRefresh() {
       // console.log("自定义下拉刷新被触发")
       // console.log(this.triggered)
 
@@ -118,19 +124,51 @@ export default {
       }, 2000)
     },
 
-    // 下拉触底
-    onLower() {
-      // 防抖
+    // 下拉触底，加载更多
+    async onLower() {
+      // 节流
       if (this.status === "loading" || this.status === "nomore") return
+
       this.status = "loading"
-      setTimeout(() => {
-        this.status = "nomore"
-      }, 3000)
+      this.paramsData.currentPage++
+      try {
+        const { data: res } = await uni.request({
+          url: "/question/get/set/information",
+          method: "GET",
+          data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+        })
+        if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "上拉加载失败" })
+        this.questionList = [...this.questionList, ...res.data.res]
+
+        // 到底了
+        if (this.paramsData.currentPage >= this.totalPages) return (this.status = "nomore")
+        this.status = "loadmore"
+      } catch (err) {
+        console.error(err)
+        this.$refs.uToast.show({ type: "error", message: "请求异常" })
+        this.status = "loadmore"
+      }
+    },
+
+    // 获取题组列表
+    async getQuestionGroupList() {
+      const { data: res } = await uni.request({
+        url: "/question/get/set/information",
+        method: "GET",
+        data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+      })
+      // console.log(res)
+      if (re.status !== "200") return this.$refs.uToast.show({ type: "error", message: "获取题组列表失败" })
+
+      this.questionList = res.data.list
+      this.totalPages = res.data.pages
     },
   },
 
   // 页面周期函数--监听页面加载
-  onLoad() {},
+  onLoad() {
+    // this.getQuestionGroupList()
+  },
 }
 </script>
 

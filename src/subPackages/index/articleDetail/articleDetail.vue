@@ -16,7 +16,7 @@
           <!-- 日期、阅读量 -->
           <view class="aali-tip">
             <view class="aali-tip-date">{{ articleData.create_time }}</view>
-            <view class="aali-tip-view">{{ "阅读 " + articleData.view }}</view>
+            <view class="aali-tip-view">{{ "阅读 " + articleData.visitNumber }}</view>
           </view>
         </view>
       </view>
@@ -31,7 +31,7 @@
     <view class="article-main">
       <!-- 文章图片 -->
       <u-swiper
-        :list="articleData.picList"
+        :list="articleData.images"
         indicator
         indicatorMode="dot"
         circular
@@ -50,13 +50,17 @@
 
       <!-- 文章标签 -->
       <view class="article-main-tags">
-        <my-tag class="tag" type="success" v-for="(item, index) in articleData.tagList" :key="index">{{ "#" + item }}</my-tag>
+        <my-tag class="tag" type="success" v-for="(item, index) in articleData.tags" :key="index">{{ "#" + item }}</my-tag>
       </view>
     </view>
 
     <!-- 评论 -->
     <view class="article-comment-header">全部评论</view>
-    <article-comment :commentList="commentList"></article-comment>
+    <article-comment
+      @giveLikeHandler="giveCommentLikeHandler"
+      :commentList="commentList"
+      :hasLikedArr="hasLikedArr"
+    ></article-comment>
 
     <!-- 底部栏 -->
     <view class="article-bar">
@@ -86,10 +90,12 @@
 <script>
 import ArticleComment from "../components/article-comment.vue"
 import { commentList } from "@/mock/commentList.js"
+
 export default {
   components: { ArticleComment },
   props: {},
   data: () => ({
+    articleId: "",
     articleData: {
       id: uni.$u.guid(20),
       userName: "稀土君",
@@ -98,22 +104,22 @@ export default {
       content: `前端这个技术领域，在应用化以后，涵盖的内容越来越广——纯表现层、应用实现层、应用架构层、基础设施层到改进开发范式的理念层，都有太多可以去钻研的技术点，衍生出了无数前端开发的发展路线。“别更新了，学不动了”成了前端开发群体的切肤之痛，如何在纷繁复杂的前端潮流中找准自己的方向，是年轻前端开发们的群体痛点。
                 在过去的几年间，来自尤雨溪及其团队开发的Vue.js获得了国内外前端开发的广泛青睐，从小型企业到中型代理机构，再到市值数十亿美元的上市公司，都有Vue的实践用例。2020年9月18日，Vue 3.0正式发布，提供了更好的性能、更小的捆绑包体积、更好的 TypeScript 集成、用于处理大规模用例的新 API，并为框架未来的长期迭代奠定了坚实的基础。
               `,
-      picList: [
+      images: [
         "https://cdn.uviewui.com/uview/swiper/swiper3.png",
         "https://cdn.uviewui.com/uview/swiper/swiper2.png",
         "https://cdn.uviewui.com/uview/swiper/swiper1.png",
       ],
-      tagList: ["前端", "Vue"],
+      tags: ["前端", "Vue"],
       create_time: "2022/03/17",
-      view: 273,
+      visitNumber: 273,
       likeNumber: 23,
       commentNumber: 7,
       thumbStatus: false,
-      // commentList: commentList,
     },
     commentList: commentList,
+    hasLikedArr: [0, 2],
     styles: {
-      thumbColor: "#3f536e",
+      thumbColor: "#808080",
     },
     commentText: "",
   }),
@@ -131,13 +137,40 @@ export default {
 
     // 预览图片
     previewImage(index) {
-      uni.previewImage({ urls: this.articleData.picList, current: index, loop: true })
+      uni.previewImage({ urls: this.articleData.images, current: index, loop: true })
     },
 
     // 获取文章数据
     async getArticleData() {
-      const { data: res } = await uni.request({ url: "/get/article", method: "POST", data: { id: "01" } })
+      const { data: res } = await uni.request({ url: "/index/get/one/essays", data: { invitationId: this.articleId } })
       this.articleData = res.data
+      // console.log(res)
+      // this.addVisitNumber()
+    },
+
+    // 获取评论列表
+    async getCommentList() {
+      const { data: res } = await uni.request({
+        url: "/index/get/all/comment",
+        data: { invitationId: this.articleId, currentPage: 1, pageSize: 5 },
+      })
+      console.log(res.data)
+      this.commentList = res.data.comment
+    },
+
+    // 获取用户对评论列表的点赞列表
+    async getHasLikedArr() {
+      const { data: res } = await uni.request({ url: "/get/hasLikedArr", data: { invitationId: this.articleId } })
+      this.hasLikedArr = res.data
+    },
+
+    // 文章访问量增加
+    async addVisitNumber() {
+      const { data: res, result } = await uni.request({
+        url: "/add/visitNumber",
+        data: { articleId: this.articleId, visitNumber: this.articleData.visitNumber },
+      })
+      if (result === "SUCCESS") this.articleData.visitNumber++
     },
 
     // 打开发布面板
@@ -157,7 +190,7 @@ export default {
       }, 1000)
     },
 
-    // 点赞
+    // 文章点赞
     giveLikeHandler() {
       if (this.articleData.thumbStatus) {
         this.articleData.thumbStatus = false
@@ -168,12 +201,37 @@ export default {
         this.articleData.likeNumber++
       }
     },
+
+    // 评论点赞处理函数
+    giveCommentLikeHandler(handlerType, commentId) {
+      // 取消点赞
+      if (handlerType === "down") {
+        this.hasLikedArr.splice(this.hasLikedArr.indexOf(commentId), 1)
+        this.commentList = this.commentList.filter(item => {
+          if (item.id === commentId) {
+            item.likeNumber--
+          }
+        })
+      } else if (handlerType === "up") {
+        // 点赞
+        this.hasLikedArr.push(commentId)
+        this.commentList = this.commentList.filter(item => {
+          if (item.id === commentId) {
+            item.likeNumber++
+          }
+        })
+      }
+    },
   },
   watch: {},
 
   // 页面周期函数--监听页面加载
-  onLoad() {
-    // this.getArticleData()
+  onLoad(options) {
+    this.articleId = options.articleId
+
+    this.getArticleData()
+    this.getCommentList()
+    // this.getHasLikedArr()
   },
 }
 </script>

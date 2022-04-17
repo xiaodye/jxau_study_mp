@@ -2,7 +2,7 @@
   <div class="comment">
     <!-- 评论列表 -->
     <view class="comment-list" v-if="commentList.length">
-      <view class="comment-list-item" v-for="item in commentList" :key="item.uuid" @click="gotoReply">
+      <view class="comment-list-item" v-for="(item, index) in commentList" :key="item.uuid" @click="gotoReply">
         <view class="cli-lf">
           <u-avatar :src="item.avatarUrl" :size="rpxToPx(70)" @click="previewAvatar(item.avatarUrl)"></u-avatar>
         </view>
@@ -26,12 +26,12 @@
               <view class="cli-rfr-call">
                 <!-- color="#19be6b" -->
                 <u-icon name="chat" :size="rpxToPx(45)" color="#808080"></u-icon>
-                <text>{{ item.callNum }}</text>
+                <text>{{ item.commentNumber }}</text>
               </view>
-              <view class="cli-rfr-like" @click.stop="giveLikeHandler">
+              <view class="cli-rfr-like" @click.stop="giveLike">
                 <!-- color="#fa3534" -->
-                <u-icon name="thumb-up" :size="rpxToPx(45)" :color="styles.thumbColor"></u-icon>
-                <text>{{ item.like }}</text>
+                <u-icon name="heart" :size="rpxToPx(45)" :color="thumbStatus(index)"></u-icon>
+                <text>{{ item.likeNumber }}</text>
               </view>
             </view>
           </view>
@@ -53,6 +53,10 @@ export default {
       type: Array,
       required: true,
     },
+    hasLikedArr: {
+      type: Array,
+      required: true,
+    },
     showIcons: {
       type: Boolean,
       default: true,
@@ -63,13 +67,37 @@ export default {
       thumbColor: "#808080",
     },
   }),
-  computed: {},
-  methods: {
-    // 点赞
-    giveLikeHandler() {
-      if (this.styles.thumbColor === "#3f536e") return (this.styles.thumbColor = "#fa3534")
-      this.styles.thumbColor = "#3f536e"
+  computed: {
+    hasExisted() {
+      return id => {
+        return this.hasLikedArr.includes(id) ? true : false
+      }
     },
+
+    thumbStatus() {
+      return id => {
+        return this.hasLikedArr.includes(id) ? "#fa3534" : "#808080"
+      }
+    },
+  },
+  methods: {
+    // 点赞点击处理函数
+    async giveLike(articleId, commentId) {
+      // 取消点赞
+      if (this.hasExisted(commentId)) {
+        const { data: res, result } = uni.request({ url: "/like", articleId: articleId, commentId: commentId })
+        if (result === "SUCCESS") {
+          this.$emit("giveCommentLikeHandler", "down", articleId, commentId)
+        }
+      } else {
+        // 点赞
+        const { data: res, result } = uni.request({ url: "/like", articleId: articleId, commentId: commentId })
+        if (result === "SUCCESS") {
+          this.$emit("giveCommentLikeHandler", "up", articleId, commentId)
+        }
+      }
+    },
+
     // 跳转回复页
     gotoReply() {
       uni.navigateTo({ url: "/subPackages/index/reply/reply" })

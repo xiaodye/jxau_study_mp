@@ -45,10 +45,7 @@ export default {
       try {
         // 获取微信用户信息
         const { userInfo } = await uni.getUserProfile({ desc: "获取微信用户信息", lang: "zh_CN" })
-        uni.$u.toast("授权成功")
         console.log(userInfo)
-        // this.getUserInfo(userInfo)
-        // console.log(this.userInfo)
 
         // 获取code
         const { code } = await uni.login({ provider: "weixin" })
@@ -60,13 +57,17 @@ export default {
           method: "GET",
           data: { code: code, nickName: userInfo.nickName, avatarUrl: userInfo.avatarUrl },
         })
-        console.log(res)
+        // console.log(res)
+        if (res.status !== "200") return uni.$u.toast("登录失败")
 
+        // 存储token，userInfo
         uni.setStorageSync("token", res.data.token)
         this.getUserInfo(res.data.user)
       } catch (err) {
-        uni.$u.toast("微信登录异常")
-        throw new Error(err)
+        console.error(err)
+        if (err.errMsg === "getUserProfile:fail auth deny") return uni.$u.toast("取消授权")
+        uni.$u.toast("请求异常，请重试")
+      } finally {
       }
     },
   },
@@ -81,6 +82,9 @@ export default {
   box-sizing: border-box;
   background-image: linear-gradient(to top, #96fbc4 0%, #f9f586 100%);
   padding: 0 60rpx 60rpx;
+
+  display: flex;
+  flex-direction: column;
 
   &-tip {
     font-size: 60rpx;
@@ -99,7 +103,8 @@ export default {
   }
 
   &-other {
-    margin-top: 100rpx;
+    margin-top: auto;
+    margin-bottom: 100rpx;
 
     &-weixin {
       display: flex;

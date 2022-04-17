@@ -6,8 +6,8 @@ export const commentList = [
     isAuthor: true,
     content:
       "3月24日的【掘金夜谈No.1】畅聊 VUE3.0 & 前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
-    like: 11,
-    callNum: 4,
+    likeNumber: 11,
+    commentNumber: 4,
     create_time: "2022-04-04",
   },
   {
@@ -16,8 +16,8 @@ export const commentList = [
     avatarUrl: "https://s2.loli.net/2022/03/17/qR7twcYdV43hmCg.png",
     isAuthor: false,
     content: "回放呢？",
-    like: 1,
-    callNum: 6,
+    likeNumber: 1,
+    commentNumber: 6,
     create_time: "2022-04-04",
   },
   {
@@ -26,8 +26,8 @@ export const commentList = [
     avatarUrl: "https://s2.loli.net/2022/03/17/3YKvgwmo1yWzBHG.png",
     isAuthor: false,
     content: "中了实物怎么修改地址？",
-    like: 22,
-    callNum: 0,
+    likeNumber: 22,
+    commentNumber: 0,
     create_time: "2022-04-04",
   },
   {
@@ -37,8 +37,8 @@ export const commentList = [
     isAuthor: false,
     content:
       "3月24日的【掘金夜谈No.1】畅聊 VUE3.0 & 前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
-    like: 11,
-    callNum: 4,
+    likeNumber: 11,
+    commentNumber: 4,
     create_time: "2022-04-04",
   },
 ]
