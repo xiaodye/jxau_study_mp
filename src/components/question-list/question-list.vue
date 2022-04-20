@@ -2,7 +2,7 @@
   <view class="question-container">
     <!-- 题目列表 -->
     <view class="question-list" v-if="questionList.length">
-      <view class="question-list-item" v-for="item in questionList" :key="item.id" @click.stop="gotoDetail">
+      <view class="question-list-item" v-for="item in questionList" :key="item.id" @click.stop="gotoDetail(item.id)">
         <view class="question-list-item-desc">
           <view class="title u-line-1">{{ item.title }}</view>
 
@@ -13,7 +13,7 @@
             </view>
 
             <view class="pass">
-              <text class="pass-text">通过率：</text>
+              <text class="pass-text">正确率：</text>
               <text class="pass-rate">{{ item.passRate + "%" }}</text>
             </view>
           </view>
@@ -59,8 +59,8 @@ export default {
     },
 
     // goto detail
-    gotoDetail() {
-      uni.navigateTo({ url: "/subPackages/exercise/questionDetail/questionDetail" })
+    gotoDetail(id) {
+      uni.navigateTo({ url: "/subPackages/exercise/questionDetail/questionDetail?id=" + id })
     },
   },
 

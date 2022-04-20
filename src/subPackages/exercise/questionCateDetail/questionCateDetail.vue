@@ -1,14 +1,14 @@
 <template>
   <view class="question-cate-detail">
     <!-- 页面头部 -->
-    <view class="cate-header" :style="{ paddingTop: navHeight + 'px' }">
+    <view class="cate-header" :style="{ paddingTop: navHeight + 'px', backgroundImage: categoryConfig.bgColor }">
       <!-- 描述 -->
       <view class="cate-header-desc">
-        <view class="t-icon t-icon-race"></view>
+        <view class="t-icon" :class="[categoryConfig.icon]"></view>
 
         <view class="cate-header-desc-rg">
-          <view class="title">竞赛精选</view>
-          <view class="content">从竞赛中精心挑选的题目，非常适合深入学习的题库</view>
+          <view class="title">{{ categoryConfig.headLine }}</view>
+          <view class="content">{{ categoryConfig.desc }}</view>
         </view>
       </view>
 
@@ -34,22 +34,78 @@
 <script>
 import { systemInfo } from "@/mixin.js"
 import { questionList } from "@/mock/questionList.js"
+import categories from "./categories.js"
 export default {
   components: {},
   mixins: [systemInfo],
   data: () => ({
+    key: "race",
+    categoryConfig: null,
     questionList: questionList,
     status: "loadmore",
+
+    totalPages: 5,
+    paramData: {
+      currentPage: 1,
+      pageSize: 10,
+    },
   }),
   computed: {},
-  methods: {},
+  methods: {
+    pageInit(key) {
+      this.key = key
+      this.categoryConfig = categories[this.key]
+    },
+
+    // 获取题组列表
+    async getQuestionGroupList() {
+      const { data: res } = await uni.request({
+        url: "/test",
+        method: "GET",
+        data: { category: this.key, currentPage: this.paramData, currentPage, pageSize: this.paramData.pageSize },
+      })
+      console.log(res)
+      if (res.status !== "200") return uni.$u.toast("获取题组列表失败")
+      this.questionList = res.data.list
+      this.totalPages = res.pages
+    },
+
+    // 加载更多
+    async loadMore() {
+      // 节流
+      if (this.status === "loading" || this.status === "nomore") return
+
+      // 获取数组
+      this.paramData.currentPage++
+      try {
+        const { data: res } = await uni.request({
+          url: "/test",
+          method: "GET",
+          data: { category: this.key, currentPage: this.paramData.currentPage, pageSize: this.paramData.pageSize },
+        })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("下拉加载失败")
+        this.questionList = [...this.questionList, ...res.data.list]
+
+        // 判断是否还有数据
+        if (this.paramData.currentPage >= this.totalPages) return (this.status = "nomore")
+        this.status = "loadmore"
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+        this.status = "loadmore"
+      }
+    },
+  },
   watch: {},
 
-  onLoad() {},
+  onLoad(options) {
+    this.pageInit(options.key)
+  },
 
   // 监听下拉触底
   onReachBottom() {
-    // 防抖
+    // 节流
     if (this.status === "loading" || this.status === "nomore") return
 
     this.status = "loading"
@@ -86,19 +142,31 @@ $header_title: 100rpx;
   height: $header;
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(to bottom, #fa709a 0%, #fee140 100%);
+  // background-image: linear-gradient(to bottom, #fa709a 0%, #fee140 100%);
+  // background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
+  // background-image: linear-gradient(to bottom, #43e97b 0%, #38f9d7 100%);
 
   &-desc {
     flex: 1;
     padding: 0 20rpx;
     display: flex;
     align-items: center;
-
+    .t-icon {
+      margin-right: 40rpx;
+    }
     .t-icon-race {
       width: 200rpx;
       height: 200rpx;
-      margin-right: 40rpx;
     }
+    .t-icon-algo {
+      width: 180rpx;
+      height: 180rpx;
+    }
+    .t-icon-interview {
+      width: 160rpx;
+      height: 160rpx;
+    }
+
     &-rg {
       height: 100%;
       width: 60%;

@@ -15,7 +15,7 @@
 
             <!-- 通过率 -->
             <view class="pass">
-              <text class="pass-text">通过率：</text>
+              <text class="pass-text">正确率：</text>
               <text class="pass-rate">{{ question.passRate + "%" }}</text>
             </view>
           </view>
@@ -56,7 +56,7 @@
     </view>
 
     <!-- 查看解析 -->
-    <u-button text="查看解析" shape="circle" color="#19be6b"></u-button>
+    <u-button text="查看解析" shape="circle" color="#19be6b" @click="gotoAnalysis"></u-button>
   </view>
 </template>
 
@@ -96,23 +96,25 @@ export default {
       switch (level) {
         case "简单":
           return "success"
-          break
         case "中等":
           return "warning"
-          break
         case "困难":
           return "error"
         default:
           break
       }
     },
+
+    gotoAnalysis() {
+      uni.navigateTo({ url: "/subPackages/exercise/analysis/analysis" })
+    },
   },
   watch: {},
 
   // 页面周期函数--监听页面加载
   onLoad(options) {
-    console.log(JSON.parse(options.answerSheet))
-    this.answerSheet = options.answerSheet
+    // console.log(JSON.parse(options.answerSheet))
+    // this.answerSheet = options.answerSheet
   },
 }
 </script>

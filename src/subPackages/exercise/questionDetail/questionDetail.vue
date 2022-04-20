@@ -48,8 +48,8 @@
               :key="item.key"
               @click="selectOption(item, index, questionInfoList[activeIndex].question_type)"
             >
-              <text>{{ item.key + "." }}</text>
-              <text class="option-group-item-text">{{ item.choice }}</text>
+              <view class="key">{{ item.key + "." }}</view>
+              <view class="option-group-item-text">{{ item.choice }}</view>
             </view>
           </view>
         </view>
@@ -75,7 +75,7 @@
     <!-- 模态框 -->
     <u-modal
       :show="showModal"
-      @confirm="commitCard"
+      @confirm="commitAnswerCard"
       @cancel="closeModal"
       title="确认提交？"
       showCancelButton
@@ -91,6 +91,7 @@ export default {
   components: {},
   mixins: [systemInfo],
   data: () => ({
+    questionGroupId: "",
     questionInfoList: questionInfoList,
 
     // 索引
@@ -118,7 +119,7 @@ export default {
       this.questionInfoList.forEach((item, index) => {
         if (item.question_type === "单选题") {
           this.answerMap.set(index + 1, null)
-        } else {
+        } else if (item.question_type === "多选题") {
           this.answerMap.set(index + 1, [])
         }
       })
@@ -131,11 +132,11 @@ export default {
       const { data: res } = await uni.request({
         url: "/question/get/set/questions",
         method: "GET",
-        data: { QuestionSetId: "4656ed9ccb2b4256b1ee22cceb8ca394" },
+        data: { QuestionSetId: this.questionGroupId },
       })
       console.log(res)
       if (res.status !== "200") return uni.$u.toast("获取题组失败")
-      this.questionInfoList = res.data.multipleChoiceList
+      this.questionInfoList = res.data
     },
 
     // 选中选项
@@ -205,9 +206,9 @@ export default {
     // 用于判断选中option如何添加样式
     getMapValue(key, value, type) {
       /**
-       * key: 题号，第几题 如1 2 3 4...
-       * value: 题目的选项，如A B C D
-       * type: 题目的类型 如单选题 多选题
+       * @key: 题号，第几题 如1 2 3 4...
+       * @value: 题目的选项，如A B C D
+       * @type: 题目的类型 如单选题 多选题
        */
 
       if (type === "单选题") return this.answerMap.get(key) === value
@@ -220,7 +221,7 @@ export default {
     },
 
     // 提交答题卡
-    commitCard() {
+    async commitAnswerCard() {
       // 提交
       setTimeout(() => {
         // map转obj
@@ -248,7 +249,8 @@ export default {
     },
   },
 
-  onLoad() {
+  onLoad(options) {
+    this.questionGroupId = options.id
     this.createAnswerMap()
     // this.getQuestionList()
   },
@@ -312,28 +314,34 @@ export default {
     .option-group {
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
-      min-height: 500rpx;
-      margin-top: 20rpx;
+      margin-top: 40rpx;
 
       &-item {
-        @include vertical_center();
+        display: flex;
 
         box-sizing: border-box;
         width: 100%;
-        min-height: 80rpx;
         background-color: #f3f4f6;
         border-radius: 20rpx;
-        padding: 0 20rpx;
+        padding: 20rpx;
+        margin-bottom: 30rpx;
         color: $uni-text-color-grey;
+
+        &:last-of-type {
+          margin: 0;
+        }
 
         &.active {
           background-image: linear-gradient(to right, #19be6b 0%, #71d5a1 100%);
           color: #fff;
         }
 
+        .key {
+          width: 50rpx;
+        }
+
         &-text {
-          margin-left: 20rpx;
+          flex: 1;
           font-size: 32rpx;
         }
       }

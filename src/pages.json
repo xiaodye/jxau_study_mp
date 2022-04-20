@@ -97,6 +97,13 @@
             "navigationBarTitleText": "questionCateDetail",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "analysis/analysis",
+          "style": {
+            "navigationBarTitleText": "解析",
+            "navigationBarBackgroundColor": "#fff"
+          }
         }
       ]
     }

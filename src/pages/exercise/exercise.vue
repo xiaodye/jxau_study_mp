@@ -5,17 +5,17 @@
 <template>
   <view class="exercise">
     <view class="exercise-module">
-      <view class="exercise-module-lf">
+      <view class="exercise-module-lf" @click="gotoCateDetail('algo')">
         <view class="title">编程基础</view>
         <view class="t-icon t-icon-algo"></view>
       </view>
 
       <view class="exercise-module-rg">
-        <view class="rg-top" @click="gotoCateDetail">
+        <view class="rg-top" @click="gotoCateDetail('race')">
           <view class="title">竞赛精选</view>
           <view class="t-icon t-icon-race"></view>
         </view>
-        <view class="rg-bottom">
+        <view class="rg-bottom" @click="gotoCateDetail('interview')">
           <view class="title">面试宝典</view>
           <view class="t-icon t-icon-interview"></view>
         </view>
@@ -93,8 +93,8 @@ export default {
     },
 
     // goto 分类大块
-    gotoCateDetail() {
-      uni.navigateTo({ url: "/subPackages/exercise/questionCateDetail/questionCateDetail" })
+    gotoCateDetail(key) {
+      uni.navigateTo({ url: "/subPackages/exercise/questionCateDetail/questionCateDetail?key=" + key })
     },
 
     // 自动刷新
