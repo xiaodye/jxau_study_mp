@@ -71,6 +71,13 @@
           "style": {
             "navigationBarTitleText": "回复"
           }
+        },
+        {
+          "path": "downloadPage/downloadPage",
+          "style": {
+            // "navigationBarBackgroundColor": "#fff",
+            "navigationBarTitleText": "下载文件"
+          }
         }
       ]
     },

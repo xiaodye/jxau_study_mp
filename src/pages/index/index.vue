@@ -5,7 +5,7 @@
 <template>
   <view class="home">
     <!-- 导航栏 -->
-    <view class="nav" :style="{ height: navHeight + 'px', paddingTop: statusBarHeight + 'px' }" @>
+    <view class="nav" :style="{ height: navHeight + 'px', paddingTop: statusBarHeight + 'px' }">
       <u-search placeholder="前端" :showAction="false" :disabled="true" @click="gotoSearch"></u-search>
     </view>
 
@@ -81,7 +81,7 @@
       <!-- 电子书 -->
       <swiper-item class="home-list-item">
         <view id="content-container-4">
-          <u-empty text="还没有电子书哦" icon="http://cdn.uviewui.com/uview/empty/car.png"></u-empty>
+          <files></files>
         </view>
       </swiper-item>
     </swiper>
@@ -91,14 +91,12 @@
       <u-button type="error" text="登录页开发"></u-button>
     </navigator> -->
 
-    <!-- seed -->
-    <!-- <navigator style="margin-top: 20rpx" open-type="navigate" url="/subPackages/seedPages/uploadPic/uploadPic">
-      <u-button type="error" text="seed"></u-button>
-    </navigator> -->
-
     <view class="go-write" v-if="showWrite" @click="gotoWrite">
       <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon>
     </view>
+
+    <!-- 加载页 -->
+    <u-loading-page :loading="loading"></u-loading-page>
   </view>
 </template>
 
@@ -122,22 +120,26 @@ export default {
         name: "课程",
       },
       {
-        name: "电子书",
+        name: "资料",
       },
     ],
-
+    // 子tab
     subTabList: ["推荐", "最热", "最新"],
-    tabActiveIndex: 0,
-    subActiveIndex: 0,
-    swiperHeight: 0,
 
-    showWrite: true,
+    tabActiveIndex: 3,
+    subActiveIndex: 0,
+    swiperHeight: 0, // 选项卡高度
+
     articleList: [],
     videoList: videoList,
     contentList: [articleList, [], [], []],
 
     // 当前ref
     activeRef: "articleList",
+
+    // 加载页
+    loading: true,
+    showWrite: true,
 
     totalPages: 0, // 总页数
     paramsData: {
@@ -185,6 +187,7 @@ export default {
 
     // 获取文章列表
     async getArticleList() {
+      this.loading = true
       try {
         const { data: res } = await uni.request({
           url: "/index/get/all/essays",
@@ -199,6 +202,8 @@ export default {
       } catch (err) {
         console.error(err)
         uni.$u.toast("获取文章列表失败")
+      } finally {
+        this.loading = false
       }
     },
 
@@ -257,7 +262,14 @@ export default {
   onLoad() {
     // 加载获取内容高度
     this.$nextTick(() => this.setSwiperHeight())
-    this.getArticleList()
+    // this.getArticleList()
+
+    // 模拟
+    setTimeout(() => {
+      this.articleList = articleList
+      this.$nextTick(() => this.setSwiperHeight())
+      this.loading = false
+    }, 100)
   },
 
   // 监听触底

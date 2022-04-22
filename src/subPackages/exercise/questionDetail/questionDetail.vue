@@ -19,7 +19,7 @@
         ></u-line-progress>
         <view class="qmlp-text">
           <text class="qmlp-text-up">{{ lineProgress }}</text>
-          <text class="qmlp-text-fill">{{ "/10" }}</text>
+          <text class="qmlp-text-fill">{{ "/" + questionInfoList.length }}</text>
         </view>
       </view>
 
@@ -81,6 +81,9 @@
       showCancelButton
       :asyncClose="true"
     ></u-modal>
+
+    <!-- 加载页 -->
+    <u-loading-page :loading="loading"></u-loading-page>
   </view>
 </template>
 
@@ -92,7 +95,7 @@ export default {
   mixins: [systemInfo],
   data: () => ({
     questionGroupId: "",
-    questionInfoList: questionInfoList,
+    questionInfoList: [{}],
 
     // 索引
     activeIndex: 0,
@@ -108,6 +111,7 @@ export default {
 
     show: true,
     showModal: false,
+    loading: true,
 
     answerMap: new Map(),
   }),
@@ -251,8 +255,15 @@ export default {
 
   onLoad(options) {
     this.questionGroupId = options.id
+    this.questionInfoList = questionInfoList
     this.createAnswerMap()
     // this.getQuestionList()
+
+    // 模拟
+    setTimeout(() => {
+      this.questionInfoList = questionInfoList
+      this.loading = false
+    }, 2000)
   },
 
   // onBackPress(e) {

@@ -64,7 +64,7 @@
     </view>
 
     <!-- 空白页 -->
-    <u-empty v-else class="empty" mode="list" text="文章列表为空"></u-empty>
+    <u-empty v-else class="empty" icon="http://cdn.uviewui.com/uview/empty/data.png" text="文章列表为空"></u-empty>
   </view>
 </template>
 

@@ -1,5 +1,8 @@
 <template>
   <view class="analysis">
+    <!-- 加载页 -->
+    <u-loading-page :loading="loading"></u-loading-page>
+
     <!-- 答题卡 -->
     <view class="analysis-card">
       <view class="analysis-card-type">
@@ -14,7 +17,7 @@
           <view
             class="index-circle"
             :style="{ backgroundColor: getCircleBgColor(item.isCorrect) }"
-            :class="[index === activeIndex ? 'active' : '']"
+            :class="[getCircleActiveClass(index, item.isCorrect)]"
           >
             {{ index + 1 }}
           </view>
@@ -43,13 +46,25 @@ import { analysisList } from "@/mock/analysisList.js"
 export default {
   components: {},
   data: () => ({
-    analysisList: analysisList,
+    analysisList: [{}],
     activeIndex: 0,
-    mainShow: true,
+    mainShow: false,
+    loading: true,
+
+    questionGroupInfo: null,
   }),
   computed: {
     getCircleBgColor() {
       return isCorrect => (isCorrect ? "#19be6b" : "#f56c6c")
+    },
+
+    getCircleActiveClass() {
+      return (index, isCorrect) => {
+        if (index === this.activeIndex) {
+          if (isCorrect) return "active_correct"
+          return "active_worng"
+        }
+      }
     },
   },
   methods: {
@@ -63,11 +78,47 @@ export default {
         this.mainShow = true
       }, 300)
     },
+
+    // 获取题组信息
+    getQuestionGroupInfo(info) {
+      this.questionGroupInfo = info
+    },
+
+    // 获取解析
+    async getAnalysisList() {
+      this.loading = true
+      try {
+        const { data: res } = await uni.request({
+          url: "/test",
+          method: "GET",
+          data: { questionGroupInfo: this.questionGroupInfo },
+        })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("获取解析失败")
+
+        this.analysisList = res.data
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+      } finally {
+        this.loading = false
+        this.mainShow = true
+      }
+    },
   },
   watch: {},
 
   // 页面周期函数--监听页面加载
-  onLoad() {},
+  onLoad(options) {
+    this.getQuestionGroupInfo(options.questionGroupInfo)
+
+    // 模拟
+    setTimeout(() => {
+      this.loading = false
+      this.analysisList = analysisList
+      this.mainShow = true
+    }, 2000)
+  },
 }
 </script>
 
@@ -177,13 +228,19 @@ view {
           font-size: 30rpx;
           transition: all 0.2s;
 
-          &.active {
+          &.active_correct,
+          &.active_worng {
             width: 80rpx;
             height: 80rpx;
-            box-shadow: #ff9900 0 0 40rpx;
             border: 2rpx solid #fff;
             font-size: 34rpx;
             font-weight: bold;
+          }
+          &.active_correct {
+            box-shadow: #19be6b 0 0 40rpx;
+          }
+          &.active_worng {
+            box-shadow: #f56c6c 0 0 40rpx;
           }
         }
       }

@@ -10,7 +10,9 @@
           <view class="info">
             <view class="level">
               <my-tag class="tag" :type="levelColor(question.level)" :circle="false" size="mini">{{ question.level }}</my-tag>
-              <my-tag class="tag" type="info" size="mini" v-for="tag in question.tagList" :key="tag.tagId">{{ tag.tag }}</my-tag>
+              <my-tag class="tag" type="info" size="mini" v-for="tag in question.tagList" :key="tag.tagId">
+                {{ tag.tag }}
+              </my-tag>
             </view>
 
             <!-- 通过率 -->
@@ -65,6 +67,9 @@ export default {
   components: {},
   data: () => ({
     answerSheet: null,
+    questionGroupId: null,
+    faultQuestions: [],
+
     question: {
       id: "02",
       title: "寻找两个正序数组的中位数寻找两个正序数组的中位数",
@@ -106,7 +111,13 @@ export default {
     },
 
     gotoAnalysis() {
-      uni.navigateTo({ url: "/subPackages/exercise/analysis/analysis" })
+      const questionGroupInfo = null
+      // questionGroupInfo.questionGroupId = this.questionGroupId
+      // questionGroupInfo.user_choice = this.answerSheet
+      // questionGroupInfo.faultQuestions = this.faultQuestions
+
+      console.log(questionGroupInfo)
+      uni.navigateTo({ url: "/subPackages/exercise/analysis/analysis?questionGroupInfo=" + JSON.stringify(questionGroupInfo) })
     },
   },
   watch: {},
@@ -161,8 +172,8 @@ $answer_panel: 340rpx;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         .sub-circle {
           margin: auto;
-          width: 80%;
-          height: 80%;
+          width: 75%;
+          height: 75%;
           border-radius: 50%;
           background-color: #fff;
 
@@ -174,12 +185,13 @@ $answer_panel: 340rpx;
 
           .rate {
             font-size: 45rpx;
-            font-weight: 600;
+            font-weight: 700;
             color: $uni-color-success;
           }
           .text {
-            font-size: 30rpx;
-            font-weight: 600;
+            font-size: 32rpx;
+            color: $uni-color-paragraph;
+            font-weight: 700;
           }
         }
       }
