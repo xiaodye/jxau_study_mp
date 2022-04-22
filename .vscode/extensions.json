@@ -4,6 +4,7 @@
     "modyqyw.vscode-uni-app-schemas",
     "naumovs.color-highlight",
     "aaron-bond.better-comments",
-    "mrmlnc.vscode-scss"
+    "mrmlnc.vscode-scss",
+    "christian-kohler.path-intellisense"
   ]
 }

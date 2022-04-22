@@ -10,6 +10,11 @@
   "create-uniapp-view.style": "scss",
   "create-uniapp-view.typescript": false,
   "create-uniapp-view.directory": true,
+  "create-uniapp-view.name": "与文件夹同名",
+
+  "uniapp-vscode.jsAutoApi": false,
+  "uniapp-vscode.jsAutoCompletion": false,
+  "uniapp-vscode.jsHover": false,
 
   // 路径提示
   "path-intellisense.mappings": {
@@ -27,6 +32,8 @@
   "[vue]": {
     "editor.defaultFormatter": "octref.vetur",
     // "editor.defaultFormatter": "johnsoncodehk.volar",
+    // "editor.defaultFormatter": "esbenp.prettier-vscode",
+
     "editor.tabSize": 2
   },
   "vetur.format.defaultFormatterOptions": {
@@ -50,6 +57,5 @@
       "bold": true,
       "italic": false
     }
-  ],
-  "prettier.semi": false
+  ]
 }
