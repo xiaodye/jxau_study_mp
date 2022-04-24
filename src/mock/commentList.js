@@ -4,8 +4,7 @@ export const commentList = [
     userName: "稀土君",
     avatarUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
     isAuthor: true,
-    content:
-      "3月24日的【掘金夜谈No.1】畅聊 VUE3.0 & 前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
+    content: "3月24日的【掘金夜谈No.1】畅聊 VUE3.0 前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
     likeNumber: 11,
     commentNumber: 4,
     create_time: "2022-04-04",
@@ -35,8 +34,7 @@ export const commentList = [
     userName: "银渐层",
     avatarUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
     isAuthor: false,
-    content:
-      "3月24日的【掘金夜谈No.1】畅聊 VUE3.0 & 前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
+    content: "3月24日的掘金夜谈No.1畅聊 VUE3.0  前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
     likeNumber: 11,
     commentNumber: 4,
     create_time: "2022-04-04",

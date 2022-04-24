@@ -125,10 +125,7 @@ export default {
         // console.log(this.selectedTagList)
       } else {
         this.tagList[item.index].type = "info"
-        this.selectedTagList = this.selectedTagList.filter((tag) => tag !== item.text)
-
-        const list = JSON.parse(JSON.stringify(this.selectedTagList))
-        console.log(list)
+        this.selectedTagList = this.selectedTagList.filter(tag => tag !== item.text)
       }
     },
 
@@ -143,11 +140,10 @@ export default {
       }
       this.$emit("addTag", tagList)
 
-      // 清空selectedTagList,重置样式,保证数据响应式
-      this.tagList.forEach((tag) => {
-        tag.type = "info"
-      })
-      this.selectedTagList.splice(0, this.selectedTagList.length)
+      // 清空selectedTagList,重置样式
+      this.tagList.forEach(tag => (tag.type = "info"))
+      // this.selectedTagList.splice(0, this.selectedTagList.length)
+      this.selectedTagList = []
     },
   },
   watch: {

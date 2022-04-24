@@ -16,7 +16,7 @@
           <!-- 日期、阅读量 -->
           <view class="aali-tip">
             <view class="aali-tip-date">{{ articleData.create_time }}</view>
-            <view class="aali-tip-view">{{ "阅读 " + articleData.visitNumber }}</view>
+            <view class="aali-tip-view">{{ "阅读：" + articleData.visitNumber }}</view>
           </view>
         </view>
       </view>
@@ -57,7 +57,7 @@
     <!-- 评论 -->
     <view class="article-comment-header">全部评论</view>
     <article-comment
-      @giveLikeHandler="giveCommentLikeHandler"
+      @giveCommentLikeHandler="giveCommentLikeHandler"
       :commentList="commentList"
       :hasLikedArr="hasLikedArr"
     ></article-comment>
@@ -117,7 +117,7 @@ export default {
       thumbStatus: false,
     },
     commentList: commentList,
-    hasLikedArr: [0, 2],
+    hasLikedArr: [],
     styles: {
       thumbColor: "#808080",
     },
@@ -140,12 +140,16 @@ export default {
       uni.previewImage({ urls: this.articleData.images, current: index, loop: true })
     },
 
+    // 打开发布面板
+    openPanel() {
+      this.$refs.publishPanel.popupShow = true
+    },
+
     // 获取文章数据
     async getArticleData() {
       const { data: res } = await uni.request({ url: "/index/get/one/essays", data: { invitationId: this.articleId } })
       this.articleData = res.data
-      // console.log(res)
-      // this.addVisitNumber()
+      console.log(res)
     },
 
     // 获取评论列表
@@ -156,71 +160,77 @@ export default {
       })
       console.log(res.data)
       this.commentList = res.data.comment
-    },
-
-    // 获取用户对评论列表的点赞列表
-    async getHasLikedArr() {
-      const { data: res } = await uni.request({ url: "/get/hasLikedArr", data: { invitationId: this.articleId } })
-      this.hasLikedArr = res.data
-    },
-
-    // 文章访问量增加
-    async addVisitNumber() {
-      const { data: res, result } = await uni.request({
-        url: "/add/visitNumber",
-        data: { articleId: this.articleId, visitNumber: this.articleData.visitNumber },
-      })
-      if (result === "SUCCESS") this.articleData.visitNumber++
-    },
-
-    // 打开发布面板
-    openPanel() {
-      this.$refs.publishPanel.popupShow = true
+      this.hasLikedArr = res.data.hasLikedArr
     },
 
     // 发布评论
     async publishComment(value) {
-      console.log(value)
-      // const { data: res } = await uni.request({ url: "/publish", method: "POST", data: { text: value } })
-      // console.log(res)
-      setTimeout(() => {
+      try {
+        const { data: res } = await uni.request({
+          url: "/index/add/one/comment",
+          data: {
+            userId: "c4512b64edda4d3a8c874e21fa8aab31",
+            invitationId: this.articleId,
+            commentNumber: this.articleData.commentNumber,
+            content: value,
+          },
+        })
+        if (res.status !== "200") return uni.$u.toast("发布评论失败")
+        this.getCommentList()
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+      } finally {
         this.$refs.publishPanel.text = ""
         this.$refs.publishPanel.btn = { text: "发布", loading: false, disabled: false }
         this.$refs.publishPanel.popupShow = false
-      }, 1000)
+      }
     },
 
     // 文章点赞
-    giveLikeHandler() {
-      if (this.articleData.thumbStatus) {
-        this.articleData.thumbStatus = false
-        this.articleData.likeNumber--
-        uni.$u.toast("取消点赞")
-      } else {
-        this.articleData.thumbStatus = true
-        this.articleData.likeNumber++
+    async giveLikeHandler() {
+      try {
+        if (this.articleData.thumbStatus) {
+          const { data: res } = await uni.request({
+            url: "/index/like/one/essay",
+            data: {
+              userId: "c4512b64edda4d3a8c874e21fa8aab31",
+              likeNumber: this.articleData.likeNumber,
+              invitationId: this.articleData.id,
+            },
+          })
+          console.log(res)
+          if (res.status !== "200") return uni.$u.toast("取消点赞失败")
+
+          this.articleData.thumbStatus = false
+          this.articleData.likeNumber--
+          uni.$u.toast("取消点赞")
+        } else {
+          const { data: res } = await uni.request({
+            url: "/index/like/one/essay",
+            data: {
+              userId: "c4512b64edda4d3a8c874e21fa8aab31",
+              likeNumber: this.articleData.likeNumber,
+              invitationId: this.articleData.id,
+            },
+          })
+          console.log(res)
+          console.log(res.status)
+          if (res.status !== "200") return uni.$u.toast("点赞失败")
+
+          this.articleData.thumbStatus = true
+          this.articleData.likeNumber++
+          uni.$u.toast("点赞成功")
+        }
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("服务器异常")
       }
     },
 
     // 评论点赞处理函数
     giveCommentLikeHandler(handlerType, commentId) {
-      // 取消点赞
-      if (handlerType === "down") {
-        this.hasLikedArr.splice(this.hasLikedArr.indexOf(commentId), 1)
-        this.commentList = this.commentList.filter(item => {
-          if (item.id === commentId) {
-            item.likeNumber--
-          }
-        })
-      } else if (handlerType === "up") {
-        // 点赞
-        this.hasLikedArr.push(commentId)
-        this.commentList = this.commentList.filter(item => {
-          if (item.id === commentId) {
-            item.likeNumber++
-          }
-        })
-      }
+      this.getCommentList()
     },
   },
   watch: {},
@@ -266,10 +276,13 @@ $article_bar: 100rpx;
     padding: $base_padding;
 
     &-lf {
+      flex: 1;
+      margin-right: 30rpx;
       @include vertical_center();
       height: 100%;
 
       &-info {
+        flex: 1;
         margin-left: 30rpx;
         height: 80%;
         display: flex;
@@ -283,10 +296,8 @@ $article_bar: 100rpx;
           @include vertical_center();
           font-size: 30rpx;
           color: $uni-text-color-placeholder;
-          &-date {
-            margin-right: 40rpx;
-          }
           &-view {
+            margin-left: auto;
             font-size: 28rpx;
             color: $uni-opacity-disabled;
           }

@@ -2,36 +2,36 @@
   <div class="comment">
     <!-- 评论列表 -->
     <view class="comment-list" v-if="commentList.length">
-      <view class="comment-list-item" v-for="(item, index) in commentList" :key="item.uuid" @click="gotoReply">
+      <view class="comment-list-item" v-for="(comment, index) in commentList" :key="comment.uuid" @click="gotoReply(index)">
         <view class="cli-lf">
-          <u-avatar :src="item.avatarUrl" :size="rpxToPx(70)" @click="previewAvatar(item.avatarUrl)"></u-avatar>
+          <u-avatar :src="comment.avatarUrl" :size="rpxToPx(70)" @click="previewAvatar(comment.avatarUrl)"></u-avatar>
         </view>
 
         <!-- 右侧 -->
         <view class="cli-rg">
           <view class="cli-rg-author">
             <view class="cli-rg-author-name">
-              <text>{{ item.userName }}</text>
+              <text>{{ comment.userName }}</text>
             </view>
-            <my-tag class="cli-rg-author-tag" v-if="item.isAuthor" size="mini" type="success" :circle="false">作者</my-tag>
+            <my-tag class="cli-rg-author-tag" v-if="comment.isAuthor" size="mini" type="success" :circle="false">作者</my-tag>
           </view>
           <view class="cli-rg-content">
-            <text>{{ item.content }}</text>
+            <text>{{ comment.content }}</text>
           </view>
 
           <!-- 评论底部栏：日期、评论、点赞 -->
           <view class="cli-rg-footer">
-            <view class="cli-rg-footer-date">{{ item.create_time }}</view>
+            <view class="cli-rg-footer-date">{{ comment.create_time }}</view>
             <view class="cli-rg-footer-rg" v-if="showIcons">
               <view class="cli-rfr-call">
                 <!-- color="#19be6b" -->
                 <u-icon name="chat" :size="rpxToPx(45)" color="#808080"></u-icon>
-                <text>{{ item.commentNumber }}</text>
+                <text>{{ comment.commentNumber }}</text>
               </view>
-              <view class="cli-rfr-like" @click.stop="giveLike">
+              <view class="cli-rfr-like" @click.stop="giveLike(comment)">
                 <!-- color="#fa3534" -->
-                <u-icon name="heart" :size="rpxToPx(45)" :color="thumbStatus(index)"></u-icon>
-                <text>{{ item.likeNumber }}</text>
+                <u-icon name="heart" :size="rpxToPx(45)" :color="thumbStatus(comment.id)"></u-icon>
+                <text>{{ comment.likeNumber }}</text>
               </view>
             </view>
           </view>
@@ -82,30 +82,53 @@ export default {
   },
   methods: {
     // 点赞点击处理函数
-    async giveLike(articleId, commentId) {
-      // 取消点赞
-      if (this.hasExisted(commentId)) {
-        const { data: res, result } = uni.request({ url: "/like", articleId: articleId, commentId: commentId })
-        if (result === "SUCCESS") {
-          this.$emit("giveCommentLikeHandler", "down", articleId, commentId)
+    async giveLike(comment) {
+      try {
+        // 取消点赞
+        if (this.hasExisted(comment.id)) {
+          const { data: res } = await uni.request({
+            url: "/index/like/one/comment",
+            data: {
+              userId: "c4512b64edda4d3a8c874e21fa8aab31",
+              commentId: comment.id,
+              likeNumber: comment.likeNumber,
+            },
+          })
+          if (res.status === "200") {
+            this.$emit("giveCommentLikeHandler", "down", comment.id)
+          }
+        } else {
+          // 点赞
+          const { data: res } = await uni.request({
+            url: "/index/like/one/comment",
+            data: {
+              userId: "c4512b64edda4d3a8c874e21fa8aab31",
+              commentId: comment.id,
+              likeNumber: comment.likeNumber,
+            },
+          })
+          if (res.status === "200") {
+            this.$emit("giveCommentLikeHandler", "up", comment.id)
+          }
         }
-      } else {
-        // 点赞
-        const { data: res, result } = uni.request({ url: "/like", articleId: articleId, commentId: commentId })
-        if (result === "SUCCESS") {
-          this.$emit("giveCommentLikeHandler", "up", articleId, commentId)
-        }
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
       }
     },
 
     // 跳转回复页
-    gotoReply() {
-      uni.navigateTo({ url: "/subPackages/index/reply/reply" })
+    gotoReply(index) {
+      let commentStr = JSON.stringify(this.commentList[index])
+      uni.navigateTo({ url: `/subPackages/index/reply/reply?comment=${commentStr}` })
     },
   },
   watch: {},
 
-  mounted() {},
+  mounted() {
+    // console.log(this.hasLikedArr, "hasLikedArr")
+    // console.log(this.commentList, "commentList")
+  },
 }
 </script>
 

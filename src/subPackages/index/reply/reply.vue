@@ -27,16 +27,16 @@ export default {
   components: { ArticleComment, ArticleReply },
   data: () => ({
     comment: [
-      {
-        uuid: "1201030flwfle",
-        userName: "稀土君",
-        avatarUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
-        isAuthor: true,
-        content: "3月24日的【掘金夜谈No.1】畅聊 VUE3.0 & 前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
-        like: 11,
-        callNum: 4,
-        create_time: "2022-04-04",
-      },
+      // {
+      //   uuid: "1201030flwfle",
+      //   userName: "稀土君",
+      //   avatarUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
+      //   isAuthor: true,
+      //   content: "3月24日的【掘金夜谈No.1】畅聊 VUE3.0 & 前端技术新趋势已经上线回放，欢迎大家点击直播间链接：live.juejin.cn",
+      //   like: 11,
+      //   callNum: 4,
+      //   create_time: "2022-04-04",
+      // },
     ],
     replyList: replyList,
   }),
@@ -47,20 +47,52 @@ export default {
       this.$refs.replyPanel.popupShow = true
     },
 
+    // 获取回复列表
+    async getReplyList() {
+      try {
+        const { data: res } = await uni.request({ url: "/index/get/all/re/comment", data: { parentId: this.comment[0].id } })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("获取回复列表失败")
+        this.replyList = res.data.comment
+        console.log(this.replyList)
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+      }
+    },
+
+    // 回复
     async publishReply(value) {
-      console.log(value)
-      // const { data: res } = await uni.request({ url: "/publish", method: "POST", data: { text: value } })
-      // console.log(res)
-      setTimeout(() => {
+      try {
+        const { data: res } = await uni.request({
+          url: "/index/add/re/comment",
+          data: {
+            userId: "c4512b64edda4d3a8c874e21fa8aab31",
+            parentId: this.comment[0].id,
+            commentNumber: this.comment[0].commentNumber,
+            content: value,
+          },
+        })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("回复失败")
+        this.getReplyList()
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+      } finally {
         this.$refs.replyPanel.text = ""
         this.$refs.replyPanel.btn = { text: "发布", loading: false, disabled: false }
         this.$refs.replyPanel.popupShow = false
-      }, 1000)
+      }
     },
   },
   watch: {},
 
-  onLoad() {},
+  onLoad(options) {
+    let comment = JSON.parse(options.comment)
+    this.comment.push(comment)
+    this.getReplyList()
+  },
 }
 </script>
 

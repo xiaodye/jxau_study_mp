@@ -126,7 +126,7 @@ export default {
     // 子tab
     subTabList: ["推荐", "最热", "最新"],
 
-    tabActiveIndex: 3,
+    tabActiveIndex: 0,
     subActiveIndex: 0,
     swiperHeight: 0, // 选项卡高度
 
@@ -262,14 +262,13 @@ export default {
   onLoad() {
     // 加载获取内容高度
     this.$nextTick(() => this.setSwiperHeight())
-    // this.getArticleList()
-
+    this.getArticleList()
     // 模拟
-    setTimeout(() => {
-      this.articleList = articleList
-      this.$nextTick(() => this.setSwiperHeight())
-      this.loading = false
-    }, 100)
+    // setTimeout(() => {
+    //   this.articleList = articleList
+    //   this.$nextTick(() => this.setSwiperHeight())
+    //   this.loading = false
+    // }, 100)
   },
 
   // 监听触底

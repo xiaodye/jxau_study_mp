@@ -30,7 +30,7 @@
           @delete="deletePic"
           name="imgList"
           multiple
-          :maxCount="4"
+          :maxCount="3"
           :previewFullImage="true"
         ></u-upload>
       </u-form-item>
@@ -79,9 +79,7 @@
     <tag-bar @addTag="addTag" ref="tagBar"></tag-bar>
 
     <!-- toast组件 -->
-    <u-toast ref="uToast" mode="right">
-      <view class="">哈哈哈哈哈哈</view>
-    </u-toast>
+    <u-toast ref="uToast" mode="right"></u-toast>
   </view>
 </template>
 
@@ -140,10 +138,6 @@ export default {
     },
   },
   methods: {
-    contentFormatter(val) {
-      return val.trim()
-    },
-
     // 提交表单
     async submitForm() {
       try {
@@ -158,47 +152,69 @@ export default {
           }
           console.log(form)
 
+          this.uploadForm(form)
+
           // 模拟
-          this.submitBtn = { text: "提交中", loading: true, disabled: true }
+          // this.submitBtn = { text: "提交中", loading: true, disabled: true }
           // this.uploadForm(form)
 
-          setTimeout(() => {
-            this.submitBtn = { text: "提交", loading: false, disabled: false }
-            this.$refs.uToast.show({ type: "success", message: "已提交，请等待管理员审核" })
-            setTimeout(() => {
-              uni.navigateBack()
-            }, 1000)
-          }, 2000)
+          // setTimeout(() => {
+          //   this.submitBtn = { text: "提交", loading: false, disabled: false }
+          //   this.$refs.uToast.show({ type: "success", message: "已提交，请等待管理员审核" })
+          //   setTimeout(() => {
+          //     uni.navigateBack()
+          //   }, 1000)
+          // }, 2000)
         }
       } catch (err) {
-        // console.log(err)
+        console.log(err)
         this.$refs.uToast.show({ type: "error", message: "请认真填写！" })
       }
     },
 
     // 发起提交表单请求
     async uploadForm(form) {
-      // 上传普通数据
-      const { data: res, statusCode } = await uni.request({
-        url: "/upload/write",
-        data: { title: form.title, content: form.content, tagList: form.tagList },
-      })
+      try {
+        this.submitBtn = { text: "提交中", loading: true, disabled: true }
 
-      // 上传多张图片
-      form.tagList.forEach(async (item, index) => {
-        const { statusCode } = await uni.uploadFile({
-          url: "/upload/img",
-          files: item,
-          name: `file${index}`,
-          fileType: "image",
+        // 上传普通数据
+        const { data: res } = await uni.request({
+          url: "/index/add/one/essay",
+          data: { title: form.title, content: form.content, tags: form.tagList },
         })
-        if (statusCode === 200 && index === form.tagList.length - 1) return uni.$u.toast("图片上传成功")
-      })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("上传数据失败")
+        const invitationId = res.data
+
+        // 上传多张图片
+        let flag = false // 是否为文章封面
+        form.imgList.forEach(async (item, index) => {
+          if (index === 0) flag = true
+
+          const { data, statusCode } = await uni.uploadFile({
+            url: "http://192.168.196.215:8081/index/add/one/essay/image",
+            filePath: item.url,
+            name: "file",
+            fileType: "image",
+            formData: { flag: flag, invitationId: invitationId },
+          })
+          flag = false
+          if (statusCode === 200 && index === form.tagList.length - 1) {
+            console.log(data)
+            this.$refs.uToast.show({ type: "success", message: "已提交，请等待管理员审核" })
+          }
+        })
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+      } finally {
+        this.submitBtn = { text: "提交", loading: false, disabled: false }
+      }
     },
 
     // 新增图片
     afterRead(e) {
-      e.file.forEach((imgObj) => {
+      e.file.forEach(imgObj => {
         this.formModel.imgList.push(imgObj)
       })
     },
@@ -221,7 +237,7 @@ export default {
     // 添加标签
     addTag(tagList) {
       // 添加标签
-      tagList.forEach((tag) => {
+      tagList.forEach(tag => {
         if (this.formModel.tagList.length < 3) {
           this.formModel.tagList.push(tag)
         }
@@ -229,9 +245,7 @@ export default {
     },
   },
 
-  onLoad() {
-    console.log(this.$refs.tagBar.popupShow)
-  },
+  onLoad() {},
   onReady() {
     // 在onReady生命周期调用组件的setRules方法绑定验证规则
     // 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
@@ -246,6 +260,11 @@ export default {
   // background-color: $uni-bg-color-grey;
   box-sizing: border-box;
   padding: 20rpx;
+
+  ::v-deep .u-form {
+    display: flex;
+    flex-direction: column;
+  }
 
   &-tag {
     display: flex;
@@ -276,6 +295,10 @@ export default {
 
   .submit {
     margin-top: 100rpx;
+
+    ::v-deep .u-button {
+      width: 90%;
+    }
   }
 }
 </style>

@@ -24,7 +24,12 @@
         :placeholder="formType[1].placeholder"
       />
       <u-code :seconds="seconds" change-text="Xs" ref="uCode" @end="codeEnd" @change="codeChange"></u-code>
-      <view class="send" v-if="formType[1].name === 'code'" :class="[sending ? 'disabled' : '']" @click.stop="getCode">
+      <view
+        class="send"
+        v-if="formType[1].name === 'code'"
+        :class="[sending ? 'disabled' : '']"
+        @click.stop="getCode(firstColumn)"
+      >
         {{ tips }}
       </view>
     </view>
@@ -46,6 +51,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex"
 export default {
   props: {},
   data: () => ({
@@ -81,38 +87,7 @@ export default {
   }),
   computed: {},
   methods: {
-    // 提交表单
-    formSubmit(e) {
-      const { value: userInfo } = e.detail
-
-      if (!this.isPhoneLogin) {
-        if (userInfo.userName && userInfo.password) {
-          console.log(userInfo)
-          // this.accountLogin(userInfo)
-
-          this.loginBtn = { btnText: "登录中", disabled: true, loading: true }
-          setTimeout(() => {
-            this.loginBtn = { btnText: "立即登录", loading: false, disabled: false }
-            this.$refs.uToast.show({ type: "success", message: "登录成功" })
-          }, 3000)
-        } else {
-          this.$refs.uToast.show({ type: "error", message: "用户名或密码不能为空" })
-        }
-      } else {
-        if (userInfo.phone && userInfo.code) {
-          console.log(userInfo)
-          // this.phoneLogin(userInfo)
-
-          this.loginBtn = { btnText: "登录中", disabled: true, loading: true }
-          setTimeout(() => {
-            this.loginBtn = { btnText: "立即登录", loading: false, disabled: false }
-            this.$refs.uToast.show({ type: "success", message: "登录成功" })
-          }, 3000)
-        } else {
-          this.$refs.uToast.show({ type: "error", message: "电话号码或验证码不能为空" })
-        }
-      }
-    },
+    ...mapMutations("userModule", ["getUserInfo"]),
 
     // 切换登录方式
     switchWay() {
@@ -120,27 +95,92 @@ export default {
       this.isPhoneLogin = !this.isPhoneLogin
     },
 
+    // 模拟
+    mock() {
+      this.loginBtn = { btnText: "登录中", disabled: true, loading: true }
+      setTimeout(() => {
+        this.loginBtn = { btnText: "立即登录", loading: false, disabled: false }
+        this.$refs.uToast.show({ type: "success", message: "登录成功" })
+      }, 3000)
+    },
+
+    // 提交表单
+    formSubmit(e) {
+      const { value: userInfo } = e.detail
+
+      if (!this.isPhoneLogin) {
+        if (userInfo.userName && userInfo.password) {
+          // console.log(userInfo)
+          this.accountLogin(userInfo)
+
+          // 模拟
+          // this.mock()
+        } else {
+          this.$refs.uToast.show({ type: "error", message: "用户名或密码不能为空" })
+        }
+      } else {
+        if (userInfo.phone && userInfo.code) {
+          console.log(userInfo)
+          this.phoneLogin(userInfo)
+
+          // 模拟
+          // this.mock()
+        } else {
+          this.$refs.uToast.show({ type: "error", message: "电话号码或验证码不能为空" })
+        }
+      }
+    },
+
     // 账号密码登录
     async accountLogin(accountInfo) {
-      const { data: res } = await uni.request({
-        url: "/api/login/byaccount",
-        method: "POST",
-        data: { username: accountInfo.userName, password: accountInfo.password },
-      })
-      if (res.status !== 200) return this.$refs.uToast.show({ type: "error", message: "登录失败" })
-      console.log(res)
+      try {
+        this.loginBtn = { btnText: "登录中", disabled: true, loading: true }
+
+        const { data: res } = await uni.request({
+          url: "/wechat/user/login",
+          method: "GET",
+          data: { loginAct: accountInfo.userName, passWord: accountInfo.password },
+        })
+        console.log(res)
+        if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "登录失败" })
+        if (res.message === "用户密码错误！") return this.$refs.uToast.show({ type: "error", message: "密码错误" })
+
+        // 存储token，userInfo
+        uni.setStorageSync("token", res.data.token)
+        this.getUserInfo(res.data.user)
+        uni.reLaunch({ url: "/pages/index/index" })
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+      } finally {
+        this.loginBtn = { btnText: "立即登录", loading: false, disabled: false }
+      }
     },
 
     // 电话号码登录
     async phoneLogin(phoneInfo) {
-      const { data: res } = await uni.request({
-        url: "/api/login/byphone",
-        method: "POST",
-        data: { phone: phoneInfo.phone, code: phoneInfo.code },
-      })
+      try {
+        this.loginBtn = { btnText: "登录中", disabled: true, loading: true }
 
-      if (res.status !== 200) return this.$refs.uToast.show({ type: "error", message: "登录失败" })
-      console.log(res)
+        const { data: res } = await uni.request({
+          url: "/wechat/user/login/phone",
+          method: "GET",
+          data: { userPhone: phoneInfo.phone, code: phoneInfo.code },
+        })
+        console.log(res)
+        if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "登录失败" })
+        if (res.message === "验证码已过期！") return this.$refs.uToast.show({ type: "error", message: "验证码已过期" })
+
+        // 存储token，userInfo
+        uni.setStorageSync("token", res.data.token)
+        this.getUserInfo(res.data.user)
+        uni.reLaunch({ url: "/pages/index/index" })
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("服务器异常")
+      } finally {
+        this.loginBtn = { btnText: "立即登录", loading: false, disabled: false }
+      }
     },
 
     // 监听code改变
@@ -149,14 +189,24 @@ export default {
     },
 
     // 获取验证码
-    getCode() {
+    async getCode(phone) {
+      console.log(this.firstColumn)
+
+      if (!this.firstColumn.trim()) return this.$refs.uToast.show({ type: "error", message: "电话号码有误" })
+
       if (this.$refs.uCode.canGetCode) {
         // 通知验证码组件内部开始倒计时
         this.$refs.uCode.start()
         this.sending = true
-        setTimeout(() => {
-          uni.$u.toast("验证码已发送")
-        }, 2500)
+        const { data: res } = await uni.request({ url: "/wechat/user/login/phone/code", method: "GET", data: { phone: phone } })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("获取验证码失败")
+        this.$refs.uToast.show({ type: "success", message: "验证码已发送" })
+
+        // 模拟
+        // setTimeout(() => {
+        //   uni.$u.toast("验证码已发送")
+        // }, 2500)
       }
     },
 

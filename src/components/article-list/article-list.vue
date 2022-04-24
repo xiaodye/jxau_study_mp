@@ -15,7 +15,6 @@
             <view class="text u-line-1">{{ item.title }}</view>
             <view class="user-info">
               <view class="name">{{ item.user.nickName }}</view>
-              <view class="date">{{ item.create_time }}</view>
             </view>
           </view>
         </view>
@@ -44,6 +43,9 @@
 
         <!-- 尾部，点赞，评论，浏览 -->
         <view class="article-list-item-footer">
+          <!-- 日期 -->
+          <view class="date">{{ item.create_time }}</view>
+
           <view class="icon">
             <u-icon name="eye" size="24" color="#808080"></u-icon>
             <view>{{ item.visitNumber }}</view>
@@ -129,11 +131,10 @@ export default {
         .user-info {
           display: flex;
           align-items: center;
-          font-size: $uni-font-size-base;
-          color: $uni-text-color-grey;
-          .name {
-            margin-right: 25rpx;
-          }
+          font-size: 29rpx;
+          font-weight: 700;
+          // color: $uni-text-color-grey;
+          color: $uni-text-color-placeholder;
         }
       }
     }
@@ -172,6 +173,12 @@ export default {
       justify-content: flex-end;
       align-items: center;
 
+      .date {
+        margin-right: auto;
+        font-size: 29rpx;
+        color: $uni-text-color-placeholder;
+      }
+
       .icon {
         margin-right: 30rpx;
         display: flex;
@@ -181,6 +188,7 @@ export default {
         & > view {
           margin-left: 4rpx;
           color: #19be6b;
+          // color: $uni-text-color-placeholder;
         }
       }
     }

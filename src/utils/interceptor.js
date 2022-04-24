@@ -5,9 +5,9 @@ uni.addInterceptor("request", {
     if (args.method === undefined) args.method = "POST"
 
     // 拼接根路由
-    const BASE_URL = "http://192.168.196.215:8081" // chen
+    // const BASE_URL = "http://192.168.196.215:8081" // chen
     // const BASE_URL = "http://192.168.196.213:8084" // dai
-    // const BASE_URL = "http://192.168.196.213:8085" // dai
+    const BASE_URL = "http://192.168.196.213:8085" // dai
     args.url = BASE_URL + args.url
 
     // 如果有token,则在请求头添加token
