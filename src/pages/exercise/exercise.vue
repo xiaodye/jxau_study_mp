@@ -138,7 +138,7 @@ export default {
           data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
         })
         if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "上拉加载失败" })
-        this.questionList = [...this.questionList, ...res.data.res]
+        this.questionList = [...this.questionList, ...res.data.list]
 
         // 到底了
         if (this.paramsData.currentPage >= this.totalPages) return (this.status = "nomore")
@@ -157,8 +157,8 @@ export default {
         method: "GET",
         data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
       })
-      // console.log(res)
-      if (re.status !== "200") return this.$refs.uToast.show({ type: "error", message: "获取题组列表失败" })
+      console.log(res)
+      if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "获取题组列表失败" })
 
       this.questionList = res.data.list
       this.totalPages = res.data.pages
@@ -167,7 +167,7 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad() {
-    // this.getQuestionGroupList()
+    this.getQuestionGroupList()
   },
 }
 </script>

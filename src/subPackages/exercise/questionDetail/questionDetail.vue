@@ -99,7 +99,6 @@ export default {
 
     // 索引
     activeIndex: 0,
-    optionActiveIndex: null,
 
     // 进度条
     lineProgress: 1,
@@ -109,7 +108,7 @@ export default {
     prevBtnDisabled: true,
     nextBtn: { text: "下一题", loading: false, disabled: false },
 
-    show: true,
+    show: false,
     showModal: false,
     loading: true,
 
@@ -133,14 +132,20 @@ export default {
 
     // 获取题组
     async getQuestionList() {
+      this.loading = true
+
       const { data: res } = await uni.request({
         url: "/question/get/set/questions",
         method: "GET",
         data: { QuestionSetId: this.questionGroupId },
       })
       console.log(res)
+      this.loading = false
       if (res.status !== "200") return uni.$u.toast("获取题组失败")
       this.questionInfoList = res.data
+      this.createAnswerMap()
+      this.lineProgressPer = this.questionInfoList.length
+      this.show = true
     },
 
     // 选中选项
@@ -171,7 +176,7 @@ export default {
     switchQuestion(type) {
       if (type === "next") {
         // 最后一题，转为提交
-        if (this.activeIndex === 9) {
+        if (this.activeIndex === this.questionInfoList.length - 1) {
           const unFinishedArr = []
           for (const [key, value] of this.answerMap) {
             if (value === null || !value.length) unFinishedArr.push(key)
@@ -226,26 +231,50 @@ export default {
 
     // 提交答题卡
     async commitAnswerCard() {
-      // 提交
-      setTimeout(() => {
-        // map转obj
-        let answerObj = {}
-        for (const [key, value] of this.answerMap) {
-          answerObj[key] = value
-        }
-        // console.log(answerObj)
+      // map转obj
+      let answerObj = {}
+      for (const [key, value] of this.answerMap) {
+        answerObj[key] = value
+      }
+      // console.log(answerObj)
 
-        answerObj = JSON.stringify(answerObj)
-        uni.redirectTo({ url: `/subPackages/exercise/resultPage/resultPage?answerSheet=${answerObj}` })
+      // 提交
+      try {
+        const { data: res } = await uni.request({
+          url: "/question/user/correcting",
+          data: { QuestionSetId: this.questionGroupId, answerObj: answerObj },
+        })
+        console.log(res)
+        if (res.status !== "200") {
+          this.showModal = false
+          return uni.$u.toast("提交失败")
+        }
+        const answerReport = res.data
+        uni.navigateTo({
+          url: `/subPackages/exercise/resultPage/resultPage?answerReport=${JSON.stringify(
+            answerReport
+          )}&answerSheet=${JSON.stringify(answerObj)}`,
+        })
+      } catch (err) {
+        console.error(err)
+        uni.$u.toast("请求异常")
+      } finally {
         this.showModal = false
-      }, 2000)
+      }
+
+      // 模拟
+      // setTimeout(() => {
+      //   answerObj = JSON.stringify(answerObj)
+      //   uni.redirectTo({ url: `/subPackages/exercise/resultPage/resultPage?answerSheet=${answerObj}` })
+      //   this.showModal = false
+      // }, 2000)
     },
   },
   watch: {
     // 把控btn开禁
     lineProgress(value) {
       this.prevBtnDisabled = value === 1 ? true : false
-      if (value >= 10) {
+      if (value >= this.questionInfoList.length) {
         this.nextBtn = { text: "提交", loading: false, disabled: false }
       } else {
         this.nextBtn = { text: "下一题", loading: false, disabled: false }
@@ -255,15 +284,13 @@ export default {
 
   onLoad(options) {
     this.questionGroupId = options.id
-    this.questionInfoList = questionInfoList
-    this.createAnswerMap()
-    // this.getQuestionList()
+    this.getQuestionList()
 
     // 模拟
-    setTimeout(() => {
-      this.questionInfoList = questionInfoList
-      this.loading = false
-    }, 2000)
+    // setTimeout(() => {
+    //   this.questionInfoList = questionInfoList
+    //   this.loading = false
+    // }, 2000)
   },
 
   // onBackPress(e) {

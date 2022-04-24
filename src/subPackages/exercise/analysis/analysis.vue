@@ -34,7 +34,9 @@
         <!-- 解析 -->
         <view class="analysis-main-explain">
           <view class="title">解析</view>
-          <view class="content">暂无解析</view>
+          <view class="content">
+            {{ analysisList[activeIndex].hasAnalysis ? analysisList[activeIndex].analysis_content : "" }}
+          </view>
         </view>
       </view>
     </u-transition>
@@ -89,9 +91,13 @@ export default {
       this.loading = true
       try {
         const { data: res } = await uni.request({
-          url: "/test",
+          url: "/question/user/get/analysis",
           method: "GET",
-          data: { questionGroupInfo: this.questionGroupInfo },
+          data: {
+            QuestionSetId: this.questionGroupInfo.QuestionSetId,
+            answerObj: this.questionGroupInfo.answerObj,
+            faultQuestions: this.questionGroupInfo.faultQuestions,
+          },
         })
         console.log(res)
         if (res.status !== "200") return uni.$u.toast("获取解析失败")
@@ -110,14 +116,16 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad(options) {
-    this.getQuestionGroupInfo(options.questionGroupInfo)
+    this.getQuestionGroupInfo(JSON.parse(options.questionGroupInfo))
+    console.log(this.questionGroupInfo)
+    this.getAnalysisList()
 
     // 模拟
-    setTimeout(() => {
-      this.loading = false
-      this.analysisList = analysisList
-      this.mainShow = true
-    }, 2000)
+    // setTimeout(() => {
+    //   this.loading = false
+    //   this.analysisList = analysisList
+    //   this.mainShow = true
+    // }, 2000)
   },
 }
 </script>

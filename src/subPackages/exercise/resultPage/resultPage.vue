@@ -2,46 +2,53 @@
   <view class="result">
     <!-- 总览 -->
     <view class="result-panel">
-      <!-- 题目 -->
-      <view class="question-list-item">
-        <view class="question-list-item-desc">
-          <view class="title u-line-1">{{ question.title }}</view>
-          <!-- 难度 -->
-          <view class="info">
-            <view class="level">
-              <my-tag class="tag" :type="levelColor(question.level)" :circle="false" size="mini">{{ question.level }}</my-tag>
-              <my-tag class="tag" type="info" size="mini" v-for="tag in question.tagList" :key="tag.tagId">
-                {{ tag.tag }}
-              </my-tag>
-            </view>
+      <view class="tip">数据分析</view>
 
-            <!-- 通过率 -->
-            <view class="pass">
-              <text class="pass-text">正确率：</text>
-              <text class="pass-rate">{{ question.passRate + "%" }}</text>
-            </view>
+      <!-- 题目 -->
+      <view class="result-panel-question">
+        <view class="title">{{ answerReport.question.title }}</view>
+
+        <view class="info">
+          <my-tag class="tag" :type="getLevelColor(answerReport.question.level)" :circle="false" size="mini">
+            {{ answerReport.question.level }}
+          </my-tag>
+          <my-tag class="tag" type="info" size="mini" v-for="tag in answerReport.question.tagList" :key="tag.tagId">
+            {{ tag.tag }}
+          </my-tag>
+
+          <view class="pass">
+            <text class="pass-text">正确率：</text>
+            <text class="pass-rate">{{ answerReport.question.passRate + "%" }}</text>
           </view>
         </view>
       </view>
 
       <!-- chart -->
       <view class="result-panel-chart">
-        <view class="result-panel-chart-circle">
-          <view class="sub-circle">
-            <text class="rate">{{ 60 + ".00%" }}</text>
-            <text class="text">正确率</text>
+        <view class="result-panel-chart-lf">
+          <view class="circle">
+            <view class="sub-circle">
+              <text class="rate">{{ answerReport.passRate + ".00%" }}</text>
+              <text class="text">正确率</text>
+            </view>
           </view>
         </view>
-      </view>
-    </view>
 
-    <!-- case -->
-    <view class="result-case">
-      <view class="result-case-tip">作答情况</view>
-      <view class="result-case-list">
-        <view class="result-case-list-item" v-for="(item, index) in caseList" :key="index">
-          <text class="num">{{ item.num }}</text>
-          <text class="text">{{ item.text }}</text>
+        <view class="result-panel-chart-case">
+          <view class="tip">作答情况</view>
+
+          <view class="list-item">
+            <text class="text">共计：</text>
+            <text class="num">{{ answerReport.totalNumber }}</text>
+          </view>
+          <view class="list-item">
+            <text class="text">答对：</text>
+            <text class="num">{{ answerReport.correctNumber }}</text>
+          </view>
+          <view class="list-item">
+            <text class="text">答错：</text>
+            <text class="num">{{ answerReport.wrongNumber }}</text>
+          </view>
         </view>
       </view>
     </view>
@@ -50,7 +57,7 @@
     <view class="result-answer-container">
       <view class="tip">正确答案</view>
       <view class="answer-list">
-        <view class="answer-list-item" v-for="(item, index) in answerList" :key="index">
+        <view class="answer-list-item" v-for="(item, index) in answerReport.answerList" :key="index">
           <text class="answer-list-item-index">{{ index + 1 + "." }}</text>
           <text class="answer-list-item-option">{{ item }}</text>
         </view>
@@ -68,7 +75,16 @@ export default {
   data: () => ({
     answerSheet: null,
     questionGroupId: null,
-    faultQuestions: [],
+
+    answerReport: {
+      faultQuestions: [],
+      answerList: ["A", "D", "C", "B", "C", "B", "B", ["A", "B"], ["B", "D"], ["A", "B", "C", "D"]],
+      question: null,
+      passRate: 60,
+      totalNumber: 10,
+      correctNumber: 6,
+      wrongNumber: 4,
+    },
 
     question: {
       id: "02",
@@ -86,35 +102,32 @@ export default {
       ],
       passRate: 11,
     },
-    caseList: [
-      { text: "共计", num: 10 },
-      { text: "答对", num: 6 },
-      { text: "答错", num: 4 },
-    ],
-
-    answerList: ["A", "D", "C", "B", "C", "B", "B", ["A", "B"], ["B", "D"], ["A", "B", "C", "D"]],
   }),
-  computed: {},
-  methods: {
+  computed: {
     // 根据难度选择tag种类
-    levelColor(level) {
-      switch (level) {
-        case "简单":
-          return "success"
-        case "中等":
-          return "warning"
-        case "困难":
-          return "error"
-        default:
-          break
+    getLevelColor() {
+      return level => {
+        switch (level) {
+          case "简单":
+            return "success"
+          case "中等":
+            return "warning"
+          case "困难":
+            return "error"
+          default:
+            break
+        }
       }
     },
-
+  },
+  methods: {
     gotoAnalysis() {
-      const questionGroupInfo = null
-      // questionGroupInfo.questionGroupId = this.questionGroupId
-      // questionGroupInfo.user_choice = this.answerSheet
-      // questionGroupInfo.faultQuestions = this.faultQuestions
+      const questionGroupInfo = {
+        QuestionSetId: this.answerReport.question.id,
+        answerObj: this.answerSheet,
+        faultQuestions: this.answerReport.faultQuestions,
+      }
+      console.log(this.answerReport.question.id)
 
       console.log(questionGroupInfo)
       uni.navigateTo({ url: "/subPackages/exercise/analysis/analysis?questionGroupInfo=" + JSON.stringify(questionGroupInfo) })
@@ -124,8 +137,8 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad(options) {
-    // console.log(JSON.parse(options.answerSheet))
-    // this.answerSheet = options.answerSheet
+    this.answerReport = JSON.parse(options.answerReport)
+    this.answerSheet = JSON.parse(options.answerSheet)
   },
 }
 </script>
@@ -134,6 +147,18 @@ export default {
 view {
   box-sizing: border-box;
 }
+@mixin before($bgColor: #2b85e4) {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  height: 80%;
+  width: 8rpx;
+  border-radius: 4rpx;
+  background-color: $bgColor;
+}
+
 $chart_panel: 600rpx;
 $case_panel: 220rpx;
 $answer_panel: 340rpx;
@@ -154,93 +179,134 @@ $answer_panel: 340rpx;
 
     display: flex;
     flex-direction: column;
-    // box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    // padding: 20rpx;
+
+    .tip {
+      position: relative;
+      margin: 20rpx;
+      margin-bottom: 0;
+      font-size: 32rpx;
+      color: $uni-color-subtitle;
+      font-weight: 700;
+      padding-left: 30rpx;
+
+      &::before {
+        @include before();
+      }
+    }
+
+    &-question {
+      display: flex;
+      flex-direction: column;
+
+      padding: 20rpx;
+      border-bottom: 1rpx solid #f4f4f5;
+
+      .title {
+        margin-bottom: 20rpx;
+        color: $uni-color-paragraph;
+        font-weight: 700;
+      }
+
+      .info {
+        display: flex;
+        align-items: center;
+
+        .tag {
+          margin-right: 20rpx;
+        }
+
+        .pass {
+          margin-left: auto;
+          font-size: 24rpx;
+          color: $uni-text-color-placeholder;
+          &-rate {
+            color: $uni-color-success;
+          }
+        }
+      }
+    }
 
     &-chart {
       flex: 1;
       display: flex;
 
-      &-circle {
+      &-lf {
+        flex: 3;
         display: flex;
+        justify-content: center;
+        align-items: center;
 
-        margin: auto;
-        width: 350rpx;
-        height: 350rpx;
-        border-radius: 50%;
-        background-image: linear-gradient(120deg, #2af598 0%, #009efd 100%);
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        .sub-circle {
-          margin: auto;
-          width: 75%;
-          height: 75%;
+        .circle {
+          width: 300rpx;
+          height: 300rpx;
           border-radius: 50%;
-          background-color: #fff;
+          background-image: linear-gradient(120deg, #2af598 0%, #009efd 100%);
+          box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
           display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
+          justify-content: center;
           align-items: center;
-          padding: 60rpx 0;
+          .sub-circle {
+            width: 75%;
+            height: 75%;
+            border-radius: 50%;
+            background-color: #fff;
 
-          .rate {
-            font-size: 45rpx;
-            font-weight: 700;
-            color: $uni-color-success;
-          }
-          .text {
-            font-size: 32rpx;
-            color: $uni-color-paragraph;
-            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            padding: 60rpx 0;
+
+            .rate {
+              font-size: 45rpx;
+              font-weight: 700;
+              color: $uni-color-success;
+            }
+            .text {
+              font-size: 30rpx;
+              color: $uni-color-paragraph;
+              font-weight: 700;
+            }
           }
         }
       }
-    }
-  }
 
-  &-case {
-    min-height: $case_panel;
-    border-radius: 20rpx;
-    overflow: hidden;
-    background-color: #fff;
-    margin-top: 40rpx;
+      &-case {
+        flex: 2;
 
-    display: flex;
-    flex-direction: column;
+        .tip {
+          position: relative;
+          margin: 30rpx 0;
+          font-size: 32rpx;
+          color: $uni-color-subtitle;
+          font-weight: 700;
+          padding-left: 30rpx;
 
-    &-tip {
-      height: 60rpx;
-      line-height: 60rpx;
-      margin: 20rpx 0 0;
-      margin-left: 40rpx;
-      font-weight: 600;
-      font-size: 30rpx;
-    }
-
-    &-list {
-      flex: 1;
-      display: flex;
-
-      &-item {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-
-        .num {
-          font-size: 35rpx;
+          &::before {
+            @include before();
+          }
         }
 
-        .text {
-          color: $uni-text-color-placeholder;
-        }
+        .list-item {
+          margin: 40rpx 0;
+          padding-left: 10rpx;
 
-        &:nth-child(2) .num {
-          color: $uni-color-success;
-        }
-        &:nth-child(3) .num {
-          color: $uni-color-error;
+          .text {
+            color: $uni-text-color-placeholder;
+            margin-right: 20rpx;
+          }
+
+          .num {
+            font-size: 35rpx;
+          }
+
+          &:nth-of-type(3) .num {
+            color: $uni-color-success;
+          }
+          &:nth-of-type(4) .num {
+            color: $uni-color-error;
+          }
         }
       }
     }
@@ -250,18 +316,23 @@ $answer_panel: 340rpx;
     display: flex;
     flex-direction: column;
     min-height: $answer_panel;
+    padding: 20rpx;
 
     margin-top: 40rpx;
     border-radius: 20rpx;
     overflow: hidden;
     background-color: #fff;
     .tip {
-      height: 60rpx;
-      line-height: 60rpx;
-      margin: 20rpx 0 0;
-      margin-left: 40rpx;
-      font-weight: 600;
-      font-size: 30rpx;
+      position: relative;
+      margin-bottom: 20rpx;
+      font-size: 32rpx;
+      color: $uni-color-subtitle;
+      font-weight: 700;
+      padding-left: 30rpx;
+
+      &::before {
+        @include before();
+      }
     }
 
     .answer-list {
@@ -269,7 +340,7 @@ $answer_panel: 340rpx;
       display: flex;
       flex-wrap: wrap;
       align-content: space-between;
-      padding: 20rpx;
+      // padding: 20rpx;
       &-item {
         width: 20%;
         height: 100rpx;
@@ -295,47 +366,6 @@ $answer_panel: 340rpx;
     margin-top: auto;
     margin-bottom: 40rpx;
     width: 90%;
-  }
-}
-
-.question-list-item {
-  width: 100%;
-  padding: 20rpx;
-  background-color: #fff;
-  border-bottom: 1rpx solid #f4f4f5;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  &-desc {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    .title {
-      font-weight: 600;
-      font-size: 36rpx;
-      margin-bottom: 20rpx;
-    }
-
-    .info {
-      display: flex;
-      font-size: 24rpx;
-      align-items: center;
-      color: $uni-text-color-placeholder;
-      .level {
-        .tag {
-          margin-right: 20rpx;
-        }
-      }
-
-      .pass {
-        margin-left: auto;
-        &-rate {
-          color: $uni-color-success;
-        }
-      }
-    }
   }
 }
 </style>
