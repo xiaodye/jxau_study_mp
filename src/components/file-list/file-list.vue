@@ -3,7 +3,7 @@
     <!-- 文件列表 -->
     <template v-if="fileList.length">
       <view class="file-list">
-        <view class="file-list-item" v-for="item in fileList" :key="item.id" @click="getSavedFileList">
+        <view class="file-list-item" v-for="item in fileList" :key="item.id">
           <!-- 文件icon -->
           <view class="t-icon" :class="[`t-icon-${item.type}`]"></view>
 
@@ -64,7 +64,7 @@ export default {
     tempFilePath: null,
     localFilePath: null,
 
-    savedFileList: uni.getStorageSync("savedFileList") || [],
+    savedFileList: null,
   }),
   computed: {
     // 进度条是否展示
@@ -77,18 +77,23 @@ export default {
     },
   },
   methods: {
+    // 获取已保存文件列表
+    getSavedFileList() {
+      if (uni.getStorageSync("savedFileList")) return (this.savedFileList = JSON.parse(uni.getStorageSync("savedFileList")))
+      this.savedFileList = []
+    },
+
     // 文件状态初始化
     fileStatusListInit() {
       this.fileList.forEach(file => {
-        // let isExist = false
-        // this.savedFileList.forEach(item => {
-        //   if (item.id === id) return (isExist = true)
-        // })
+        let isExist = false
+        this.savedFileList.forEach(item => {
+          if (item.id === id) return (isExist = true)
+        })
 
-        this.$set(this.fileStatusObject, file.id, { downloading: false, progress: 0, isExist: false })
-        // this.$set(this.fileStatusObject, file.id, { downloading: false, progress: 0, isExist: isExist })
+        this.$set(this.fileStatusObject, file.id, { downloading: false, progress: 0, isExist: isExist })
       })
-      // console.log(this.fileStatusObject)
+      console.log(this.fileStatusObject)
     },
 
     // 点击下载处理函数
@@ -109,55 +114,64 @@ export default {
     },
 
     // 下载文件
-    async downloadFile(id) {
+    downloadFile(id) {
+      this.$set(this.fileStatusObject[id], "downloading", true)
       // 发起请求
-      const downloadTask = uni.downloadFile({ url: "/test" }).then(async ({ tempFilePath, statusCode }) => {
-        if (statusCode !== 200) return uni.$u.toast("下载文件失败，请重试")
-        this.tempFilePath = tempFilePath
+      const downloadTask = uni.downloadFile({
+        url: "/test",
+        success: async ({ tempFilePath, statusCode }) => {
+          if (statusCode !== 200) return uni.$u.toast("下载文件失败，请重试")
 
-        // 保存文件
-        const savedFilePath = await uni.saveFile({ tempFilePath: this.tempFilePath })
-        this.localFilePath = savedFilePath
+          // 保存文件
+          const savedFilePath = await uni.saveFile({ tempFilePath: tempFilePath })
 
-        // 持久化到本地
-        this.savedFileList.forEach((item, index) => {
-          // localStorage中已存在
-          if (item.id === id) {
-            return this.$set(this.savedFileList[index], "localFilePath", savedFilePath)
-          }
-          // localStorage中不存在
-          if (index === this.savedFileList.length - 1) this.savedFileList.push({ id: id, localFilePath: savedFilePath })
-        })
-        uni.setStorageSync("savedFileList", JSON.stringify(this.savedFileList))
+          // 持久化到本地
+          this.savedFileList.forEach((item, index) => {
+            // localStorage中已存在
+            if (item.id === id) return (this.savedFileList[index].localFilePath = savedFilePath)
+            // localStorage中不存在
+            if (index === this.savedFileList.length - 1) this.savedFileList.push({ id: id, localFilePath: savedFilePath })
+          })
+
+          uni.setStorageSync("savedFileList", JSON.stringify(this.savedFileList))
+          this.fileStatusObject[id].isExist = true
+          this.$u.toast("下载成功")
+        },
+        fail: err => {
+          console.error(err)
+          uni.$u.toast("服务器异常")
+        },
+        complete: () => {
+          this.fileStatusObject[id].downloading = false
+        },
       })
 
       // 监听下载进度
       downloadTask.onProgressUpdate(({ progress }) => {
         console.log(progress)
+        this.fileStatusObject[id].progress = progress
       })
     },
 
     // 打开文件
-    async openFile(filePath) {
+    async openFile(id) {
+      const filePath = ""
+      this.savedFileList.forEach(item => {
+        if (item.id === id) return (filePath = item.localFilePath)
+      })
+
       const res = await uni.openDocument({ filePath: filePath })
       console.log(res)
     },
 
-    // 获取已保存文件列表
-    async getSavedFileList() {
-      const { errMsg, fileList } = await uni.getSavedFileList()
-      if (errMsg !== "getSavedFileList:ok") return uni.$u.toast("获取已保存文件失败")
-      return fileList
-    },
-
     // 模拟
     test(id) {
-      this.$set(this.fileStatusObject[id], "downloading", true)
+      this.fileStatusObject[id].downloading = true
       setTimeout(() => {
-        this.$set(this.fileStatusObject[id], "progress", 100)
+        this.fileStatusObject[id].progress = 100
         setTimeout(() => {
-          this.$set(this.fileStatusObject[id], "downloading", false)
-          this.$set(this.fileStatusObject[id], "isExist", true)
+          this.fileStatusObject[id].downloading = false
+          this.fileStatusObject[id].isExist = true
           this.$u.toast("下载成功")
         }, 500)
       }, 2000)
@@ -167,6 +181,7 @@ export default {
 
   // 组件周期函数--监听组件挂载完毕
   mounted() {
+    this.getSavedFileList()
     this.fileStatusListInit()
   },
 }

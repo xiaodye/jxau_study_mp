@@ -30,7 +30,7 @@
               </view>
               <view class="cli-rfr-like" @click.stop="giveLike(comment)">
                 <!-- color="#fa3534" -->
-                <u-icon name="heart" :size="rpxToPx(45)" :color="thumbStatus(comment.id)"></u-icon>
+                <u-icon name="heart" :size="rpxToPx(45)" :color="getThumbStatus(comment.id)"></u-icon>
                 <text>{{ comment.likeNumber }}</text>
               </view>
             </view>
@@ -68,13 +68,7 @@ export default {
     },
   }),
   computed: {
-    hasExisted() {
-      return id => {
-        return this.hasLikedArr.includes(id) ? true : false
-      }
-    },
-
-    thumbStatus() {
+    getThumbStatus() {
       return id => {
         return this.hasLikedArr.includes(id) ? "#fa3534" : "#808080"
       }
@@ -83,38 +77,12 @@ export default {
   methods: {
     // 点赞点击处理函数
     async giveLike(comment) {
-      try {
-        // 取消点赞
-        if (this.hasExisted(comment.id)) {
-          const { data: res } = await uni.request({
-            url: "/index/like/one/comment",
-            data: {
-              userId: "c4512b64edda4d3a8c874e21fa8aab31",
-              commentId: comment.id,
-              likeNumber: comment.likeNumber,
-            },
-          })
-          if (res.status === "200") {
-            this.$emit("giveCommentLikeHandler", "down", comment.id)
-          }
-        } else {
-          // 点赞
-          const { data: res } = await uni.request({
-            url: "/index/like/one/comment",
-            data: {
-              userId: "c4512b64edda4d3a8c874e21fa8aab31",
-              commentId: comment.id,
-              likeNumber: comment.likeNumber,
-            },
-          })
-          if (res.status === "200") {
-            this.$emit("giveCommentLikeHandler", "up", comment.id)
-          }
-        }
-      } catch (err) {
-        console.error(err)
-        uni.$u.toast("请求异常")
-      }
+      const { data: res } = await uni.request({
+        url: "/index/like/one/comment",
+        data: { commentId: comment.id, likeNumber: comment.likeNumber },
+      })
+      if (res.status !== "200") return uni.$u.toast("出错了")
+      this.$emit("giveCommentLikeHandler")
     },
 
     // 跳转回复页

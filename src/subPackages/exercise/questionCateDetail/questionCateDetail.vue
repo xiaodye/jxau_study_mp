@@ -162,7 +162,7 @@ $header_title: 100rpx;
       width: 180rpx;
       height: 180rpx;
     }
-    .t-icon-interview {
+    .t-icon-advance {
       width: 160rpx;
       height: 160rpx;
     }

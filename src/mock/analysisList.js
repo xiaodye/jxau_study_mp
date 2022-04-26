@@ -26,7 +26,7 @@ export const analysisList = [
     ],
     analysis_content: "",
     hasAnalysis: false,
-    withinWrongBook: false, // 是否在错题本
+    withinWrongBook: true, // 是否在错题本
   },
   {
     id: uni.$u.guid(20),
@@ -167,7 +167,7 @@ export const analysisList = [
       },
     ],
     analysis_content: "", // 解析
-    withinWrongBook: false, // 是否在错题本
+    withinWrongBook: true, // 是否在错题本
   },
   {
     id: uni.$u.guid(20),

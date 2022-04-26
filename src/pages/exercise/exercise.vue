@@ -6,18 +6,18 @@
   <view class="exercise">
     <view class="exercise-module">
       <view class="exercise-module-lf" @click="gotoCateDetail('algo')">
-        <view class="title">编程基础</view>
+        <view class="title">基础题库</view>
         <view class="t-icon t-icon-algo"></view>
       </view>
 
       <view class="exercise-module-rg">
-        <view class="rg-top" @click="gotoCateDetail('race')">
-          <view class="title">竞赛精选</view>
-          <view class="t-icon t-icon-race"></view>
+        <view class="rg-top" @click="gotoCateDetail('advance')">
+          <view class="title">进阶</view>
+          <view class="t-icon t-icon-advance"></view>
         </view>
-        <view class="rg-bottom" @click="gotoCateDetail('interview')">
-          <view class="title">面试宝典</view>
-          <view class="t-icon t-icon-interview"></view>
+        <view class="rg-bottom" @click="gotoCateDetail('race')">
+          <view class="title">困难</view>
+          <view class="t-icon t-icon-race"></view>
         </view>
       </view>
     </view>
@@ -58,10 +58,10 @@
 
       <!-- 加载更多 -->
       <u-loadmore :status="status" loadingText="一大波题目正在赶来" nomoreText="~我是有底线的~" />
-    </scroll-view>
 
-    <!-- 消息框 -->
-    <u-toast ref="uToast"></u-toast>
+      <!-- 消息框 -->
+      <u-toast ref="uToast"></u-toast>
+    </scroll-view>
   </view>
 </template>
 
@@ -74,7 +74,7 @@ export default {
   data: () => ({
     tagList: ["推荐", "最热", "最新"],
     activeTabIndex: 0,
-    questionList: questionList,
+    questionList: [],
 
     triggered: false,
     status: "loadmore",
@@ -110,18 +110,24 @@ export default {
 
     // 自定义刷新触发处理函数
     async onRefresh() {
-      // console.log("自定义下拉刷新被触发")
-      // console.log(this.triggered)
+      try {
+        const { data: res } = await uni.request({
+          url: "/question/get/set/information",
+          method: "GET",
+          data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+        })
+        // console.log(res)
+        if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "下拉刷新失败" })
 
-      setTimeout(() => {
+        this.questionList = res.data.list
+        this.totalPages = res.data.pages
+        this.$refs.uToast.show({ type: "success", message: "刷新成功" })
+      } catch (err) {
+        this.$refs.uToast.show({ type: "error", message: "服务器异常" })
+      } finally {
         this.triggered = false
         this.status = "loadmore"
-        this.$refs.uToast.show({
-          type: "success",
-          message: "刷新成功",
-          iconUrl: "https://cdn.uviewui.com/uview/demo/toast/success.png",
-        })
-      }, 2000)
+      }
     },
 
     // 下拉触底，加载更多
@@ -152,21 +158,29 @@ export default {
 
     // 获取题组列表
     async getQuestionGroupList() {
-      const { data: res } = await uni.request({
-        url: "/question/get/set/information",
-        method: "GET",
-        data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
-      })
-      console.log(res)
-      if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "获取题组列表失败" })
+      uni.showLoading({ title: "加载中..." })
+      try {
+        const { data: res } = await uni.request({
+          url: "/question/get/set/information",
+          method: "GET",
+          data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+        })
+        // console.log(res)
+        if (res.status !== "200") return this.$refs.uToast.show({ type: "error", message: "获取题组列表失败" })
 
-      this.questionList = res.data.list
-      this.totalPages = res.data.pages
+        this.questionList = res.data.list
+        this.totalPages = res.data.pages
+      } catch (err) {
+        uni.$u.toast("服务器异常")
+      } finally {
+        uni.hideLoading()
+      }
     },
   },
 
   // 页面周期函数--监听页面加载
   onLoad() {
+    this.questionList = questionList
     this.getQuestionGroupList()
   },
 }
@@ -238,20 +252,20 @@ $tab: 100rpx;
       }
 
       .rg-top {
-        background-image: linear-gradient(to right, #fee140 0%, #fa709a 100%);
+        background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
         margin-bottom: 20rpx;
+
+        .t-icon-advance {
+          width: 100rpx;
+          height: 100rpx;
+        }
+      }
+      .rg-bottom {
+        background-image: linear-gradient(to right, #fee140 0%, #fa709a 100%);
 
         .t-icon-race {
           width: 120rpx;
           height: 120rpx;
-        }
-      }
-      .rg-bottom {
-        background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
-
-        .t-icon-interview {
-          width: 100rpx;
-          height: 100rpx;
         }
       }
     }

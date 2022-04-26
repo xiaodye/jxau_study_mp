@@ -199,7 +199,6 @@ export default {
               invitationId: this.articleData.id,
             },
           })
-          console.log(res)
           if (res.status !== "200") return uni.$u.toast("取消点赞失败")
 
           this.articleData.thumbStatus = false
@@ -214,8 +213,6 @@ export default {
               invitationId: this.articleData.id,
             },
           })
-          console.log(res)
-          console.log(res.status)
           if (res.status !== "200") return uni.$u.toast("点赞失败")
 
           this.articleData.thumbStatus = true
@@ -229,7 +226,7 @@ export default {
     },
 
     // 评论点赞处理函数
-    giveCommentLikeHandler(handlerType, commentId) {
+    giveCommentLikeHandler() {
       this.getCommentList()
     },
   },

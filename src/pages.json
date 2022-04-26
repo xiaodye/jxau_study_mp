@@ -78,6 +78,12 @@
             // "navigationBarBackgroundColor": "#fff",
             "navigationBarTitleText": "下载文件"
           }
+        },
+        {
+          "path": "searchPage/searchPage",
+          "style": {
+            "navigationBarTitleText": "searchPage"
+          }
         }
       ]
     },

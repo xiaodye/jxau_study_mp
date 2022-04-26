@@ -1,11 +1,6 @@
 <template>
   <view class="download">
     <file-list :fileList="fileList"></file-list>
-
-    <!-- 打开文件 -->
-    <!-- <u-transition :show="showOpenPanel" mode="fade">
-      <view class="open" v-if="showOpenPanel"></view>
-    </u-transition> -->
   </view>
 </template>
 
@@ -19,13 +14,28 @@ export default {
     showOpenPanel: false,
   }),
   computed: {},
-  methods: {},
+  methods: {
+    // 获取文件列表
+    async getFileList() {
+      uni.showLoading({ title: "加载中..." })
+      try {
+        const { data: res } = await uni.request({ url: "/test" })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("获取文件列表失败")
+
+        this.fileList = res.data
+      } finally {
+        uni.hideLoading()
+      }
+    },
+  },
   watch: {},
 
   // 页面周期函数--监听页面加载
   onLoad(options) {
     this.cateName = options.name
     this.fileList = fileList
+    // this.getFileList()
     // console.log(this.cateName)
   },
 }

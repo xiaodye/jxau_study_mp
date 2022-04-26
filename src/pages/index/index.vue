@@ -225,14 +225,15 @@ export default {
 
         // 重新设置内容高度
         this.$nextTick(() => this.setSwiperHeight())
+
+        // 到底了
+        if (this.paramsData.currentPage >= this.totalPages) return (this.$refs.articleList.status = "nomore")
+        this.$refs.articleList.status = "loadmore"
       } catch (err) {
         console.error(err)
+        this.$refs.articleList.status = "loadmore"
         uni.$u.toast("上拉加载失败")
       }
-
-      // 到底了
-      if (this.paramsData.currentPage >= this.totalPages) return (this.$refs.articleList.status = "nomore")
-      this.$refs.articleList.status = "loadmore"
     },
 
     // 跳转写文章page
@@ -261,14 +262,9 @@ export default {
 
   onLoad() {
     // 加载获取内容高度
+    this.articleList = articleList
     this.$nextTick(() => this.setSwiperHeight())
     this.getArticleList()
-    // 模拟
-    // setTimeout(() => {
-    //   this.articleList = articleList
-    //   this.$nextTick(() => this.setSwiperHeight())
-    //   this.loading = false
-    // }, 100)
   },
 
   // 监听触底

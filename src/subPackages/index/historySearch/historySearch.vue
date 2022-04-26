@@ -16,10 +16,12 @@
     <view class="search-history">
       <view class="search-history-header">
         <view class="title">最近搜索</view>
-        <u-icon name="trash" :size="rpxToPx(50)"></u-icon>
+        <view class="icon-del" @click="deleteAllHistoryRecords">
+          <u-icon name="trash" :size="rpxToPx(50)"></u-icon>
+        </view>
       </view>
       <view class="search-history-tags">
-        <my-tag class="search-history-tags-item" type="info" v-for="(item, index) in tagList" :key="index">
+        <my-tag class="search-history-tags-item" type="info" v-for="(item, index) in historyRecords" :key="index">
           {{ item }}
         </my-tag>
       </view>
@@ -35,7 +37,7 @@
       <!-- 文章列表 -->
       <view class="article-list">
         <view class="article-list-item" v-for="(item, index) in articleList" :key="index">
-          <my-tag class="tag" :circle="false" size="mini" :type="tagColor(index + 1)">{{ index + 1 }}</my-tag>
+          <my-tag class="tag" :circle="false" size="mini" :type="getTagColor(index + 1)">{{ index + 1 }}</my-tag>
           <view class="article-title u-line-1">{{ item }}</view>
         </view>
       </view>
@@ -48,7 +50,8 @@ export default {
   components: {},
   data: () => ({
     key: "",
-    tagList: ["前端", "后端", "大数据", "数据结构", "算法", "leetcode", "后端", "大数据", "数据结构"],
+    historyRecords: null,
+    pageRecords: new Set(),
     articleList: [
       "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
       "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
@@ -62,32 +65,58 @@ export default {
       "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
     ],
   }),
-  computed: {},
+  computed: {
+    getTagColor() {
+      return index => {
+        if (index === 1) {
+          return "error"
+        } else if (index === 2) {
+          return "warning"
+        } else if (index === 3) {
+          return "primary"
+        } else {
+          return "info"
+        }
+      }
+    },
+  },
   methods: {
-    tagColor(index) {
-      if (index === 1) {
-        return "error"
-      } else if (index === 2) {
-        return "warning"
-      } else if (index === 3) {
-        return "primary"
+    // 获取历史记录
+    getHistoryRecords() {
+      if (uni.getStorageSync("historyRecords")) {
+        this.historyRecords = JSON.parse(uni.getStorageSync("historyRecords"))
       } else {
-        return "info"
+        this.historyRecords = []
       }
     },
 
     // 搜索处理函数
     searchHandler(keyword) {
       if (keyword.trim().length) {
-        console.log(keyword)
+        if (this.historyRecords.includes(keyword)) this.historyRecords = this.historyRecords.filter(item => item !== keyword)
+        this.historyRecords.unshift(keyword)
+        uni.setStorageSync("historyRecords", JSON.stringify(this.historyRecords))
+
+        uni.navigateTo({ url: "/subPackages/index/searchPage/searchPage?key=" + keyword })
         this.key = ""
+      }
+    },
+
+    // 删除全部历史记录
+    async deleteAllHistoryRecords() {
+      const { confirm } = await uni.showModal({ title: "提示", content: "是否删除全部历史记录" })
+      if (confirm) {
+        this.historyRecords = []
+        uni.removeStorageSync("historyRecords")
       }
     },
   },
   watch: {},
 
   // 页面周期函数--监听页面加载
-  onLoad() {},
+  onLoad() {
+    this.getHistoryRecords()
+  },
 }
 </script>
 

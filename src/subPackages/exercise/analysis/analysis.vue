@@ -29,17 +29,19 @@
     <u-transition :show="mainShow" mode="fade-left">
       <view class="analysis-main">
         <!-- 题目信息 -->
-        <questionInfo :analysisData="analysisList[activeIndex]"></questionInfo>
+        <questionInfo :analysisData="analysisList[activeIndex]" @addWrongBook="addWrongBook"></questionInfo>
 
         <!-- 解析 -->
         <view class="analysis-main-explain">
           <view class="title">解析</view>
           <view class="content">
-            {{ analysisList[activeIndex].hasAnalysis ? analysisList[activeIndex].analysis_content : "" }}
+            {{ analysisList[activeIndex].hasAnalysis ? analysisList[activeIndex].analysis_content : "暂无解析" }}
           </view>
         </view>
       </view>
     </u-transition>
+
+    <u-notify ref="uNotify" message="Hi uView"></u-notify>
   </view>
 </template>
 
@@ -111,21 +113,35 @@ export default {
         this.mainShow = true
       }
     },
+
+    // 添加至错题本
+    addWrongBook(questionId, value) {
+      this.analysisList.forEach(item => {
+        if (item.id === questionId) {
+          item.withinWrongBook = value
+          if (value) {
+            this.$refs.uNotify.success("已添加到错题本")
+          } else {
+            this.$refs.uNotify.error("已取消添加")
+          }
+          return
+        }
+      })
+    },
   },
   watch: {},
 
   // 页面周期函数--监听页面加载
   onLoad(options) {
-    this.getQuestionGroupInfo(JSON.parse(options.questionGroupInfo))
-    console.log(this.questionGroupInfo)
-    this.getAnalysisList()
+    // this.getQuestionGroupInfo(JSON.parse(options.questionGroupInfo))
+    // this.getAnalysisList()
 
     // 模拟
-    // setTimeout(() => {
-    //   this.loading = false
-    //   this.analysisList = analysisList
-    //   this.mainShow = true
-    // }, 2000)
+    setTimeout(() => {
+      this.loading = false
+      this.analysisList = analysisList
+      this.mainShow = true
+    }, 100)
   },
 }
 </script>
