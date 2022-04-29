@@ -88,7 +88,7 @@ export default {
         },
       })
       console.log(res)
-      if (res.status) return uni.$u.toast("出错了")
+      if (res.status !== "200") return uni.$u.toast("出错了")
 
       if (this.analysisData.withinWrongBook) return this.$emit("addWrongBook", this.analysisData.id, false)
       this.$emit("addWrongBook", this.analysisData.id, true)

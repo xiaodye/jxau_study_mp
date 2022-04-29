@@ -5,24 +5,40 @@
         <!-- 头部 -->
         <view class="video-list-item-header">
           <u-avatar :src="item.avatar" fontSize="16" size="40"></u-avatar>
-          <view class="title">
-            <view class="text u-line-1">
-              <text>{{ item.title }}</text>
-            </view>
-            <view class="user-info">
-              <view class="name">{{ item.userName }}</view>
-              <!-- <view class="date">{{ "2022-03-14" }}</view> -->
-            </view>
+
+          <view class="info">
+            <view class="info-name">{{ item.userName }}</view>
+            <view class="info-date">{{ item.create_time }}</view>
           </view>
         </view>
 
+        <view class="video-list-item-content">{{ item.title }}</view>
+
         <!-- 视频容器 -->
-        <video class="video-list-item-main" id="myVideo" :show-mute-btn="true" :src="item.videoUrl"></video>
+        <video
+          class="video-list-item-main"
+          muted
+          loop
+          :id="`myVideo${item.uuid}`"
+          :autoplay="false"
+          :show-center-play-btn="false"
+          :show-mute-btn="true"
+          enable-play-gesture
+          object-fit="cover"
+          :src="item.videoUrl"
+        ></video>
 
         <!-- footer -->
         <view class="video-list-item-footer">
-          <!-- <u-icon name="clock" :size="rpxToPx(40)" color="#909399"></u-icon> -->
-          <view class="date">{{ item.create_time }}</view>
+          <view class="visit">
+            <u-avatar-group :urls="urls" :size="rpxToPx(50)" gap="0.4"></u-avatar-group>
+            <view class="visit-placeholder">等13个人看过</view>
+          </view>
+
+          <view class="category_tip">
+            分类：
+            <my-tag size="mini" :circle="false">{{ item.category }}</my-tag>
+          </view>
         </view>
       </view>
     </view>
@@ -38,7 +54,16 @@ export default {
     },
   },
   data: () => ({
-    src: "",
+    videoContextList: [],
+    urls: [
+      "https://cdn.uviewui.com/uview/album/1.jpg",
+      "https://cdn.uviewui.com/uview/album/2.jpg",
+      "https://cdn.uviewui.com/uview/album/3.jpg",
+      "https://cdn.uviewui.com/uview/album/4.jpg",
+      "https://cdn.uviewui.com/uview/album/7.jpg",
+      "https://cdn.uviewui.com/uview/album/6.jpg",
+      "https://cdn.uviewui.com/uview/album/5.jpg",
+    ],
   }),
   computed: {},
   methods: {
@@ -47,11 +72,25 @@ export default {
       const res = await uni.chooseVideo({ sourceType: ["camera", "album"] })
       this.src = res.tempFilePath
     },
+
+    createVideoContextList() {
+      this.videoList.forEach(item => {
+        const videoContext = uni.createVideoContext(`myVideo${item.uuid}`, this)
+        this.videoContextList.push(videoContext)
+      })
+    },
+
+    firstPlay() {
+      this.videoContextList[0].play()
+    },
   },
   watch: {},
 
   // 组件周期函数--监听组件挂载完毕
-  mounted() {},
+  mounted() {
+    this.createVideoContextList()
+    this.firstPlay()
+  },
 }
 </script>
 
@@ -69,58 +108,70 @@ export default {
       flex-direction: column;
       margin-bottom: 40rpx;
       background-color: #fff;
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-      // border-top: 1rpx solid #f4f4f5;
+      border-radius: 30rpx;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
 
       &-header {
-        height: 90rpx;
         display: flex;
         align-items: center;
-        margin-bottom: 20rpx;
+        height: 90rpx;
 
-        .title {
-          height: 100%;
+        .info {
           display: flex;
-          margin-left: 20rpx;
+          justify-content: space-around;
           flex-direction: column;
-          justify-content: space-between;
 
-          .text {
-            font-size: 30rpx;
+          margin-left: 20rpx;
+
+          &-name {
+            color: $uni-color-title;
             font-weight: bold;
+            font-size: 32rpx;
+            // margin-bottom: 10rpx;
           }
-
-          .user-info {
-            display: flex;
-            align-items: center;
-            font-size: $uni-font-size-base;
-            color: #71d5a1;
-            font-weight: 600;
-            .name {
-              margin-right: 25rpx;
-            }
+          &-date {
+            color: $uni-text-color-disable;
+            font-size: 28rpx;
           }
         }
       }
 
+      &-content {
+        margin: 20rpx 0;
+        color: $uni-color-paragraph;
+        font-size: 32rpx;
+      }
+
       &-main {
         width: 100%;
-        height: 350rpx;
+        height: 400rpx;
         border: none;
-        // border-radius: 15rpx;
+        border-radius: 20rpx;
       }
 
       &-footer {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
-        height: 80rpx;
-        margin-right: 20rpx;
-        // border-top: 1rpx solid #f4f4f5;
+        min-height: 100rpx;
 
-        .date {
-          margin-left: 10rpx;
-          color: #909399;
+        .visit {
+          display: flex;
+          align-items: center;
+          &-placeholder {
+            margin-left: 10rpx;
+            color: $uni-text-color-placeholder;
+            font-size: 28rpx;
+          }
+        }
+
+        .category_tip {
+          font-size: 28rpx;
+          color: $uni-text-color-placeholder;
+          margin-right: 10rpx;
         }
       }
     }
