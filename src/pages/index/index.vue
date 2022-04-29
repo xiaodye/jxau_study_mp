@@ -81,7 +81,7 @@
       <!-- 电子书 -->
       <swiper-item class="home-list-item">
         <view id="content-container-4">
-          <files></files>
+          <file-list :fileList="fileList"></file-list>
         </view>
       </swiper-item>
     </swiper>
@@ -95,6 +95,9 @@
       <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon>
     </view>
 
+    <!-- 加载更多 -->
+    <u-loadmore :status="status" loading-text="正在加载..." nomore-text="~我是有底线的~" />
+
     <!-- 加载页 -->
     <u-loading-page :loading="loading"></u-loading-page>
   </view>
@@ -104,6 +107,7 @@
 import { systemInfo } from "@/mixin.js"
 import { articleList } from "@/mock/articleList.js"
 import { videoList } from "@/mock/videoList.js"
+import { fileList } from "@/mock/fileList.js"
 export default {
   components: {},
   mixins: [systemInfo],
@@ -131,7 +135,8 @@ export default {
     swiperHeight: 0, // 选项卡高度
 
     articleList: [],
-    videoList: videoList,
+    videoList: [],
+    fileList: [],
     contentList: [articleList, [], [], []],
 
     // 当前ref
@@ -140,6 +145,7 @@ export default {
     // 加载页
     loading: true,
     showWrite: true,
+    status: "loadmore",
 
     totalPages: 0, // 总页数
     paramsData: {
@@ -180,7 +186,7 @@ export default {
           if (res.height < this.minSwiperHeight) return (this.swiperHeight = this.minSwiperHeight)
           this.swiperHeight = res.height
 
-          console.log(this.swiperHeight)
+          // console.log(this.swiperHeight)
         })
         .exec()
     },
@@ -210,10 +216,10 @@ export default {
     //  加载更多
     async loadMore() {
       // 节流
-      if (this.$refs.articleList.status === "loading" || this.$refs.articleList.status === "nomore") return
+      if (this.status === "loading" || this.status === "nomore") return
 
       // 请求数据
-      this.$refs.articleList.status = "loading"
+      this.status = "loading"
       this.paramsData.currentPage++
       try {
         const { data: res } = await uni.request({
@@ -227,11 +233,11 @@ export default {
         this.$nextTick(() => this.setSwiperHeight())
 
         // 到底了
-        if (this.paramsData.currentPage >= this.totalPages) return (this.$refs.articleList.status = "nomore")
-        this.$refs.articleList.status = "loadmore"
+        if (this.paramsData.currentPage >= this.totalPages) return (this.status = "nomore")
+        this.status = "loadmore"
       } catch (err) {
         console.error(err)
-        this.$refs.articleList.status = "loadmore"
+        this.status = "loadmore"
         uni.$u.toast("上拉加载失败")
       }
     },
@@ -255,16 +261,22 @@ export default {
 
   watch: {
     // 是否展示gotoWrite
-    tabActiveIndex(val) {
-      this.showWrite = val === 0 ? true : false
+    tabActiveIndex: {
+      handler(val) {
+        this.showWrite = val === 0 ? true : false
+      },
+      immediate: true,
     },
   },
 
   onLoad() {
     // 加载获取内容高度
     this.articleList = articleList
+    this.videoList = videoList
+    this.fileList = fileList
     this.$nextTick(() => this.setSwiperHeight())
-    this.getArticleList()
+    // this.getArticleList()
+    this.loading = false
   },
 
   // 监听触底

@@ -60,9 +60,6 @@
           </view>
         </view>
       </view>
-
-      <!-- 加载更多 -->
-      <u-loadmore :status="status" loading-text="正在加载..." nomore-text="~我是有底线的~" />
     </view>
 
     <!-- 空白页 -->
@@ -78,9 +75,7 @@ export default {
       required: true,
     },
   },
-  data: () => ({
-    status: "loadmore",
-  }),
+  data: () => ({}),
   computed: {},
   methods: {
     gotoDetail(articleId) {
