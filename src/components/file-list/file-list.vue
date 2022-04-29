@@ -200,7 +200,8 @@ view {
       align-items: center;
 
       // height: 150rpx;
-      background-color: #f6f5fc;
+      // background-color: #f6f5fc;
+      background-color: #fff;
       padding: 20rpx;
       margin-bottom: 20rpx;
       border-radius: 20rpx;
