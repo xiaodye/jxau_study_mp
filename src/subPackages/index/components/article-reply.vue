@@ -15,7 +15,7 @@
           </view>
 
           <!-- 日期 -->
-          <view class="rli-rg-date">{{ item.create_time }}</view>
+          <view class="rli-rg-date">{{ $u.timeFrom(Date.parse(item.create_time), false) }}</view>
 
           <!-- 内容 -->
           <view class="rli-rg-content">{{ item.content }}</view>
@@ -79,7 +79,7 @@ export default {
         }
 
         &-date {
-          color: $uni-text-color-placeholder;
+          color: $uni-text-color-disable;
           font-size: 26rpx;
           margin-bottom: 20rpx;
         }

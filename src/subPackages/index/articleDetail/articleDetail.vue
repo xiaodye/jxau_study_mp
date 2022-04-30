@@ -15,7 +15,7 @@
           <view class="aali-name">{{ articleData.userName }}</view>
           <!-- 日期、阅读量 -->
           <view class="aali-tip">
-            <view class="aali-tip-date">{{ articleData.create_time }}</view>
+            <view class="aali-tip-date">{{ $u.timeFrom(Date.parse(articleData.create_time), false) }}</view>
             <view class="aali-tip-view">{{ "阅读：" + articleData.visitNumber }}</view>
           </view>
         </view>
@@ -287,12 +287,18 @@ $article_bar: 100rpx;
         justify-content: space-evenly;
 
         .aali-name {
-          font-weight: 600;
+          color: $uni-color-title;
+          font-weight: bold;
+          font-size: 32rpx;
         }
         .aali-tip {
           @include vertical_center();
           font-size: 30rpx;
           color: $uni-text-color-placeholder;
+          &-date {
+            color: $uni-text-color-disable;
+            font-size: 28rpx;
+          }
           &-view {
             margin-left: auto;
             font-size: 28rpx;

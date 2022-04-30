@@ -5,7 +5,7 @@ export const articleList = [
       nickName: "银渐层",
       imageUrl: "https://s2.loli.net/2022/03/17/qR7twcYdV43hmCg.png",
     },
-    title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
+    title: "经验分享：我的八股文学习路线及攻略路线及攻略",
     coverImgUrl: "https://cdn.uviewui.com/uview/album/1.jpg",
     create_time: "2022-03-14",
     content:
@@ -21,7 +21,7 @@ export const articleList = [
       nickName: "狸花猫",
       imageUrl: "https://s2.loli.net/2022/03/17/3YKvgwmo1yWzBHG.png",
     },
-    title: "学习路径 | 学习路径问题，求助",
+    title: "学习路径：学习路径问题，求助",
     coverImgUrl: "https://cdn.uviewui.com/uview/album/1.jpg",
     create_time: "2022-03-15",
     content:
@@ -37,7 +37,7 @@ export const articleList = [
       nickName: "蓝猫",
       imageUrl: "https://s2.loli.net/2022/03/17/x7VqdXteLupnlUK.png",
     },
-    title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
+    title: "经验分享：我的八股文学习路线及攻略路线及攻略",
     // coverImgUrl: "https://cdn.uviewui.com/uview/album/1.jpg",
     create_time: "2022-03-14",
     content:
@@ -53,7 +53,7 @@ export const articleList = [
       nickName: "加菲猫",
       imageUrl: "https://s2.loli.net/2022/03/17/W5yOKFNX7qhzxIY.png",
     },
-    title: "学习路径 | 学习路径问题，求助",
+    title: "学习路径：学习路径问题，求助",
     // coverImgUrl: "https://cdn.uviewui.com/uview/album/1.jpg",
     create_time: "2022-03-15",
     content:
@@ -69,7 +69,7 @@ export const articleList = [
       nickName: "大橘猫",
       imageUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
     },
-    title: "经验分享 | 我的八股文学习路线及攻略路线及攻略",
+    title: "经验分享：我的八股文学习路线及攻略路线及攻略",
     coverImgUrl: "https://cdn.uviewui.com/uview/album/1.jpg",
     create_time: "2022-03-14",
     content:

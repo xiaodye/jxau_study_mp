@@ -21,7 +21,7 @@
 
           <!-- 评论底部栏：日期、评论、点赞 -->
           <view class="cli-rg-footer">
-            <view class="cli-rg-footer-date">{{ comment.create_time }}</view>
+            <view class="cli-rg-footer-date">{{ $u.timeFrom(Date.parse(comment.create_time), false) }}</view>
             <view class="cli-rg-footer-rg" v-if="showIcons">
               <view class="cli-rfr-call">
                 <!-- color="#19be6b" -->
@@ -148,7 +148,7 @@ export default {
           height: 60rpx;
 
           &-date {
-            color: $uni-text-color-placeholder;
+            color: $uni-text-color-disable;
             font-size: 28rpx;
           }
 

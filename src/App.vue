@@ -1,32 +1,44 @@
 <script>
+import { mapMutations } from "vuex"
 export default {
   globalData: {
     statusBarHeight: 0, // 状态导航栏高度
     navHeight: 0, // 总体高度
     navigationBarHeight: 0, // 导航栏高度(标题栏高度)
   },
-  onLaunch: function () {
-    console.log("App Launch")
+  methods: {
+    ...mapMutations("userModule", ["getUserInfo"]),
 
-    // 状态栏高度
-    this.globalData.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+    // 获取用户信息
+    async getUserInfo() {
+      const token = uni.getStorageSync("token")
+      if (!token) return uni.reLaunch({ url: "/pages/login/login" })
+      const { data: res } = await uni.request({ url: "/get/user", method: "GET", data: { token: token } })
+      this.getUserInfo(res.data)
+    },
 
-    // #ifdef MP-WEIXIN
-    // 获取微信胶囊的位置信息 width,height,top,right,left,bottom
-    const custom = wx.getMenuButtonBoundingClientRect()
-    // console.log(custom)
+    // 获取小程序头部信息
+    getAppHeaderInfo() {
+      // 获取状态栏高度
+      this.globalData.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 
-    // 导航栏高度(标题栏高度) = 胶囊高度 + (顶部距离 - 状态栏高度) * 2
-    this.globalData.navigationBarHeight = custom.height + (custom.top - this.globalData.statusBarHeight) * 2
-    // console.log("导航栏高度："+this.globalData.navigationBarHeight)
+      // #ifdef MP-WEIXIN
+      // 获取微信胶囊的位置信息 width,height,top,right,left,bottom
+      const custom = wx.getMenuButtonBoundingClientRect()
 
-    // 总体高度 = 状态栏高度 + 导航栏高度
-    this.globalData.navHeight = this.globalData.navigationBarHeight + this.globalData.statusBarHeight
+      // 导航栏高度(标题栏高度) = 胶囊高度 + (顶部距离 - 状态栏高度) * 2
+      this.globalData.navigationBarHeight = custom.height + (custom.top - this.globalData.statusBarHeight) * 2
 
-    // #endif
-
-    // console.log(this.globalData)
+      // 总体高度 = 状态栏高度 + 导航栏高度
+      this.globalData.navHeight = this.globalData.navigationBarHeight + this.globalData.statusBarHeight
+      // #endif
+    },
   },
+  onLaunch: function () {
+    // this.getUserInfo()
+    this.getAppHeaderInfo()
+  },
+
   onShow: function () {
     console.log("App Show")
   },

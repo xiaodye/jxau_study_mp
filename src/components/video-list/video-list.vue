@@ -8,7 +8,7 @@
 
           <view class="info">
             <view class="info-name">{{ item.userName }}</view>
-            <view class="info-date">{{ item.create_time }}</view>
+            <view class="info-date">{{ $u.timeFrom(Date.parse(item.create_time), false) }}</view>
           </view>
         </view>
 
@@ -25,6 +25,7 @@
           :show-mute-btn="true"
           enable-play-gesture
           object-fit="cover"
+          :poster="item.poster"
           :src="item.videoUrl"
         ></video>
 
@@ -32,12 +33,12 @@
         <view class="video-list-item-footer">
           <view class="visit">
             <u-avatar-group :urls="urls" :size="rpxToPx(50)" gap="0.4"></u-avatar-group>
-            <view class="visit-placeholder">等13个人看过</view>
+            <view class="visit-placeholder">等13人看过</view>
           </view>
 
           <view class="category_tip">
             分类：
-            <my-tag size="mini" :circle="false">{{ item.category }}</my-tag>
+            <my-tag size="mini" type="success" :circle="false">{{ item.category }}</my-tag>
           </view>
         </view>
       </view>
@@ -67,12 +68,6 @@ export default {
   }),
   computed: {},
   methods: {
-    // 上传视频
-    async uploadVideo() {
-      const res = await uni.chooseVideo({ sourceType: ["camera", "album"] })
-      this.src = res.tempFilePath
-    },
-
     createVideoContextList() {
       this.videoList.forEach(item => {
         const videoContext = uni.createVideoContext(`myVideo${item.uuid}`, this)

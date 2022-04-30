@@ -44,7 +44,7 @@
         <!-- 尾部，点赞，评论，浏览 -->
         <view class="article-list-item-footer">
           <!-- 日期 -->
-          <view class="date">{{ item.create_time }}</view>
+          <view class="date">{{ $u.timeFrom(Date.parse(item.create_time), false) }}</view>
 
           <view class="icon">
             <u-icon name="eye" size="24" color="#808080"></u-icon>
@@ -126,10 +126,10 @@ export default {
         .user-info {
           display: flex;
           align-items: center;
-          font-size: 29rpx;
-          font-weight: 700;
+          font-size: 30rpx;
+          // font-weight: 700;
           // color: $uni-text-color-grey;
-          color: $uni-text-color-placeholder;
+          color: $uni-color-title;
         }
       }
     }
@@ -170,8 +170,8 @@ export default {
 
       .date {
         margin-right: auto;
-        font-size: 29rpx;
-        color: $uni-text-color-placeholder;
+        font-size: 28rpx;
+        color: $uni-text-color-disable;
       }
 
       .icon {

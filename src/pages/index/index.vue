@@ -49,7 +49,6 @@
     </view>
 
     <!-- 首页列表 -->
-    <!-- rpx转px单位 -->
     <swiper
       class="home-list"
       :style="{ height: swiperHeight + 'px', marginTop: `${rpxToPx(160) + navHeight}px` }"
@@ -59,15 +58,14 @@
       <!-- 文章 -->
       <swiper-item class="home-list-item">
         <view id="content-container-1">
-          <article-list :articleList="articleList" ref="articleList"></article-list>
+          <article-list :articleList="contentObj.articleList" ref="articleList"></article-list>
         </view>
       </swiper-item>
 
       <!-- 视频 -->
       <swiper-item class="home-list-item">
         <view id="content-container-2">
-          <!-- <u-empty text="还没有视频哦" icon="http://cdn.uviewui.com/uview/empty/data.png"></u-empty> -->
-          <video-list :videoList="videoList"></video-list>
+          <video-list :videoList="contentObj.videoList"></video-list>
         </view>
       </swiper-item>
 
@@ -81,7 +79,7 @@
       <!-- 电子书 -->
       <swiper-item class="home-list-item">
         <view id="content-container-4">
-          <file-list :fileList="fileList"></file-list>
+          <file-list :fileList="contentObj.fileList"></file-list>
         </view>
       </swiper-item>
     </swiper>
@@ -91,8 +89,10 @@
       <u-button type="error" text="登录页开发"></u-button>
     </navigator> -->
 
+    <!-- 跳转 -->
     <view class="go-write" v-if="showWrite" @click="gotoWrite">
-      <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon>
+      <!-- <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon> -->
+      <view class="t-icon t-icon-bianji"></view>
     </view>
 
     <!-- 加载更多 -->
@@ -134,10 +134,11 @@ export default {
     subActiveIndex: 0,
     swiperHeight: 0, // 选项卡高度
 
-    articleList: [],
-    videoList: [],
-    fileList: [],
-    contentList: [articleList, [], [], []],
+    contentObj: {
+      articleList: [],
+      videoList: [],
+      fileList: [],
+    },
 
     // 当前ref
     activeRef: "articleList",
@@ -200,7 +201,7 @@ export default {
           data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
         })
         // console.log(res.data)
-        this.articleList = res.data.list
+        this.contentObj.articleList = res.data.list
         this.totalPages = res.data.pages
 
         // 重新设置内容高度
@@ -227,7 +228,7 @@ export default {
           data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
         })
         // console.log(res.data)
-        this.articleList = [...this.articleList, ...res.data.list]
+        this.contentObj.articleList = [...this.contentObj.articleList, ...res.data.list]
 
         // 重新设置内容高度
         this.$nextTick(() => this.setSwiperHeight())
@@ -271,9 +272,9 @@ export default {
 
   onLoad() {
     // 加载获取内容高度
-    this.articleList = articleList
-    this.videoList = videoList
-    this.fileList = fileList
+    this.contentObj.articleList = articleList
+    this.contentObj.videoList = videoList
+    this.contentObj.fileList = fileList
     this.$nextTick(() => this.setSwiperHeight())
     // this.getArticleList()
     this.loading = false
@@ -339,9 +340,15 @@ $tab: 160rpx;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #dbf1e1;
+  background-color: #fcbd71;
+  box-shadow: 0 0 20rpx #fcbd71;
   border-radius: 50%;
   right: 10%;
   bottom: 10%;
+
+  .t-icon {
+    width: 60rpx;
+    height: 60rpx;
+  }
 }
 </style>

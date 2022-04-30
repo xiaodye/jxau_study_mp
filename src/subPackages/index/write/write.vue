@@ -19,17 +19,14 @@
 
       <!-- 上传图片 -->
       <u-form-item prop="imgList" ref="item3">
-        <view class="upload-tip">
-          <text style="color: #333; font-weight: blod; font-size: 32rpx">提示：</text>
-          默认第一张图片作为文章封面
-        </view>
-
         <u-upload
           :fileList="formModel.imgList"
           @afterRead="afterRead"
           @delete="deletePic"
           name="imgList"
           multiple
+          :width="100"
+          :height="100"
           :maxCount="3"
           :previewFullImage="true"
         ></u-upload>
@@ -286,11 +283,6 @@ export default {
         margin-right: 20rpx;
       }
     }
-  }
-
-  .upload-tip {
-    color: $uni-text-color-placeholder;
-    margin-bottom: 30rpx;
   }
 
   .submit {
