@@ -47,7 +47,7 @@ export default {
     totalPages: 5,
     paramData: {
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 8,
     },
   }),
   computed: {},
@@ -60,14 +60,14 @@ export default {
     // 获取题组列表
     async getQuestionGroupList() {
       const { data: res } = await uni.request({
-        url: "/test",
+        url: "/question/get/set/information",
         method: "GET",
-        data: { category: this.key, currentPage: this.paramData, currentPage, pageSize: this.paramData.pageSize },
+        data: { level: this.categoryConfig.level, currentPage: this.paramData.currentPage, pageSize: this.paramData.pageSize },
       })
       console.log(res)
       if (res.status !== "200") return uni.$u.toast("获取题组列表失败")
       this.questionList = res.data.list
-      this.totalPages = res.pages
+      this.totalPages = res.data.pages
     },
 
     // 加载更多
@@ -79,12 +79,13 @@ export default {
       this.paramData.currentPage++
       try {
         const { data: res } = await uni.request({
-          url: "/test",
+          url: "/question/get/set/information",
           method: "GET",
-          data: { category: this.key, currentPage: this.paramData.currentPage, pageSize: this.paramData.pageSize },
+          data: { level: this.categoryConfig.level, currentPage: this.paramData.currentPage, pageSize: this.paramData.pageSize },
         })
         console.log(res)
         if (res.status !== "200") return uni.$u.toast("下拉加载失败")
+
         this.questionList = [...this.questionList, ...res.data.list]
 
         // 判断是否还有数据
@@ -101,17 +102,19 @@ export default {
 
   onLoad(options) {
     this.pageInit(options.key)
+    this.getQuestionGroupList()
   },
 
   // 监听下拉触底
   onReachBottom() {
+    this.loadMore()
     // 节流
-    if (this.status === "loading" || this.status === "nomore") return
+    // if (this.status === "loading" || this.status === "nomore") return
 
-    this.status = "loading"
-    setTimeout(() => {
-      this.status = "nomore"
-    }, 2000)
+    // this.status = "loading"
+    // setTimeout(() => {
+    //   this.status = "nomore"
+    // }, 2000)
   },
 }
 </script>

@@ -94,7 +94,6 @@ export default {
       try {
         const { data: res } = await uni.request({
           url: "/question/user/get/analysis",
-          method: "GET",
           data: {
             QuestionSetId: this.questionGroupInfo.QuestionSetId,
             answerObj: this.questionGroupInfo.answerObj,
@@ -133,15 +132,15 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad(options) {
-    // this.getQuestionGroupInfo(JSON.parse(options.questionGroupInfo))
-    // this.getAnalysisList()
+    this.getQuestionGroupInfo(JSON.parse(options.questionGroupInfo))
+    this.getAnalysisList()
 
     // 模拟
-    setTimeout(() => {
-      this.loading = false
-      this.analysisList = analysisList
-      this.mainShow = true
-    }, 100)
+    // setTimeout(() => {
+    //   this.loading = false
+    //   this.analysisList = analysisList
+    //   this.mainShow = true
+    // }, 100)
   },
 }
 </script>

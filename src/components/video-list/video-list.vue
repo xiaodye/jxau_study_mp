@@ -32,7 +32,7 @@
         <!-- footer -->
         <view class="video-list-item-footer">
           <view class="visit">
-            <u-avatar-group :urls="urls" :size="rpxToPx(50)" gap="0.4"></u-avatar-group>
+            <u-avatar-group :urls="avatarList" :size="rpxToPx(50)" gap="0.4"></u-avatar-group>
             <view class="visit-placeholder">等13人看过</view>
           </view>
 
@@ -56,7 +56,7 @@ export default {
   },
   data: () => ({
     videoContextList: [],
-    urls: [
+    avatarList: [
       "https://cdn.uviewui.com/uview/album/1.jpg",
       "https://cdn.uviewui.com/uview/album/2.jpg",
       "https://cdn.uviewui.com/uview/album/3.jpg",
@@ -76,7 +76,9 @@ export default {
     },
 
     firstPlay() {
-      this.videoContextList[0].play()
+      if (this.videoContextList.length) {
+        this.videoContextList[0].play()
+      }
     },
   },
   watch: {},

@@ -179,7 +179,7 @@ export default {
           url: "/index/add/one/essay",
           data: { title: form.title, content: form.content, tags: form.tagList },
         })
-        console.log(res)
+        console.log(res, "commmon")
         if (res.status !== "200") return uni.$u.toast("上传数据失败")
         const invitationId = res.data
 
@@ -189,16 +189,18 @@ export default {
           if (index === 0) flag = true
 
           const { data, statusCode } = await uni.uploadFile({
-            url: "http://192.168.196.215:8081/index/add/one/essay/image",
+            url: "/index/add/one/essay/image",
             filePath: item.url,
             name: "file",
             fileType: "image",
-            formData: { flag: flag, invitationId: invitationId },
+            formData: { flag: "true", invitationId: invitationId },
           })
           flag = false
           if (statusCode === 200 && index === form.tagList.length - 1) {
-            console.log(data)
             this.$refs.uToast.show({ type: "success", message: "已提交，请等待管理员审核" })
+            setTimeout(() => {
+              uni.navigateBack()
+            }, 1000)
           }
         })
       } catch (err) {

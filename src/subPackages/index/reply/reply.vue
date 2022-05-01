@@ -56,7 +56,6 @@ export default {
         const { data: res } = await uni.request({
           url: "/index/add/re/comment",
           data: {
-            userId: "c4512b64edda4d3a8c874e21fa8aab31",
             parentId: this.comment[0].id,
             commentNumber: this.comment[0].commentNumber,
             content: value,

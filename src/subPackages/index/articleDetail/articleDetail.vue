@@ -169,7 +169,6 @@ export default {
         const { data: res } = await uni.request({
           url: "/index/add/one/comment",
           data: {
-            userId: "c4512b64edda4d3a8c874e21fa8aab31",
             invitationId: this.articleId,
             commentNumber: this.articleData.commentNumber,
             content: value,
@@ -194,7 +193,6 @@ export default {
           const { data: res } = await uni.request({
             url: "/index/like/one/essay",
             data: {
-              userId: "c4512b64edda4d3a8c874e21fa8aab31",
               likeNumber: this.articleData.likeNumber,
               invitationId: this.articleData.id,
             },
@@ -208,7 +206,6 @@ export default {
           const { data: res } = await uni.request({
             url: "/index/like/one/essay",
             data: {
-              userId: "c4512b64edda4d3a8c874e21fa8aab31",
               likeNumber: this.articleData.likeNumber,
               invitationId: this.articleData.id,
             },

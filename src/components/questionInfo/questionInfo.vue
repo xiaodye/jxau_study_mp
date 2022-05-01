@@ -76,22 +76,36 @@ export default {
   },
   methods: {
     // 添加到错题本
-    async addWrongBook() {
-      const { data: res } = await uni.request({
-        url: "/test",
-        data: {
-          questionId: this.analysisData.id,
-          type: this.analysisData.question_type,
-          user_choice: this.analysisData.user_choice,
-          right_choice: this.analysisData.right_choice,
-          analysis: this.analysisData.analysis_content,
-        },
-      })
-      console.log(res)
-      if (res.status !== "200") return uni.$u.toast("出错了")
 
-      if (this.analysisData.withinWrongBook) return this.$emit("addWrongBook", this.analysisData.id, false)
-      this.$emit("addWrongBook", this.analysisData.id, true)
+    async addWrongBook() {
+      console.log(this.analysisData.id)
+      if (this.analysisData.withinWrongBook) {
+        const { data: res } = await uni.request({
+          url: "/question/user/delete/notebook",
+          method: "GET",
+          data: {
+            questionId: this.analysisData.id,
+          },
+        })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("出错了")
+
+        this.$emit("addWrongBook", this.analysisData.id, false)
+      } else {
+        const { data: res } = await uni.request({
+          url: "/question/user/save/notebook",
+          data: {
+            questionId: this.analysisData.id,
+            type: this.analysisData.question_type,
+            userChoice: this.analysisData.user_choice,
+            rightChoice: this.analysisData.right_choice,
+            analysis: this.analysisData.analysis_content,
+          },
+        })
+        console.log(res)
+        if (res.status !== "200") return uni.$u.toast("出错了")
+        this.$emit("addWrongBook", this.analysisData.id, true)
+      }
     },
   },
   watch: {},

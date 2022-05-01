@@ -1,7 +1,9 @@
 // 根路由
 // const BASE_URL = "http://192.168.196.215:8081" // chen
+// const BASE_URL = "http://192.168.43.134:8081" // chen
 // const BASE_URL = "http://192.168.196.213:8084" // dai
 const BASE_URL = "http://192.168.196.213:8085" // dai
+// const BASE_URL = "http://192.168.196.213:8089" // dai
 
 // add token
 function addToken(args) {
@@ -21,18 +23,17 @@ uni.addInterceptor("request", {
     // 如果有token,则在请求头添加token
     addToken(args)
   },
+
+  // 响应拦截
+  success({ data: res }) {
+    if (res.status === "401") {
+      uni.reLaunch({ url: "/pages/login/login" })
+    }
+  },
 })
 
 // 上传文件拦截器
 uni.addInterceptor("uploadFile", {
-  invoke(args) {
-    args.url = BASE_URL + args.url
-    addToken(args)
-  },
-})
-
-// 下载文件拦截器
-uni.addInterceptor("downloadFile", {
   invoke(args) {
     args.url = BASE_URL + args.url
     addToken(args)

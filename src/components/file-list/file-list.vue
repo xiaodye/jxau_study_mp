@@ -3,7 +3,7 @@
     <!-- 文件列表 -->
     <template v-if="fileList.length">
       <view class="file-list">
-        <view class="file-list-item" v-for="item in fileList" :key="item.id">
+        <view class="file-list-item" v-for="item in fileList" :key="item.id" @click="openFile(item.id, item.url)">
           <!-- 文件icon -->
           <view class="t-icon" :class="[`t-icon-${item.type}`]"></view>
 
@@ -29,7 +29,7 @@
           </view>
 
           <!-- 下载 -->
-          <view class="file-list-item-download" @click.stop="downloadClickHandler(item.id)">
+          <view class="file-list-item-download" @click.stop="downloadClickHandler(item.id, item.url)">
             <u-loading-icon
               :show="fileStatusObject[item.id].downloading"
               mode="circle"
@@ -88,7 +88,7 @@ export default {
       this.fileList.forEach(file => {
         let isExist = false
         this.savedFileList.forEach(item => {
-          if (item.id === id) return (isExist = true)
+          if (item.id === file.id) return (isExist = true)
         })
 
         this.$set(this.fileStatusObject, file.id, { downloading: false, progress: 0, isExist: isExist })
@@ -97,7 +97,7 @@ export default {
     },
 
     // 点击下载处理函数
-    async downloadClickHandler(id) {
+    async downloadClickHandler(id, url) {
       // 节流
       if (this.fileStatusObject[id].downloading) return
 
@@ -107,18 +107,20 @@ export default {
         if (cancel) return
       }
 
-      // this.downloadFile(id)
+      this.downloadFile(id, url)
 
       // 模拟
-      this.test(id)
+      // this.test(id)
     },
 
     // 下载文件
-    downloadFile(id) {
+    downloadFile(id, url) {
+      console.log(id, url)
+
       this.$set(this.fileStatusObject[id], "downloading", true)
       // 发起请求
       const downloadTask = uni.downloadFile({
-        url: "/test",
+        url: url,
         success: async ({ tempFilePath, statusCode }) => {
           if (statusCode !== 200) return uni.$u.toast("下载文件失败，请重试")
 
@@ -126,12 +128,16 @@ export default {
           const savedFilePath = await uni.saveFile({ tempFilePath: tempFilePath })
 
           // 持久化到本地
-          this.savedFileList.forEach((item, index) => {
-            // localStorage中已存在
-            if (item.id === id) return (this.savedFileList[index].localFilePath = savedFilePath)
-            // localStorage中不存在
-            if (index === this.savedFileList.length - 1) this.savedFileList.push({ id: id, localFilePath: savedFilePath })
-          })
+          if (!this.savedFileList.length) {
+            this.savedFileList.push({ id: id, localFilePath: savedFilePath })
+          } else {
+            this.savedFileList.forEach((item, index) => {
+              // localStorage中已存在
+              if (item.id === id) return (this.savedFileList[index].localFilePath = savedFilePath)
+              // localStorage中不存在
+              if (index === this.savedFileList.length - 1) this.savedFileList.push({ id: id, localFilePath: savedFilePath })
+            })
+          }
 
           uni.setStorageSync("savedFileList", JSON.stringify(this.savedFileList))
           this.fileStatusObject[id].isExist = true
@@ -148,20 +154,32 @@ export default {
 
       // 监听下载进度
       downloadTask.onProgressUpdate(({ progress }) => {
-        console.log(progress)
         this.fileStatusObject[id].progress = progress
+        if (progress === 100) {
+          downloadTask.abort()
+        }
       })
     },
 
     // 打开文件
-    async openFile(id) {
-      const filePath = ""
+    async openFile(id, url) {
+      let filePath = ""
       this.savedFileList.forEach(item => {
-        if (item.id === id) return (filePath = item.localFilePath)
+        if (item.id === id) return (filePath = item.localFilePath.savedFilePath)
       })
 
-      const res = await uni.openDocument({ filePath: filePath })
-      console.log(res)
+      try {
+        const { errMsg } = await uni.openDocument({ filePath: filePath })
+        // if (errMsg === "openDocument:ok") uni.$u.toast("文件打开成功")
+      } catch (err) {
+        console.log(err)
+        if (err.errMsg === "openDocument:fail filetype not supported") {
+          const { confirm } = await uni.showModal({ title: "提示", content: "文件未下载或已被删除，是否下载？" })
+          if (confirm) {
+            this.downloadFile(id, url)
+          }
+        }
+      }
     },
 
     // 模拟
@@ -182,7 +200,7 @@ export default {
   // 组件周期函数--监听组件挂载完毕
   mounted() {
     this.getSavedFileList()
-    this.fileStatusListInit()
+    // this.fileStatusListInit()
   },
 }
 </script>

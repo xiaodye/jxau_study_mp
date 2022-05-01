@@ -79,7 +79,7 @@
       <!-- 电子书 -->
       <swiper-item class="home-list-item">
         <view id="content-container-4">
-          <file-list :fileList="contentObj.fileList"></file-list>
+          <file-list :fileList="contentObj.fileList" ref="file"></file-list>
         </view>
       </swiper-item>
     </swiper>
@@ -214,6 +214,32 @@ export default {
       }
     },
 
+    // 获取文件列表
+    async getFileList() {
+      const { data: res } = await uni.request({
+        url: "/index/get/all/resource",
+        data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+      })
+      // console.log(res)
+      if (res.status !== "200") return uni.$u.toast("获取文件列表失败")
+      this.contentObj.fileList = res.data.list
+      this.$nextTick(() => {
+        console.log(this.$refs.file.fileList)
+        this.$refs.file.fileStatusListInit()
+      })
+    },
+
+    // 获取视频列表
+    async getVideoList() {
+      const { data: res } = await uni.request({
+        url: "/index/get/all/video",
+        data: { currentPage: this.paramsData.currentPage, pageSize: this.paramsData.pageSize },
+      })
+      console.log(res)
+      if (res.status !== "200") return uni.$u.toast("获取视频列表失败")
+      this.contentObj.videoList = res.data.list
+    },
+
     //  加载更多
     async loadMore() {
       // 节流
@@ -239,7 +265,7 @@ export default {
       } catch (err) {
         console.error(err)
         this.status = "loadmore"
-        uni.$u.toast("上拉加载失败")
+        uni.$u.toast("服务器异常")
       }
     },
 
@@ -272,12 +298,15 @@ export default {
 
   onLoad() {
     // 加载获取内容高度
-    this.contentObj.articleList = articleList
-    this.contentObj.videoList = videoList
-    this.contentObj.fileList = fileList
+    // this.contentObj.articleList = articleList
+    // this.contentObj.videoList = videoList
+    // this.contentObj.fileList = fileList
+    // this.loading = false
+
     this.$nextTick(() => this.setSwiperHeight())
-    // this.getArticleList()
-    this.loading = false
+    this.getArticleList()
+    this.getFileList()
+    // this.getVideoList()
   },
 
   // 监听触底
