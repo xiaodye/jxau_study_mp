@@ -7,7 +7,7 @@
 			</view>
 			<!-- 标题下方的容器 -->
 			<view class="myCreate-undcon">
-				<view class="myCreate-container" v-for="(item,index) in list" :key="index">
+				<view class="myCreate-container" v-for="(item,index) in list" :key="index" @click="goOther('./myCreate/myPosts',1,list[index])">
 					<image class="myCreate-image" :src="item.src" mode=""></image>
 					<text class="myCreate-text">{{item.text}}</text>
 				</view>
@@ -16,7 +16,8 @@
 	</view>
 </template>
 
-<script>
+<script type="module">
+	import {goDetail} from '../../utils/utils.js'
 	export default {
 		data() {
 			return {
@@ -30,6 +31,11 @@
 						src: `../../static/person/myInvitation.png`
 					}
 				]
+			}
+		},
+		methods:{
+			goOther(path,num,param){
+				goDetail(path,num,param);
 			}
 		}
 	}

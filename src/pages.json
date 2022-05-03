@@ -41,6 +41,102 @@
       "style": {
         "navigationBarTitleText": "个人"
       }
+    },
+    {
+      "path": "pages/community/cumTag/cumTag",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/community/cummunityNews/systemNews",
+      "style": {
+        "navigationBarTitleText": "系统消息",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/community/cummunityNews/receiveLike",
+      "style": {
+        "navigationBarTitleText": "收到的赞",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/community/cummunityNews/replay",
+      "style": {
+        "navigationBarTitleText": "我的回复",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/community/cummunityNews/privateLetter",
+      "style": {
+        "navigationBarTitleText": "私信",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/community/cumTag/chat",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/person/personComponents/collect/myComponent",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/person/personComponents/collect/singleFavorite",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/person/personComponents/collect/myCollect",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/person/personComponents/skipHistory",
+      "style": {
+        "navigationBarTitleText": "浏览记录"
+      }
+    },
+    {
+      "path": "pages/person/myCreate/myPosts",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/person/settingInfo/setting",
+      "style": {
+        "navigationBarTitleText": "设置"
+      }
+    },
+    {
+      "path": "pages/person/settingInfo/personInfo",
+      "style": {
+        "navigationBarTitleText": "完善个人信息"
+      }
+    },
+    {
+      "path": "pages/person/settingInfo/repairInfo/repair",
+      "style": {
+        "navigationBarTitleText": "修改信息",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "subPackages": [

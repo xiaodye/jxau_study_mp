@@ -8,13 +8,13 @@
 			<view class="cummunity-inpCon">
 				<!-- 搜索框需要一个图标 -->
 				<image class="cummunity-searchIcon" src="../../static/cummunity/mySearch.png" mode=""></image>
-				<input class="cummunity-input" type="text" placeholder="请输入问题或贴子" />
+				<input class="cummunity-input" placeholder="请输入需要查找的社区" placeholder-style="text-align: left" type="text" />
 			</view>
 			<!-- 列表导航栏： -->
 			<view class="cummunity-container">
 				<view class="cummunity-icons" v-for="(item,index) in list" :key="index">
-					<image class="cummunity-image" :src="item.src" mode=""></image>
-					<text>{{item.text}}</text>
+					<image @click="skipUrl(item.assignUrl)" class="cummunity-image" :src="item.src"  mode=""></image>
+					<text :style="{fontSize: fs+'rpx'}">{{item.text}}</text>
 				</view>
 			</view>
 		</view>
@@ -25,26 +25,42 @@
 	export default {
 		data() {
 			return {
-				bacColor: 'white',
+				// 字体大小:
+				fs: '35',
+				// 关于定位：
+				pos: 'fixed',
+				textPosition: 'center',
+				bacColor: '#F4F4F5',
 				list: [{
 						text: `通知消息`,
-						src: `../../static/cummunity/inform.png`
+						assignUrl: `./cummunityNews/systemNews`,
+						src: `https://s2.loli.net/2022/04/23/aZHdXeSKsNoJbfA.png`
 					},
 					{
 						text: `赞`,
-						src: `../../static/cummunity/myLike.png`
+						assignUrl: `./cummunityNews/receiveLike`,
+						src: `https://s2.loli.net/2022/04/23/4LyclIE9TOhfdGA.png`
 					},
 					{
 						text: `回复`,
-						src: `../../static/cummunity/myReplay.png`
+						assignUrl: `./cummunityNews/replay`,
+						src: `https://s2.loli.net/2022/04/23/FMhLoXgYlxcwRUG.png`
 					},
 					{
 						text: `私信`,
-						src: `../../static/cummunity/privateLetter.png`
+						assignUrl: `./cummunityNews/privateLetter`,
+						src: `https://s2.loli.net/2022/04/23/KaZ6Nj7g3b2vIXL.png`
 					}
 				]
 			}
 		},
+		methods:{
+			skipUrl(assignUrl){
+				uni.navigateTo({
+					url: assignUrl
+				})
+			}
+		}
 	}
 </script>
 
@@ -58,7 +74,6 @@
 			width: 100%;
 			margin-top: 20rpx;
 			position: relative;
-
 			.cummunity-searchIcon {
 				width: 5%;
 				height: 50%;
@@ -75,11 +90,15 @@
 				display: flex;
 				height: 80rpx;
 				margin: 0 auto;
-				text-indent: 60rpx;
+				position: relative;
+				justify-content: space-around;
 				align-items: center;
+				text-align: center;
 				border-radius: 40rpx;
 				background-color: #F4F4F5;
 			}
+			// 对输入框中提示文字的样式：
+			
 		}
 
 		.cummunity-container {
@@ -100,7 +119,7 @@
 				.cummunity-image {
 					width: 80rpx;
 					height: 80rpx;
-
+					
 				}
 			}
 		}

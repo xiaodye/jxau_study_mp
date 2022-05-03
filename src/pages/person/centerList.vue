@@ -2,7 +2,7 @@
 	<!-- 此组件用于设置中部列表，包括浏览记录，收藏等等 -->
 	<view>
 		<view class="centerList">
-			<view class="centerList-container" v-for="(item,index) in list" :key="index">
+			<view class="centerList-container" @click="goOtherPage(index)" v-for="(item,index) in list" :key="index">
 				<image class="centerList-img" :src="item.src"></image>
 				<text class="centerList-text">{{item.tittle}}</text>
 			</view>
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+	import {goDetail} from '@/utils/utils.js'
 	export default {
 		data() {
 			return {
@@ -32,6 +33,17 @@
 						src: '../../static/person/myCollect.png'
 					}
 				]
+			}
+		},
+
+		methods: {
+
+			goOtherPage(index) {
+				if (index === 3) {
+					goDetail('./personComponents/collect/myComponent',1,this.list[index].tittle)
+				} else if (index === 0) {
+					goDetail('././personComponents/skipHistory',index,{})
+				}
 			}
 		}
 	}

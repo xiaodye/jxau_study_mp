@@ -18,6 +18,10 @@
 		components: {
 			CumHeader,
 			List
+		},
+		onLoad() {},
+		methods: {
+
 		}
 	}
 </script>
