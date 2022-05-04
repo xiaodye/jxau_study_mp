@@ -1,8 +1,9 @@
 // 根路由
 // const BASE_URL = "http://192.168.196.215:8081" // chen
+const BASE_URL = "http://192.168.196.237:8081" // chen
 // const BASE_URL = "http://192.168.43.134:8081" // chen
 // const BASE_URL = "http://192.168.196.213:8084" // dai
-const BASE_URL = "http://192.168.196.213:8085" // dai
+// const BASE_URL = "http://192.168.196.213:8085" // dai
 // const BASE_URL = "http://192.168.196.213:8089" // dai
 
 // add token
@@ -26,7 +27,8 @@ uni.addInterceptor("request", {
 
   // 响应拦截
   success({ data: res }) {
-    if (res.status === "401") {
+    // 无token、token无效、token过期
+    if (res.status === "511") {
       uni.reLaunch({ url: "/pages/login/login" })
     }
   },

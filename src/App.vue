@@ -13,7 +13,7 @@ export default {
     async getUserInfo() {
       const token = uni.getStorageSync("token")
       if (!token) return uni.reLaunch({ url: "/pages/login/login" })
-      const { data: res } = await uni.request({ url: "/get/user", method: "GET", data: { token: token } })
+      const { data: res } = await uni.request({ url: "/token/get/user", method: "GET" })
       this.getUserInfo(res.data)
     },
 
