@@ -1,12 +1,12 @@
 <template>
-  <view class="login" :style="{ paddingTop: navHeight + 'px' }">
+  <view class="login" :style="{ paddingTop: navHeight + 'px' /*backgroundImage: `url(${bg})`*/ }">
     <!-- 登录提示 -->
     <view class="login-tip">Hi~，欢迎回来！</view>
 
     <!-- 注册跳转 -->
     <view class="rigister-go">
       <text class="rigister-go-tip">还没有账号？立即</text>
-      <text class="rigister-go-url">注册</text>
+      <text class="rigister-go-url" @click="gotoRigister">注册</text>
     </view>
 
     <!-- 表单 -->
@@ -31,7 +31,9 @@ import { systemInfo } from "@/mixin.js"
 import { mapMutations, mapState } from "vuex"
 export default {
   components: { formBox },
-  data: () => ({}),
+  data: () => ({
+    bg: require("@/static/bg.png"),
+  }),
   mixins: [systemInfo],
   computed: {
     ...mapState("userModule", ["userInfo"]),
@@ -70,6 +72,11 @@ export default {
       } finally {
       }
     },
+
+    // goto 注册
+    gotoRigister() {
+      uni.redirectTo({ url: "/pages/newRigister/newRigister" })
+    },
   },
 
   onLoad() {},
@@ -80,7 +87,10 @@ export default {
 .login {
   min-height: 100vh;
   box-sizing: border-box;
-  background-image: linear-gradient(to top, #96fbc4 0%, #f9f586 100%);
+  // background-image: linear-gradient(to top, #96fbc4 0%, #f9f586 100%);
+  background-image: linear-gradient(-225deg, #dfffcd 0%, #90f9c4 48%, #39f3bb 100%);
+  // background-image: linear-gradient(-225deg, #e3fdf5 0%, #ffe6fa 100%);
+  background-size: cover;
   padding: 0 60rpx 60rpx;
 
   display: flex;

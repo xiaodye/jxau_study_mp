@@ -19,6 +19,13 @@
       }
     },
     {
+      "path": "pages/newRigister/newRigister",
+      "style": {
+        "navigationBarTitleText": "newRigister",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/rigister/rigister",
       "style": {
         "navigationBarTitleText": "rigister"

@@ -2,7 +2,7 @@
   <form class="form-container" @submit="formSubmit">
     <!-- 输入框1 -->
     <view class="form-container-item">
-      <u-icon :size="rpxToPx(50)" :name="formType[0].icon"></u-icon>
+      <u-icon :size="rpxToPx(50)" color="#303133" :name="formType[0].icon"></u-icon>
       <input
         :password="formType[0].isPassword"
         :name="formType[0].name"
@@ -14,7 +14,7 @@
 
     <!-- 输入框2 -->
     <view class="form-container-item">
-      <u-icon :size="rpxToPx(50)" :name="formType[1].icon"></u-icon>
+      <u-icon :size="rpxToPx(50)" color="#303133" :name="formType[1].icon"></u-icon>
       <input
         :password="formType[1].isPassword"
         :name="formType[1].name"
@@ -151,7 +151,7 @@ export default {
         uni.reLaunch({ url: "/pages/index/index" })
       } catch (err) {
         console.error(err)
-        uni.$u.toast("请求异常")
+        uni.$u.toast("服务器异常")
       } finally {
         this.loginBtn = { btnText: "立即登录", loading: false, disabled: false }
       }
@@ -310,7 +310,7 @@ export default {
       width: 100%;
       border-radius: 40rpx;
       font-size: 36rpx;
-      background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
+      background-image: linear-gradient(to right, #38f9d7 0%, #43e97b 100%);
       margin-bottom: 20rpx;
 
       display: flex;
