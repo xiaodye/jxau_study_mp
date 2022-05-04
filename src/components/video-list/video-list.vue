@@ -76,6 +76,7 @@ export default {
     },
 
     firstPlay() {
+      console.log(1)
       if (this.videoContextList.length) {
         this.videoContextList[0].play()
       }
@@ -84,10 +85,7 @@ export default {
   watch: {},
 
   // 组件周期函数--监听组件挂载完毕
-  mounted() {
-    this.createVideoContextList()
-    this.firstPlay()
-  },
+  mounted() {},
 }
 </script>
 

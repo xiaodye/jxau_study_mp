@@ -27,7 +27,7 @@ export default {
   components: { ArticleComment, ArticleReply },
   data: () => ({
     comment: [],
-    replyList: replyList,
+    replyList: [],
   }),
   computed: {},
   methods: {
@@ -40,10 +40,9 @@ export default {
     async getReplyList() {
       try {
         const { data: res } = await uni.request({ url: "/index/get/all/re/comment", data: { parentId: this.comment[0].id } })
-        console.log(res)
+        // console.log(res)
         if (res.status !== "200") return uni.$u.toast("获取回复列表失败")
         this.replyList = res.data.comment
-        console.log(this.replyList)
       } catch (err) {
         console.error(err)
         uni.$u.toast("请求异常")
@@ -61,7 +60,7 @@ export default {
             content: value,
           },
         })
-        console.log(res)
+        // console.log(res)
         if (res.status !== "200") return uni.$u.toast("回复失败")
         this.getReplyList()
       } catch (err) {

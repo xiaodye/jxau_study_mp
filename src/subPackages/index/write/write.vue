@@ -147,21 +147,9 @@ export default {
           for (let i = 0; i < form.tagList.length; i++) {
             form.tagList[i] = form.tagList[i].text
           }
-          console.log(form)
+          // console.log(form)
 
           this.uploadForm(form)
-
-          // 模拟
-          // this.submitBtn = { text: "提交中", loading: true, disabled: true }
-          // this.uploadForm(form)
-
-          // setTimeout(() => {
-          //   this.submitBtn = { text: "提交", loading: false, disabled: false }
-          //   this.$refs.uToast.show({ type: "success", message: "已提交，请等待管理员审核" })
-          //   setTimeout(() => {
-          //     uni.navigateBack()
-          //   }, 1000)
-          // }, 2000)
         }
       } catch (err) {
         console.log(err)
@@ -179,7 +167,6 @@ export default {
           url: "/index/add/one/essay",
           data: { title: form.title, content: form.content, tags: form.tagList },
         })
-        console.log(res, "commmon")
         if (res.status !== "200") return uni.$u.toast("上传数据失败")
         const invitationId = res.data
 
@@ -187,16 +174,15 @@ export default {
         let flag = false // 是否为文章封面
         form.imgList.forEach(async (item, index) => {
           if (index === 0) flag = true
-
           const { data, statusCode } = await uni.uploadFile({
             url: "/index/add/one/essay/image",
             filePath: item.url,
             name: "file",
             fileType: "image",
-            formData: { flag: "true", invitationId: invitationId },
+            formData: { flag: flag.toString(), invitationId: invitationId },
           })
           flag = false
-          if (statusCode === 200 && index === form.tagList.length - 1) {
+          if (statusCode === 200 && index === form.imgList.length - 1) {
             this.$refs.uToast.show({ type: "success", message: "已提交，请等待管理员审核" })
             setTimeout(() => {
               uni.navigateBack()
@@ -205,7 +191,7 @@ export default {
         })
       } catch (err) {
         console.error(err)
-        uni.$u.toast("请求异常")
+        uni.$u.toast("服务器异常")
       } finally {
         this.submitBtn = { text: "提交", loading: false, disabled: false }
       }

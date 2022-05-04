@@ -96,26 +96,27 @@ export default {
   props: {},
   data: () => ({
     articleId: "",
-    articleData: {
-      id: uni.$u.guid(20),
-      userName: "稀土君",
-      avatarUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
-      title: "尤雨溪携手字节前端专家，畅聊 Vue 3.0 & 前端技术新趋势",
-      content: `前端这个技术领域，在应用化以后，涵盖的内容越来越广——纯表现层、应用实现层、应用架构层、基础设施层到改进开发范式的理念层，都有太多可以去钻研的技术点，衍生出了无数前端开发的发展路线。“别更新了，学不动了”成了前端开发群体的切肤之痛，如何在纷繁复杂的前端潮流中找准自己的方向，是年轻前端开发们的群体痛点。
-                在过去的几年间，来自尤雨溪及其团队开发的Vue.js获得了国内外前端开发的广泛青睐，从小型企业到中型代理机构，再到市值数十亿美元的上市公司，都有Vue的实践用例。2020年9月18日，Vue 3.0正式发布，提供了更好的性能、更小的捆绑包体积、更好的 TypeScript 集成、用于处理大规模用例的新 API，并为框架未来的长期迭代奠定了坚实的基础。
-              `,
-      images: [
-        "https://cdn.uviewui.com/uview/swiper/swiper3.png",
-        "https://cdn.uviewui.com/uview/swiper/swiper2.png",
-        "https://cdn.uviewui.com/uview/swiper/swiper1.png",
-      ],
-      tags: ["前端", "Vue"],
-      create_time: "2022/03/17",
-      visitNumber: 273,
-      likeNumber: 23,
-      commentNumber: 7,
-      thumbStatus: false,
-    },
+    // articleData: {
+    //   id: uni.$u.guid(20),
+    //   userName: "稀土君",
+    //   avatarUrl: "https://s2.loli.net/2022/03/17/Rfo5g7ztAcTwGB4.png",
+    //   title: "尤雨溪携手字节前端专家，畅聊 Vue 3.0 & 前端技术新趋势",
+    //   content: `前端这个技术领域，在应用化以后，涵盖的内容越来越广——纯表现层、应用实现层、应用架构层、基础设施层到改进开发范式的理念层，都有太多可以去钻研的技术点，衍生出了无数前端开发的发展路线。“别更新了，学不动了”成了前端开发群体的切肤之痛，如何在纷繁复杂的前端潮流中找准自己的方向，是年轻前端开发们的群体痛点。
+    //             在过去的几年间，来自尤雨溪及其团队开发的Vue.js获得了国内外前端开发的广泛青睐，从小型企业到中型代理机构，再到市值数十亿美元的上市公司，都有Vue的实践用例。2020年9月18日，Vue 3.0正式发布，提供了更好的性能、更小的捆绑包体积、更好的 TypeScript 集成、用于处理大规模用例的新 API，并为框架未来的长期迭代奠定了坚实的基础。
+    //           `,
+    //   images: [
+    //     "https://cdn.uviewui.com/uview/swiper/swiper3.png",
+    //     "https://cdn.uviewui.com/uview/swiper/swiper2.png",
+    //     "https://cdn.uviewui.com/uview/swiper/swiper1.png",
+    //   ],
+    //   tags: ["前端", "Vue"],
+    //   create_time: "2022/03/17",
+    //   visitNumber: 273,
+    //   likeNumber: 23,
+    //   commentNumber: 7,
+    //   thumbStatus: false,
+    // },
+    articleData: {},
     commentList: commentList,
     hasLikedArr: [],
     styles: {
@@ -149,7 +150,6 @@ export default {
     async getArticleData() {
       const { data: res } = await uni.request({ url: "/index/get/one/essays", data: { invitationId: this.articleId } })
       this.articleData = res.data
-      console.log(res)
     },
 
     // 获取评论列表
@@ -158,7 +158,6 @@ export default {
         url: "/index/get/all/comment",
         data: { invitationId: this.articleId, currentPage: 1, pageSize: 5 },
       })
-      console.log(res.data)
       this.commentList = res.data.comment
       this.hasLikedArr = res.data.hasLikedArr
     },
@@ -189,6 +188,7 @@ export default {
     // 文章点赞
     async giveLikeHandler() {
       try {
+        // 取消点赞
         if (this.articleData.thumbStatus) {
           const { data: res } = await uni.request({
             url: "/index/like/one/essay",
@@ -203,6 +203,7 @@ export default {
           this.articleData.likeNumber--
           uni.$u.toast("取消点赞")
         } else {
+          // 点赞
           const { data: res } = await uni.request({
             url: "/index/like/one/essay",
             data: {
@@ -235,7 +236,6 @@ export default {
 
     this.getArticleData()
     this.getCommentList()
-    // this.getHasLikedArr()
   },
 }
 </script>

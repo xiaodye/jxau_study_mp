@@ -29,14 +29,16 @@ export default {
   methods: {
     // 获取文章列表
     async getArticleList(key) {
+      uni.showLoading()
       try {
-        const { data: res } = await uni.request({ url: "/test", data: { key: key } })
+        const { data: res } = await uni.request({ url: "/index/get/all/essays", data: { title: key } })
         console.log(res)
-        if (res.status !== 200) return uni.$u.toast("获取文章列表失败")
-
-        this.articleList = res.data
+        if (res.status !== "200") return uni.$u.toast("获取文章列表失败")
+        this.articleList = res.data.list
       } catch (err) {
         uni.$u.toast("服务器异常")
+      } finally {
+        uni.hideLoading()
       }
     },
 
