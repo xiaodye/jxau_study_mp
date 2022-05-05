@@ -47,11 +47,7 @@ export default {
   components: {},
   mixins: [systemInfo],
   data: () => ({
-    loginBtn: {
-      btnText: "立即注册",
-      loading: false,
-      disabled: false,
-    },
+    loginBtn: { btnText: "立即注册", loading: false, disabled: false },
   }),
 
   computed: {},
@@ -61,15 +57,29 @@ export default {
     async rigisterAccount(e) {
       let { userName, password, confirmPassword } = e.detail.value
       userName = userName.trim()
+      /**
+       * 用户名：4-16位字母,数字,汉字,下划线 汉字表示4个字符
+       * 密码：最短6位，最长12位 {6,16}，[a-z]  [A-Z] [0-9] [-_]
+       */
+      const userNameReg = /^([\u4e00-\u9fa5]{2,4})|([A-Za-z0-9_]{4,16})|([a-zA-Z0-9_\u4e00-\u9fa5]{4,16})$/
+      const passwordReg = /^[\w_-]{6,12}$/
 
       if (!userName || !password || !confirmPassword) {
         this.$refs.uToast.show({ type: "error", message: "用户名或密码不能为空" })
         return
       }
+
+      if (!userNameReg.test(userName)) {
+        this.$refs.uToast.show({ type: "error", message: "用户名不符合规范" })
+        return
+      }
       if (password !== confirmPassword) {
         this.$refs.uToast.show({ type: "error", message: "两次密码不一致" })
         return
+      } else if (!passwordReg.test(password)) {
+        this.$refs.uToast.show({ type: "error", message: "密码不符合规范" })
       }
+
       this.loginBtn = { btnText: "注册中", disabled: true, loading: true }
 
       try {

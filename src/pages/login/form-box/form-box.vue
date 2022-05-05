@@ -73,7 +73,7 @@ export default {
         isPassword: true,
       },
     ],
-    isPhoneLogin: false,
+    isPhoneLogin: true,
     loginText: "使用验证码登录",
     loginBtn: {
       btnText: "立即登录",
@@ -83,7 +83,7 @@ export default {
 
     tips: "",
     sending: false,
-    seconds: 10,
+    seconds: 60,
   }),
   computed: {},
   methods: {
@@ -190,9 +190,8 @@ export default {
 
     // 获取验证码
     async getCode(phone) {
-      console.log(this.firstColumn)
-
-      if (!this.firstColumn.trim()) return this.$refs.uToast.show({ type: "error", message: "电话号码有误" })
+      const regTel = /^[1][3,4,5,7,8][0-9]{9}$/
+      if (!regTel.test(phone)) return this.$refs.uToast.show({ type: "error", message: "电话号码有误" })
 
       if (this.$refs.uCode.canGetCode) {
         // 通知验证码组件内部开始倒计时
@@ -202,11 +201,6 @@ export default {
         console.log(res)
         if (res.status !== "200") return uni.$u.toast("获取验证码失败")
         this.$refs.uToast.show({ type: "success", message: "验证码已发送" })
-
-        // 模拟
-        // setTimeout(() => {
-        //   uni.$u.toast("验证码已发送")
-        // }, 2500)
       }
     },
 
