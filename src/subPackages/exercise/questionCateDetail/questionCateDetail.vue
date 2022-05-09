@@ -59,15 +59,17 @@ export default {
 
     // 获取题组列表
     async getQuestionGroupList() {
+      uni.showLoading()
       const { data: res } = await uni.request({
         url: "/question/get/set/information",
         method: "GET",
         data: { level: this.categoryConfig.level, currentPage: this.paramData.currentPage, pageSize: this.paramData.pageSize },
       })
-      console.log(res)
+      // console.log(res)
       if (res.status !== "200") return uni.$u.toast("获取题组列表失败")
       this.questionList = res.data.list
       this.totalPages = res.data.pages
+      uni.hideLoading()
     },
 
     // 加载更多
@@ -83,7 +85,7 @@ export default {
           method: "GET",
           data: { level: this.categoryConfig.level, currentPage: this.paramData.currentPage, pageSize: this.paramData.pageSize },
         })
-        console.log(res)
+        // console.log(res)
         if (res.status !== "200") return uni.$u.toast("下拉加载失败")
 
         this.questionList = [...this.questionList, ...res.data.list]

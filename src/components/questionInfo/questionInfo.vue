@@ -78,7 +78,6 @@ export default {
     // 添加到错题本
 
     async addWrongBook() {
-      console.log(this.analysisData.id)
       if (this.analysisData.withinWrongBook) {
         const { data: res } = await uni.request({
           url: "/question/user/delete/notebook",
@@ -87,7 +86,7 @@ export default {
             questionId: this.analysisData.id,
           },
         })
-        console.log(res)
+        // console.log(res)
         if (res.status !== "200") return uni.$u.toast("出错了")
 
         this.$emit("addWrongBook", this.analysisData.id, false)
@@ -102,7 +101,7 @@ export default {
             analysis: this.analysisData.analysis_content,
           },
         })
-        console.log(res)
+        // console.log(res)
         if (res.status !== "200") return uni.$u.toast("出错了")
         this.$emit("addWrongBook", this.analysisData.id, true)
       }

@@ -180,7 +180,7 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad() {
-    this.questionList = questionList
+    // this.questionList = questionList
     this.getQuestionGroupList()
   },
 }

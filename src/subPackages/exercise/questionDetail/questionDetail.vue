@@ -1,6 +1,6 @@
 /**
  * @author lan
- * 刷题页
+ * @page 刷题页
  */
 <template>
   <view class="question-container">
@@ -139,7 +139,7 @@ export default {
         method: "GET",
         data: { QuestionSetId: this.questionGroupId },
       })
-      console.log(res)
+      // console.log(res)
       this.loading = false
       if (res.status !== "200") return uni.$u.toast("获取题组失败")
       this.questionInfoList = res.data
@@ -169,7 +169,7 @@ export default {
 
       // 手动更新、渲染数据
       this.$forceUpdate()
-      console.log(this.answerMap)
+      // console.log(this.answerMap)
     },
 
     // 切换题目
@@ -250,7 +250,7 @@ export default {
           return uni.$u.toast("提交失败")
         }
         const answerReport = res.data
-        uni.navigateTo({
+        uni.redirectTo({
           url: `/subPackages/exercise/resultPage/resultPage?answerReport=${JSON.stringify(
             answerReport
           )}&answerSheet=${JSON.stringify(answerObj)}`,
@@ -261,13 +261,6 @@ export default {
       } finally {
         this.showModal = false
       }
-
-      // 模拟
-      // setTimeout(() => {
-      //   answerObj = JSON.stringify(answerObj)
-      //   uni.redirectTo({ url: `/subPackages/exercise/resultPage/resultPage?answerSheet=${answerObj}` })
-      //   this.showModal = false
-      // }, 2000)
     },
   },
   watch: {
@@ -285,18 +278,7 @@ export default {
   onLoad(options) {
     this.questionGroupId = options.id
     this.getQuestionList()
-
-    // 模拟
-    // setTimeout(() => {
-    //   this.questionInfoList = questionInfoList
-    //   this.loading = false
-    // }, 2000)
   },
-
-  // onBackPress(e) {
-  //   console.log(e)
-  //   uni.$u.toast("你返回了")
-  // },
 }
 </script>
 
