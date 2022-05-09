@@ -215,6 +215,23 @@
           }
         }
       ]
+    },
+    {
+      "root": "subPackages/person",
+      "pages": [
+        {
+          "path": "errorBook/errorBook",
+          "style": {
+            "navigationBarTitleText": "我的错题本"
+          }
+        },
+        {
+          "path": "myBlog/myBlog",
+          "style": {
+            "navigationBarTitleText": "我的博客"
+          }
+        }
+      ]
     }
   ],
   "globalStyle": {
