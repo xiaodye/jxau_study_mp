@@ -6,7 +6,7 @@
   <view class="home">
     <!-- 导航栏 -->
     <view class="nav" :style="{ height: navHeight + 'px', paddingTop: statusBarHeight + 'px' }">
-      <u-search placeholder="前端" :showAction="false" :disabled="true" @click="gotoSearch"></u-search>
+      <u-search placeholder="搜索文章" :showAction="false" :disabled="true" @click="gotoSearch"></u-search>
     </view>
 
     <!-- tab栏 -->
@@ -219,9 +219,6 @@ export default {
         console.log(res.data)
         this.contentObj.articleList.data = res.data.list
         this.contentObj.articleList.totalPages = res.data.pages
-
-        // 重新设置内容高度
-        // this.$nextTick(() => this.setSwiperHeight())
       } catch (err) {
         console.error(err)
         uni.$u.toast("服务器异常")

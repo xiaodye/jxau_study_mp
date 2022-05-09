@@ -83,7 +83,10 @@ export default {
       this.loginBtn = { btnText: "注册中", disabled: true, loading: true }
 
       try {
-        const { data: res } = await uni.request({ url: "/test", method: "GET", data: { userName: userName, password: password } })
+        const { data: res } = await uni.request({
+          url: "/learnTree/user/register",
+          data: { userName: userName, password: password },
+        })
         console.log(res)
         if (res.message === "用户名已存在") return this.$refs.uToast.show({ type: "error", message: "用户名已存在" })
 

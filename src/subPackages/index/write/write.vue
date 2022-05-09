@@ -102,7 +102,7 @@ export default {
       },
       content: {
         type: "string",
-        min: 5,
+        min: 50,
         required: true,
         message: "内容字数不够,最少50字",
         trigger: ["blur"],
