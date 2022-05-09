@@ -36,9 +36,9 @@
 
       <!-- 文章列表 -->
       <view class="article-list">
-        <view class="article-list-item" v-for="(item, index) in articleList" :key="index">
+        <view class="article-list-item" v-for="(item, index) in articleList" :key="index" @click="gotoArticleDetail(item.id)">
           <my-tag class="tag" :circle="false" size="mini" :type="getTagColor(index + 1)">{{ index + 1 }}</my-tag>
-          <view class="article-title u-line-1">{{ item }}</view>
+          <view class="article-title u-line-1">{{ item.title }}</view>
         </view>
       </view>
     </view>
@@ -52,18 +52,7 @@ export default {
     key: "",
     historyRecords: null,
     pageRecords: new Set(),
-    articleList: [
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-      "来自南方的温柔的风，经不起北方的寒冷。 --最爱你的十年",
-    ],
+    articleList: [],
   }),
   computed: {
     getTagColor() {
@@ -110,12 +99,24 @@ export default {
         uni.removeStorageSync("historyRecords")
       }
     },
+
+    // 获取热门文章列表
+    async getHotArticleList() {
+      const { data: res } = await uni.request({ url: "/index/get/file/essays" })
+      console.log(res.data)
+      this.articleList = res.data
+    },
+
+    gotoArticleDetail(articleId) {
+      uni.navigateTo({ url: "/subPackages/index/articleDetail/articleDetail?articleId=" + articleId })
+    },
   },
   watch: {},
 
   // 页面周期函数--监听页面加载
   onLoad() {
     this.getHistoryRecords()
+    this.getHotArticleList()
   },
 }
 </script>
@@ -174,12 +175,13 @@ export default {
         margin-bottom: 20rpx;
 
         .tag {
-          margin-right: 10rpx;
-          width: 100rpx;
+          width: 80rpx;
         }
+
         .article-title {
           color: $uni-color-subtitle;
           font-size: 30rpx;
+          flex: 1;
         }
       }
     }

@@ -116,7 +116,8 @@ export default {
 
   data: () => ({
     tabList: [{ name: "文章" }, { name: "视频" }, { name: "资源" }],
-    subTabList: ["推荐", "最热", "最新"],
+    subTabList: ["最热", "最新"],
+    unRecommendHot: false,
 
     tabActiveIndex: 0, // 当前tab
     subActiveIndex: 0, // 当前子tab
@@ -171,11 +172,11 @@ export default {
 
       // 请求数据
       if (detail.current === 0 && this.contentObj.articleList.data.length === 0) {
-        this.getArticleList()
+        this.getArticleList(this.unRecommendHot)
       } else if (detail.current === 1 && this.contentObj.videoList.data.length === 0) {
-        this.getVideoList()
+        this.getVideoList(this.unRecommendHot)
       } else if (detail.current === 2 && this.contentObj.fileList.data.length === 0) {
-        this.getFileList()
+        this.getFileList(this.unRecommendHot)
       }
     },
 
@@ -202,21 +203,39 @@ export default {
 
     // 切换子tab
     switchSubTab(item) {
-      this.subActiveIndex = item.index
+      if (this.tabActiveIndex === 0) {
+        this.subActiveIndex = item.index
+        this.unRecommendHot = item.text === "最热" ? false : true
+
+        // 重置
+        this.contentObj.articleList = {
+          data: [],
+          status: "loadmore",
+          totalPages: 0,
+          paramsData: {
+            currentPage: 1,
+            pageSize: 5,
+          },
+          noMore: false,
+        }
+        this.getArticleList(this.unRecommendHot)
+      }
     },
 
     // 获取文章列表
-    async getArticleList() {
+    async getArticleList(flag) {
       this.loading = true
       try {
         const { data: res } = await uni.request({
-          url: "/index/get/all/essays",
+          url: "/index/get/all/essays/recommend",
           data: {
             currentPage: this.contentObj.articleList.paramsData.currentPage,
             pageSize: this.contentObj.articleList.paramsData.pageSize,
+            flag: flag.toString(),
           },
         })
-        console.log(res.data)
+        // console.log(res.data, "data")
+        if (res.status !== "200") return uni.$u.toast("获取文章失败")
         this.contentObj.articleList.data = res.data.list
         this.contentObj.articleList.totalPages = res.data.pages
       } catch (err) {
@@ -238,7 +257,7 @@ export default {
             pageSize: this.contentObj.videoList.paramsData.pageSize,
           },
         })
-        // console.log(res)
+        // console.log(res.data)
         if (res.status !== "200") return uni.$u.toast("获取视频列表失败")
         this.contentObj.videoList.data = res.data.list
         this.$nextTick(() => {
@@ -408,14 +427,13 @@ export default {
   },
 
   onLoad() {
-    // 加载获取内容高度
-    this.contentObj.articleList.data = articleList
-    this.contentObj.videoList.data = videoList
-    this.contentObj.fileList.data = []
+    // this.contentObj.articleList.data = articleList
+    // this.contentObj.videoList.data = videoList
+    // this.contentObj.fileList.data = []
     // this.$nextTick(() => this.setSwiperHeight())
-    this.loading = false
+    // this.loading = false
 
-    // this.getArticleList()
+    this.getArticleList(this.unRecommendHot)
   },
 }
 </script>

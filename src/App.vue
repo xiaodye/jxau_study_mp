@@ -10,10 +10,11 @@ export default {
     ...mapMutations("userModule", ["getUserInfo"]),
 
     // 获取用户信息
-    async getUserInfo() {
+    async getUserInfoInit() {
       const token = uni.getStorageSync("token")
       if (!token) return uni.reLaunch({ url: "/pages/login/login" })
-      const { data: res } = await uni.request({ url: "/token/get/user", method: "GET" })
+      const { data: res } = await uni.request({ url: "/token/get/user", method: "GET", data: { token: token } })
+      console.log(res)
       this.getUserInfo(res.data)
     },
 
@@ -35,7 +36,7 @@ export default {
     },
   },
   onLaunch: function () {
-    // this.getUserInfo()
+    // this.getUserInfoInit()
     this.getAppHeaderInfo()
   },
 
