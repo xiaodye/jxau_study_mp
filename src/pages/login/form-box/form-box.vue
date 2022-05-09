@@ -74,7 +74,7 @@ export default {
       },
     ],
     isPhoneLogin: true,
-    loginText: "使用验证码登录",
+    loginText: "使用账号密码登录",
     loginBtn: {
       btnText: "立即登录",
       loading: false,
@@ -107,24 +107,15 @@ export default {
     // 提交表单
     formSubmit(e) {
       const { value: userInfo } = e.detail
-
       if (!this.isPhoneLogin) {
         if (userInfo.userName && userInfo.password) {
-          // console.log(userInfo)
           this.accountLogin(userInfo)
-
-          // 模拟
-          // this.mock()
         } else {
           this.$refs.uToast.show({ type: "error", message: "用户名或密码不能为空" })
         }
       } else {
         if (userInfo.phone && userInfo.code) {
-          console.log(userInfo)
           this.phoneLogin(userInfo)
-
-          // 模拟
-          // this.mock()
         } else {
           this.$refs.uToast.show({ type: "error", message: "电话号码或验证码不能为空" })
         }
@@ -183,14 +174,9 @@ export default {
       }
     },
 
-    // 监听code改变
-    codeChange(text) {
-      this.tips = text
-    },
-
     // 获取验证码
     async getCode(phone) {
-      const regTel = /^[1][3,4,5,7,8][0-9]{9}$/
+      const regTel = /^[1][3,4,5,7,8,9][0-9]{9}$/
       if (!regTel.test(phone)) return this.$refs.uToast.show({ type: "error", message: "电话号码有误" })
 
       if (this.$refs.uCode.canGetCode) {
@@ -202,6 +188,11 @@ export default {
         if (res.status !== "200") return uni.$u.toast("获取验证码失败")
         this.$refs.uToast.show({ type: "success", message: "验证码已发送" })
       }
+    },
+
+    // 监听code改变
+    codeChange(text) {
+      this.tips = text
     },
 
     // 倒计时结束

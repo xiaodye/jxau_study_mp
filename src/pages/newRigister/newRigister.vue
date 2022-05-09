@@ -58,8 +58,8 @@ export default {
       let { userName, password, confirmPassword } = e.detail.value
       userName = userName.trim()
       /**
-       * 用户名：4-16位字母,数字,汉字,下划线 汉字表示4个字符
-       * 密码：最短6位，最长12位 {6,16}，[a-z]  [A-Z] [0-9] [-_]
+       * 用户名：4-16位字母,数字,汉字,下划线 汉字可以两个
+       * 密码：最短6位，最长12位 {6,12}，[a-z]  [A-Z] [0-9] [-_]
        */
       const userNameReg = /^([\u4e00-\u9fa5]{2,4})|([A-Za-z0-9_]{4,16})|([a-zA-Z0-9_\u4e00-\u9fa5]{4,16})$/
       const passwordReg = /^[\w_-]{6,12}$/
