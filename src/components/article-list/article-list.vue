@@ -105,6 +105,10 @@ export default {
     padding: 26rpx;
     border-radius: 16rpx;
 
+    &:last-child {
+      margin-bottom: 0;
+    }
+
     &-header {
       height: 90rpx;
       display: flex;

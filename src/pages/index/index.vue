@@ -51,40 +51,54 @@
     <!-- 首页列表 -->
     <swiper
       class="home-list"
-      :style="{ height: swiperHeight + 'px', marginTop: `${rpxToPx(160) + navHeight}px` }"
+      :style="{ height: `${swiperHeight}px`, marginTop: `${rpxToPx(160) + navHeight}px` }"
       :current="tabActiveIndex"
       @change="swiperChangeHandler"
     >
       <!-- 文章 -->
       <swiper-item class="home-list-item">
-        <view id="content-container-1">
+        <scroll-view scroll-y id="content-container-1" @scrolltolower="getMoreArticle">
           <article-list :articleList="contentObj.articleList.data" ref="articleList"></article-list>
-        </view>
+          <u-loadmore
+            v-if="contentObj.articleList.data.length"
+            :status="contentObj.articleList.status"
+            loading-text="正在加载..."
+            nomore-text="~我是有底线的~"
+          />
+        </scroll-view>
       </swiper-item>
 
       <!-- 视频 -->
       <swiper-item class="home-list-item">
-        <view id="content-container-2">
+        <scroll-view scroll-y id="content-container-2" @scrolltolower="getMoreVideo">
           <video-list :videoList="contentObj.videoList.data" ref="video"></video-list>
-        </view>
+          <u-loadmore
+            v-if="contentObj.videoList.data.length"
+            :status="contentObj.videoList.status"
+            loading-text="正在加载..."
+            nomore-text="~我是有底线的~"
+          />
+        </scroll-view>
       </swiper-item>
 
       <!-- 资源 -->
       <swiper-item class="home-list-item">
-        <view id="content-container-3">
+        <scroll-view scroll-y id="content-container-3" @scrolltolower="getMoreFile">
           <file-list :fileList="contentObj.fileList.data" ref="file"></file-list>
-        </view>
+          <u-loadmore
+            v-if="contentObj.fileList.data.length"
+            :status="contentObj.fileList.status"
+            loading-text="正在加载..."
+            nomore-text="~我是有底线的~"
+          />
+        </scroll-view>
       </swiper-item>
     </swiper>
 
     <!-- 跳转 -->
     <view class="go-write" v-if="showWrite" @click="gotoWrite">
-      <!-- <u-icon name="attach" :size="rpxToPx(60)" color="#19be6b"></u-icon> -->
       <view class="t-icon t-icon-bianji"></view>
     </view>
-
-    <!-- 加载更多 -->
-    <u-loadmore :status="status" loading-text="正在加载..." nomore-text="~我是有底线的~" />
 
     <!-- 加载页 -->
     <u-loading-page :loading="loading"></u-loading-page>
@@ -106,11 +120,11 @@ export default {
 
     tabActiveIndex: 0, // 当前tab
     subActiveIndex: 0, // 当前子tab
-    swiperHeight: 0, // 选项卡高度
 
     contentObj: {
       articleList: {
         data: [],
+        status: "loadmore",
         totalPages: 0, // 总页数
         paramsData: {
           currentPage: 1, // 当前页数
@@ -120,6 +134,7 @@ export default {
       },
       videoList: {
         data: [],
+        status: "loadmore",
         totalPages: 0,
         paramsData: {
           currentPage: 1,
@@ -129,6 +144,7 @@ export default {
       },
       fileList: {
         data: [],
+        status: "loadmore",
         totalPages: 0,
         paramsData: {
           currentPage: 1,
@@ -141,7 +157,6 @@ export default {
     // 加载页
     loading: true,
     showWrite: true,
-    status: "loadmore",
   }),
 
   methods: {
@@ -155,42 +170,19 @@ export default {
       this.tabActiveIndex = detail.current
 
       // 请求数据
-      if (detail.current === 0) {
-        if (this.contentObj.articleList.noMore) {
-          this.status = "nomore"
-        } else {
-          this.status = "loadmore"
-        }
-
-        if (this.contentObj.articleList.data.length === 0) {
-          this.getArticleList()
-        }
-        this.$nextTick(() => this.setSwiperHeight())
-      } else if (detail.current === 1) {
-        if (this.contentObj.videoList.noMore) {
-          this.status = "nomore"
-        } else {
-          this.status = "loadmore"
-        }
-
-        if (this.contentObj.videoList.data.length === 0) {
-          this.getVideoList()
-        }
-        this.$nextTick(() => this.setSwiperHeight())
-      } else if (detail.current === 2) {
-        if (this.contentObj.fileList.noMore) {
-          this.status = "nomore"
-        } else {
-          this.status = "loadmore"
-        }
-        if (this.contentObj.fileList.data.length === 0) {
-          this.getFileList()
-        }
-        this.$nextTick(() => this.setSwiperHeight())
+      if (detail.current === 0 && this.contentObj.articleList.data.length === 0) {
+        this.getArticleList()
+      } else if (detail.current === 1 && this.contentObj.videoList.data.length === 0) {
+        this.getVideoList()
+      } else if (detail.current === 2 && this.contentObj.fileList.data.length === 0) {
+        this.getFileList()
       }
     },
 
-    // 动态舌设置swiper高度，因为swiper只能设置固定高度，swiper-item宽高100%是相对于其父组件
+    /**
+     * !（已弃用）
+     * * 动态舌设置swiper高度，因为swiper只能设置固定高度，swiper-item宽高100%是相对于其父组件
+     */
     setSwiperHeight() {
       const contentNodesRef = uni
         .createSelectorQuery()
@@ -229,7 +221,7 @@ export default {
         this.contentObj.articleList.totalPages = res.data.pages
 
         // 重新设置内容高度
-        this.$nextTick(() => this.setSwiperHeight())
+        // this.$nextTick(() => this.setSwiperHeight())
       } catch (err) {
         console.error(err)
         uni.$u.toast("服务器异常")
@@ -253,9 +245,8 @@ export default {
         if (res.status !== "200") return uni.$u.toast("获取视频列表失败")
         this.contentObj.videoList.data = res.data.list
         this.$nextTick(() => {
-          this.setSwiperHeight()
           this.$refs.video.createVideoContextList()
-          // this.$refs.video.firstPlay()
+          this.$refs.video.firstPlay()
         })
       } catch (err) {
         console.error(err)
@@ -279,11 +270,8 @@ export default {
         // console.log(res)
         if (res.status !== "200") return uni.$u.toast("获取文件列表失败")
         this.contentObj.fileList.data = res.data.list
-        // 重新设置内容高度
-        this.$nextTick(() => {
-          this.setSwiperHeight()
-          this.$refs.file.fileStatusListInit()
-        })
+        // 文件状态初始化
+        this.$nextTick(() => this.$refs.file.fileStatusListInit())
       } catch (err) {
         console.error(err)
         uni.$u.toast("服务器异常")
@@ -292,24 +280,13 @@ export default {
       }
     },
 
-    //  加载更多
-    async loadMore() {
-      // 节流
-      if (this.status === "loading" || this.status === "nomore") return
-      this.status = "loading"
-
-      // 请求数据
-      if (this.tabActiveIndex === 0) {
-        this.getMoreArticle()
-      } else if (this.tabActiveIndex === 1) {
-        this.getMoreVideo()
-      } else if (this.tabActiveIndex === 2) {
-        this.getMoreFile()
-      }
-    },
-
     // 获取更多文章
     async getMoreArticle() {
+      // 节流
+      const { status } = this.contentObj.articleList
+      if (status === "loading" || status === "nomore") return
+      this.contentObj.articleList.status = "loading"
+
       this.contentObj.articleList.paramsData.currentPage++
       try {
         const { data: res } = await uni.request({
@@ -321,25 +298,27 @@ export default {
         })
         // console.log(res.data)
         this.contentObj.articleList.data = [...this.contentObj.articleList.data, ...res.data.list]
-        // 重新设置内容高度
-        this.$nextTick(() => this.setSwiperHeight())
 
         // 到底了
         if (this.contentObj.articleList.paramsData.currentPage >= this.contentObj.articleList.totalPages) {
-          this.status = "nomore"
+          this.contentObj.articleList.status = "nomore"
           this.contentObj.articleList.noMore = true
           return
         }
-        this.status = "loadmore"
+        this.contentObj.articleList.status = "loadmore"
       } catch (err) {
         console.error(err)
-        this.status = "loadmore"
+        this.contentObj.articleList.status = "loadmore"
         uni.$u.toast("服务器异常")
       }
     },
 
     // 获取更多视频
     async getMoreVideo() {
+      const { status } = this.contentObj.videoList
+      if (status === "loading" || status === "nomore") return
+      this.contentObj.videoList.status = "loading"
+
       this.contentObj.videoList.paramsData.currentPage++
       try {
         const { data: res } = await uni.request({
@@ -353,26 +332,29 @@ export default {
         this.contentObj.videoList.data = [...this.contentObj.videoList.data, ...res.data.list]
         // 重新设置内容高度
         this.$nextTick(() => {
-          this.setSwiperHeight()
           this.$refs.video.createVideoContextList()
         })
 
         // 到底了
         if (this.contentObj.videoList.paramsData.currentPage >= this.contentObj.videoList.totalPages) {
-          this.status = "nomore"
+          this.contentObj.videoList.status = "nomore"
           this.contentObj.videoList.noMore = true
           return
         }
-        this.status = "loadmore"
+        this.contentObj.videoList.status = "loadmore"
       } catch (err) {
         console.error(err)
-        this.status = "loadmore"
+        this.contentObj.videoList.status = "loadmore"
         uni.$u.toast("服务器异常")
       }
     },
 
     // 获取更多资源
     async getMoreFile() {
+      const { status } = this.contentObj.fileList
+      if (status === "loading" || status === "nomore") return
+      this.contentObj.fileList.status = "loading"
+
       this.contentObj.fileList.paramsData.currentPage++
       try {
         const { data: res } = await uni.request({
@@ -384,22 +366,19 @@ export default {
         })
         // console.log(res.data)
         this.contentObj.fileList.data = [...this.contentObj.fileList.data, ...res.data.list]
-        // 重新设置内容高度
-        this.$nextTick(() => {
-          this.setSwiperHeight()
-          this.$refs.file.fileStatusListInit()
-        })
+        // 初始化文件状态
+        this.$nextTick(() => this.$refs.file.fileStatusListInit())
 
         // 到底了
         if (this.contentObj.fileList.paramsData.currentPage >= this.contentObj.fileList.totalPages) {
-          this.status = "nomore"
+          this.contentObj.fileList.status = "nomore"
           this.contentObj.fileList.noMore = true
           return
         }
-        this.status = "loadmore"
+        this.contentObj.fileList.status = "loadmore"
       } catch (err) {
         console.error(err)
-        this.status = "loadmore"
+        this.contentObj.fileList.status = "loadmore"
         uni.$u.toast("服务器异常")
       }
     },
@@ -416,7 +395,7 @@ export default {
   },
 
   computed: {
-    minSwiperHeight() {
+    swiperHeight() {
       return this.windowHeight - (this.rpxToPx(160) + this.navHeight)
     },
   },
@@ -433,18 +412,13 @@ export default {
 
   onLoad() {
     // 加载获取内容高度
-    // this.contentObj.articleList.data = articleList
-    // this.contentObj.videoList.data = videoList
-    // this.contentObj.fileList.data = fileList
+    this.contentObj.articleList.data = articleList
+    this.contentObj.videoList.data = videoList
+    this.contentObj.fileList.data = []
     // this.$nextTick(() => this.setSwiperHeight())
-    // this.loading = false
+    this.loading = false
 
-    this.getArticleList()
-  },
-
-  // 监听触底
-  onReachBottom() {
-    this.loadMore()
+    // this.getArticleList()
   },
 }
 </script>
@@ -493,6 +467,10 @@ $tab: 160rpx;
 
 .home-list {
   overflow: auto;
+
+  scroll-view {
+    height: 100%;
+  }
 }
 
 .go-write {

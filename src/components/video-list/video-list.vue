@@ -1,6 +1,6 @@
 <template>
   <view class="video">
-    <view class="video-list">
+    <view class="video-list" v-if="videoList.length">
       <view class="video-list-item" v-for="item in videoList" :key="item.uuid">
         <!-- 头部 -->
         <view class="video-list-item-header">
@@ -43,6 +43,9 @@
         </view>
       </view>
     </view>
+
+    <!-- 空白页 -->
+    <u-empty v-else class="empty" icon="http://cdn.uviewui.com/uview/empty/data.png" text="视频列表为空"></u-empty>
   </view>
 </template>
 
