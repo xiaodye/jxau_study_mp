@@ -10,7 +10,7 @@
       <!-- 下方为服务列表 -->
       <view class="tailList-serves">
         <!-- 单个服务 -->
-        <view class="tailList-serCon" v-for="(item, index) in list" :key="index">
+        <view class="tailList-serCon" v-for="(item, index) in list" :key="index" @click="gotoDetail(item.path)">
           <image class="tailList-serConIcon" :src="item.src"></image>
           <text>{{ item.text }}</text>
         </view>
@@ -28,6 +28,7 @@ export default {
         {
           text: `错题本`,
           src: `../../static/person/myWrongExcise.png`,
+          path: "/subPackages/person/errorBook/errorBook",
         },
         {
           text: `我的课程`,
@@ -59,6 +60,12 @@ export default {
         },
       ],
     }
+  },
+
+  methods: {
+    gotoDetail(path) {
+      uni.navigateTo({ url: path })
+    },
   },
 }
 </script>

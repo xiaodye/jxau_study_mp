@@ -222,13 +222,20 @@
         {
           "path": "errorBook/errorBook",
           "style": {
-            "navigationBarTitleText": "我的错题本"
+            "navigationBarTitleText": "我的错题本",
+            "navigationBarBackgroundColor": "#fff"
           }
         },
         {
           "path": "myBlog/myBlog",
           "style": {
             "navigationBarTitleText": "我的博客"
+          }
+        },
+        {
+          "path": "errorBookDetail/errorBookDetail",
+          "style": {
+            "navigationBarTitleText": "详情"
           }
         }
       ]
