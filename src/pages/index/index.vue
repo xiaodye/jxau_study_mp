@@ -57,40 +57,46 @@
     >
       <!-- 文章 -->
       <swiper-item class="home-list-item">
-        <scroll-view scroll-y id="content-container-1" @scrolltolower="getMoreArticle">
+        <scroll-view scroll-y enable-flex id="content-container-1" @scrolltolower="getMoreArticle">
           <article-list :articleList="contentObj.articleList.data" ref="articleList"></article-list>
-          <u-loadmore
-            v-if="contentObj.articleList.data.length"
-            :status="contentObj.articleList.status"
-            loading-text="正在加载..."
-            nomore-text="~我是有底线的~"
-          />
+          <view class="more">
+            <u-loadmore
+              v-if="contentObj.articleList.data.length"
+              :status="contentObj.articleList.status"
+              loading-text="正在加载..."
+              nomore-text="~我是有底线的~"
+            />
+          </view>
         </scroll-view>
       </swiper-item>
 
       <!-- 视频 -->
       <swiper-item class="home-list-item">
-        <scroll-view scroll-y id="content-container-2" @scrolltolower="getMoreVideo">
+        <scroll-view scroll-y enable-flex id="content-container-2" @scrolltolower="getMoreVideo">
           <video-list :videoList="contentObj.videoList.data" ref="video"></video-list>
-          <u-loadmore
-            v-if="contentObj.videoList.data.length"
-            :status="contentObj.videoList.status"
-            loading-text="正在加载..."
-            nomore-text="~我是有底线的~"
-          />
+          <view class="more">
+            <u-loadmore
+              v-if="contentObj.videoList.data.length"
+              :status="contentObj.videoList.status"
+              loading-text="正在加载..."
+              nomore-text="~我是有底线的~"
+            />
+          </view>
         </scroll-view>
       </swiper-item>
 
       <!-- 资源 -->
       <swiper-item class="home-list-item">
-        <scroll-view scroll-y id="content-container-3" @scrolltolower="getMoreFile">
+        <scroll-view scroll-y enable-flex id="content-container-3" @scrolltolower="getMoreFile">
           <file-list :fileList="contentObj.fileList.data" ref="file"></file-list>
-          <u-loadmore
-            v-if="contentObj.fileList.data.length"
-            :status="contentObj.fileList.status"
-            loading-text="正在加载..."
-            nomore-text="~我是有底线的~"
-          />
+          <view class="more">
+            <u-loadmore
+              v-if="contentObj.fileList.data.length"
+              :status="contentObj.fileList.status"
+              loading-text="正在加载..."
+              nomore-text="~我是有底线的~"
+            />
+          </view>
         </scroll-view>
       </swiper-item>
     </swiper>
@@ -234,7 +240,7 @@ export default {
             flag: flag.toString(),
           },
         })
-        // console.log(res.data, "data")
+        console.log(res.data, "data")
         if (res.status !== "200") return uni.$u.toast("获取文章失败")
         this.contentObj.articleList.data = res.data.list
         this.contentObj.articleList.totalPages = res.data.pages
@@ -257,13 +263,21 @@ export default {
             pageSize: this.contentObj.videoList.paramsData.pageSize,
           },
         })
-        // console.log(res.data)
+        console.log(res.data)
         if (res.status !== "200") return uni.$u.toast("获取视频列表失败")
         this.contentObj.videoList.data = res.data.list
         this.$nextTick(() => {
           this.$refs.video.createVideoContextList()
-          this.$refs.video.firstPlay()
+          setTimeout(() => {
+            this.$refs.video.firstPlay()
+          }, 500)
         })
+
+        if (this.contentObj.videoList.paramsData.currentPage >= this.contentObj.videoList.totalPages) {
+          this.contentObj.videoList.status = "nomore"
+          this.contentObj.videoList.noMore = true
+          return
+        }
       } catch (err) {
         console.error(err)
         uni.$u.toast("服务器异常")
@@ -485,6 +499,15 @@ $tab: 160rpx;
 
   scroll-view {
     height: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    .more {
+      height: 60rpx;
+      display: flex;
+      align-items: center;
+    }
   }
 }
 

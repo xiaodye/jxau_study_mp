@@ -2,12 +2,12 @@
   <view>
     <!-- 头部模块： -->
     <view class="header">
-      <image class="header-avatar" :src="headerImage"></image>
+      <image class="header-avatar" :src="userInfo.imageUrl"></image>
 
       <view class="user">
         <view class="user-info">
           <!-- 用户名： -->
-          <text class="user-info-name">{{ userName }}</text>
+          <text class="user-info-name">{{ userInfo.nickName }}</text>
           <!-- 昵称，签名，性别图标 -->
           <image class="user-info-sex" :src="isMan ? manIcon : womanIcon"></image>
 
@@ -35,7 +35,7 @@ import { goDetail } from "@/utils/utils.js"
 export default {
   props: {
     userInfo: {
-      type: String,
+      type: Object,
       required: true,
     },
   },
