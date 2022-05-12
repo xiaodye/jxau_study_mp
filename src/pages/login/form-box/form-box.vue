@@ -239,7 +239,7 @@ export default {
             {
               name: "code",
               placeholder: "验证码",
-              type: "number",
+              type: "text",
               icon: "bell",
               isPassword: false,
               maxLength: 6,

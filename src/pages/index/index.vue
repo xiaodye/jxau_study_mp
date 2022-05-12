@@ -441,13 +441,13 @@ export default {
   },
 
   onLoad() {
-    // this.contentObj.articleList.data = articleList
-    // this.contentObj.videoList.data = videoList
-    // this.contentObj.fileList.data = []
+    this.contentObj.articleList.data = articleList
+    this.contentObj.videoList.data = videoList
+    this.contentObj.fileList.data = fileList
     // this.$nextTick(() => this.setSwiperHeight())
-    // this.loading = false
+    this.loading = false
 
-    this.getArticleList(this.unRecommendHot)
+    // this.getArticleList(this.unRecommendHot)
   },
 }
 </script>

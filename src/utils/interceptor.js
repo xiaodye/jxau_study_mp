@@ -6,7 +6,7 @@
 // const BASE_URL = "http://192.168.43.134:8081" // chen
 // const BASE_URL = "http://192.168.196.213:8084" // dai
 // const BASE_URL = "http://192.168.196.213:8085" // dai
-const BASE_URL = "http://192.168.196.213:8089" // dai
+const BASE_URL = "http://192.168.43.163:8089" // dai
 
 // add token
 function addToken(args) {
