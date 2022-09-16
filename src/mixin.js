@@ -34,7 +34,7 @@ export const systemInfo = {
         // console.log('持续时间:', this.startTime)
         if (this.startTime % 60 === 0 && this.startTime !== 0) {
           this.todayLearningTime += 1
-          console.log(this.todayLearningTime)
+          // console.log(this.todayLearningTime)
         }
         if (this.todayLearningTime % 60 !== 0 && this.todayLearningTime !== 0) {
           // console.log('xiaoshi1:',this.todayLearningTime%60)
