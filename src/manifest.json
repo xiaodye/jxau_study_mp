@@ -6,11 +6,12 @@
   "versionCode": "100",
   "transformPx": false,
   "app-plus": {
-    /* 5+App特有相关 */ "usingComponents": true,
+    /* 5+App特有相关 */
+    "usingComponents": true,
     "splashscreen": {
-      "alwaysShowBeforeRender": true,
+      "alwaysShowBeforeRender": false,
       "waiting": true,
-      "autoclose": true,
+      "autoclose": false,
       "delay": 0
     },
     "modules": {
@@ -58,7 +59,7 @@
   },
   "mp-weixin": {
     /* 微信小程序特有相关 */
-    "appid": "wxd0339accb826f9dc",
+    "appid": "wx541a96b081cc260e",
     "setting": {
       "urlCheck": false,
       "checkSiteMap": false

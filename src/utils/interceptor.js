@@ -1,12 +1,5 @@
 // 根路由
-// const BASE_URL = "http://192.168.196.215:8081" // chen
-// const BASE_URL = "http://192.168.196.237:8089" // chen
-// const BASE_URL = "http://192.168.100.82:8089" // chen
-// const BASE_URL = "http://192.168.196.237:8081" // chen
-// const BASE_URL = "http://192.168.43.134:8081" // chen
-// const BASE_URL = "http://192.168.196.213:8084" // dai
-// const BASE_URL = "http://192.168.196.213:8085" // dai
-const BASE_URL = "http://192.168.43.163:8089" // dai
+const BASE_URL = "https://czqtolearn.mynatapp.cc"
 
 // add token
 function addToken(args) {

@@ -1,7 +1,3 @@
-/**
- * @author lan
- * 首页
- */
 <template>
   <view class="home">
     <!-- 导航栏 -->
@@ -240,7 +236,7 @@ export default {
             flag: flag.toString(),
           },
         })
-        console.log(res.data, "data")
+
         if (res.status !== "200") return uni.$u.toast("获取文章失败")
         this.contentObj.articleList.data = res.data.list
         this.contentObj.articleList.totalPages = res.data.pages
@@ -441,13 +437,13 @@ export default {
   },
 
   onLoad() {
-    this.contentObj.articleList.data = articleList
-    this.contentObj.videoList.data = videoList
-    this.contentObj.fileList.data = fileList
+    // this.contentObj.articleList.data = articleList
+    // this.contentObj.videoList.data = videoList
+    // this.contentObj.fileList.data = fileList
     // this.$nextTick(() => this.setSwiperHeight())
-    this.loading = false
+    // this.loading = false
 
-    // this.getArticleList(this.unRecommendHot)
+    this.getArticleList(this.unRecommendHot)
   },
 }
 </script>

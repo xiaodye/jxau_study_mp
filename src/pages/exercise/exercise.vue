@@ -1,7 +1,3 @@
-/**
- * @author lan
- * 题库
- */
 <template>
   <view class="exercise">
     <view class="exercise-module">

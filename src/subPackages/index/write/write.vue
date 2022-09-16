@@ -12,7 +12,7 @@
           v-model="formModel.content"
           count
           :height="rpxToPx(300)"
-          maxlength="200"
+          maxlength="400"
           placeholder="文章内容..."
         ></u-textarea>
       </u-form-item>
@@ -163,10 +163,11 @@ export default {
         this.submitBtn = { text: "提交中", loading: true, disabled: true }
 
         // 上传普通数据
-        const { data: res } = await uni.request({
+        const { data: res, statusCode } = await uni.request({
           url: "/index/add/one/essay",
           data: { title: form.title, content: form.content, tags: form.tagList },
         })
+        console.log(res)
         if (res.status !== "200") return uni.$u.toast("上传数据失败")
         const invitationId = res.data
 

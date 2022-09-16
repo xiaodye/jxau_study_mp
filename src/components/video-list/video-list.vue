@@ -79,7 +79,6 @@ export default {
     },
 
     firstPlay() {
-      console.log(1)
       if (this.videoContextList.length) {
         this.videoContextList[0].play()
       }
