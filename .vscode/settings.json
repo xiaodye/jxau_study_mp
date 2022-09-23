@@ -9,11 +9,6 @@
   "uniapp-vscode.jsAutoCompletion": false,
   "uniapp-vscode.jsHover": false,
 
-  // 路径提示
-  "path-intellisense.mappings": {
-    "@": "${workspaceRoot}/src/"
-  },
-
   // 文件映射，json文件写注释
   "files.associations": {
     "pages.json": "jsonc",
