@@ -2,10 +2,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"],
-      "static/*": ["./src/static/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["@dcloudio/types", "miniprogram-api-typings", "mini-types"]
-  },
-  "exclude": ["node_modules", "dist"]
+  }
 }
