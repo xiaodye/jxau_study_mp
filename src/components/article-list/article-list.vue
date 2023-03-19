@@ -83,10 +83,7 @@ export default {
     },
   },
 
-  mounted() {
-    // #ifdef MP-WEIXIN
-    // #endif
-  },
+  mounted() {},
 }
 </script>
 
