@@ -8,6 +8,13 @@
 
 **多人协作**采用`git`，远程仓库使用`gitee`。
 
+
+**小程序后端**：https://gitee.com/chenzouquan/rc_learntime
+
+**HbuilderX 版**：https://gitee.com/xiaodye/jxau_study_mp。
+
+
+
 ## 首页
 
 首页整个页面主体制作`双层Tab`，借助`swiper`组件来实现**全屏选项卡**，有三个**文章**、**视频**、**资源**三个模块，均已实现**分页按需加载**，即下拉加载更多。
