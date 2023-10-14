@@ -11,7 +11,7 @@
 
 **小程序后端**：https://gitee.com/chenzouquan/rc_learntime
 
-**HbuilderX 版**：https://gitee.com/xiaodye/jxau_study_mp。
+**HbuilderX 版**：https://gitee.com/xiaodye/jxau_study_mp
 
 
 
